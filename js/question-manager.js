@@ -280,9 +280,14 @@ class QuestionManager {
       const { data: sessionData, error: sessionError } = await window.toeicSupabase.auth.getSession();
       if (sessionError) throw sessionError;
       if (!sessionData.session) throw new Error('登录已失效，请重新登录后删除云端题目。');
-      const { error } = await window.toeicSupabase.from('toeic_questions').delete()
-        .eq('set_id', Number(setId)).eq('question_id', String(questionId));
+      // select() 返回实际删除的行数；Supabase 在 RLS 不允许删除时可能返回空数组而非明显错误。
+      const { data: deletedRows, error } = await window.toeicSupabase.from('toeic_questions').delete()
+        .eq('set_id', Number(setId)).eq('question_id', String(questionId))
+        .select('set_id, question_id');
       if (error) throw error;
+      if (!Array.isArray(deletedRows) || deletedRows.length === 0) {
+        throw new Error(`云端没有删除任何记录。请在 Supabase 执行 supabase_v14_delete_policy.sql，并确认 set_id=${setId}、question_id=${questionId} 的记录存在。`);
+      }
     }
     part.questions = part.questions.filter(q => String(q.questionId) !== String(questionId));
     part.questionCount = part.questions.length;

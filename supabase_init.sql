@@ -28,9 +28,12 @@ grant usage, select on sequence public.toeic_questions_id_seq to anon, authentic
 drop policy if exists "TOEIC public read questions" on public.toeic_questions;
 drop policy if exists "TOEIC public insert questions" on public.toeic_questions;
 drop policy if exists "TOEIC public update questions" on public.toeic_questions;
+drop policy if exists "TOEIC public delete questions" on public.toeic_questions;
 create policy "TOEIC public read questions" on public.toeic_questions for select to anon, authenticated using (true);
 create policy "TOEIC public insert questions" on public.toeic_questions for insert to anon, authenticated with check (true);
 create policy "TOEIC public update questions" on public.toeic_questions for update to anon, authenticated using (true) with check (true);
+create policy "TOEIC public delete questions" on public.toeic_questions for delete to anon, authenticated using (true);
+grant delete on public.toeic_questions to anon, authenticated;
 
 -- 初始化现有 JSON 中实际存在的示例题目。可重复执行（按 set_id + question_id 更新）。
 insert into public.toeic_questions (set_id, part_id, question_id, title, options, correct_answer, audio, note, status, created_at, updated_at) values
