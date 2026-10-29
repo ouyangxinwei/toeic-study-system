@@ -330,6 +330,9 @@ document.getElementById('addQuestionForm').addEventListener('submit', (e) => {
         <button class="mark-reviewed-btn" data-question-id="${question.questionId}">
           标记为已复习
         </button>
+        <button class="edit-question-btn" data-question-id="${question.questionId}">
+          修改题目
+        </button>
         <button class="delete-question-btn" data-question-id="${question.questionId}">
           删除题目
         </button>
@@ -356,6 +359,10 @@ document.getElementById('addQuestionForm').addEventListener('submit', (e) => {
       this.refreshCurrentView();
     });
 
+    card.querySelector('.edit-question-btn').addEventListener('click', () => {
+      this.showEditQuestionModal(question);
+    });
+
     card.querySelector('.delete-question-btn').addEventListener('click', async () => {
       const confirmed = window.confirm(`确定删除题目 ${question.questionId} 吗？\n此操作会删除本地缓存及 Supabase 云端记录，无法撤销。`);
       if (!confirmed) return;
@@ -370,6 +377,92 @@ document.getElementById('addQuestionForm').addEventListener('submit', (e) => {
     });
 
     return card;
+  }
+
+  showEditQuestionModal(question) {
+    let modal = document.getElementById('editQuestionModal');
+    if (!modal) {
+      modal = document.createElement('div');
+      modal.id = 'editQuestionModal';
+      modal.className = 'modal';
+      modal.innerHTML = `
+        <div class="modal-content modal-large">
+          <span class="close" id="closeEditQuestionModal">&times;</span>
+          <h2>修改题目</h2>
+          <form id="editQuestionForm">
+            <div class="form-group"><label>套题编号 *</label><select id="editSetId" required>${Array.from({length:15},(_,i)=>`<option value="${i+1}">第${i+1}套</option>`).join('')}</select></div>
+            <div class="form-group"><label>Part *</label><select id="editPartId" required>${Array.from({length:7},(_,i)=>`<option value="${i+1}">Part ${i+1}</option>`).join('')}</select></div>
+            <div class="form-group"><label>题号 *</label><input id="editQuestionId" required></div>
+            <div class="form-group"><label>题目标题/题干 *</label><textarea id="editTitle" rows="4" required></textarea></div>
+            <div class="form-group"><label>选项 A *</label><input id="editOptionA" required></div>
+            <div class="form-group"><label>选项 B *</label><input id="editOptionB" required></div>
+            <div class="form-group"><label>选项 C *</label><input id="editOptionC" required></div>
+            <div class="form-group"><label>选项 D *</label><input id="editOptionD" required></div>
+            <div class="form-group"><label>正确答案 *</label><select id="editCorrectAnswer" required><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option></select></div>
+            <div class="form-group"><label>音频链接（可选）</label><input id="editAudioUrl" placeholder="本地路径或外部链接"></div>
+            <div class="form-group"><label>笔记（可选）</label><textarea id="editNote" rows="3"></textarea></div>
+            <div class="form-group"><label>状态</label><select id="editStatus"><option value="unanswered">未作答</option><option value="wrong">错题</option><option value="correct">答对</option><option value="reviewed">已复习</option><option value="mastered">已掌握</option></select></div>
+            <div class="form-actions"><button type="submit" class="submit-btn">保存修改</button><button type="button" class="cancel-btn" id="cancelEditQuestion">取消</button></div>
+          </form>
+        </div>`;
+      document.body.appendChild(modal);
+      const close = () => { modal.style.display = 'none'; };
+      modal.querySelector('#closeEditQuestionModal').addEventListener('click', close);
+      modal.querySelector('#cancelEditQuestion').addEventListener('click', close);
+      modal.addEventListener('click', e => { if (e.target === modal) close(); });
+      modal.querySelector('#editQuestionForm').addEventListener('submit', async e => {
+        e.preventDefault();
+        const form = e.currentTarget;
+        const submit = form.querySelector('button[type="submit"]');
+        const originalText = submit.textContent;
+        submit.disabled = true; submit.textContent = '正在保存…';
+        const oldSetId = Number(modal.dataset.oldSetId);
+        const oldQuestionId = modal.dataset.oldQuestionId;
+        const setId = Number(document.getElementById('editSetId').value);
+        const partId = Number(document.getElementById('editPartId').value);
+        const questionId = document.getElementById('editQuestionId').value.trim();
+        const audioUrl = document.getElementById('editAudioUrl').value.trim();
+        const updated = {
+          questionId,
+          title: document.getElementById('editTitle').value.trim(),
+          options: { A: document.getElementById('editOptionA').value.trim(), B: document.getElementById('editOptionB').value.trim(), C: document.getElementById('editOptionC').value.trim(), D: document.getElementById('editOptionD').value.trim() },
+          correctAnswer: document.getElementById('editCorrectAnswer').value,
+          audio: audioUrl ? { type: /^https?:\/\//i.test(audioUrl) ? 'remote' : 'local', path: audioUrl, url: /^https?:\/\//i.test(audioUrl) ? audioUrl : '' } : { type: 'none' },
+          note: document.getElementById('editNote').value.trim(),
+          status: document.getElementById('editStatus').value,
+          partId, updatedAt: new Date().toISOString()
+        };
+        try {
+          await questionManager.editQuestion(oldSetId, oldQuestionId, setId, updated);
+          modal.style.display = 'none';
+          this.currentSetId = setId;
+          const picker = document.getElementById('currentSetSelect'); if (picker) picker.value = String(setId);
+          localStorage.setItem('toeic_current_set_id', String(setId));
+          await this.savePreferredSetId(setId);
+          await questionManager.renderSetsList(setId);
+          Utils.showToast('题目修改成功，已同步到 Supabase。', 'success', 4000);
+        } catch (error) {
+          console.error('修改题目失败:', error);
+          Utils.showToast(`修改失败：${error.message || '未知错误'}`, 'error', 9000);
+        } finally { submit.disabled = false; submit.textContent = originalText; }
+      });
+    }
+    const audio = question.audio || {};
+    modal.dataset.oldSetId = String(this.currentSetId || questionManager.currentSet?.setId || 1);
+    modal.dataset.oldQuestionId = String(question.questionId);
+    document.getElementById('editSetId').value = modal.dataset.oldSetId;
+    document.getElementById('editPartId').value = String(question.partId || 1);
+    document.getElementById('editQuestionId').value = question.questionId || '';
+    document.getElementById('editTitle').value = question.title || '';
+    document.getElementById('editOptionA').value = question.options?.A || '';
+    document.getElementById('editOptionB').value = question.options?.B || '';
+    document.getElementById('editOptionC').value = question.options?.C || '';
+    document.getElementById('editOptionD').value = question.options?.D || '';
+    document.getElementById('editCorrectAnswer').value = question.correctAnswer || 'A';
+    document.getElementById('editAudioUrl').value = audio.url || audio.path || '';
+    document.getElementById('editNote').value = question.note || '';
+    document.getElementById('editStatus').value = question.status || 'unanswered';
+    modal.style.display = 'block';
   }
 
   /**

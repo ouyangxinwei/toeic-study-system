@@ -267,6 +267,67 @@ class QuestionManager {
     }
   }
 
+  /** 修改题目所有可录入字段，并同步到云端。支持修改套题、Part 和题号。 */
+  async editQuestion(oldSetId, oldQuestionId, newSetId, updated) {
+    const targetSetId = Number(newSetId);
+    const oldSet = await this.loadSet(Number(oldSetId));
+    if (!oldSet) throw new Error(`无法加载第${oldSetId}套题目`);
+    const oldPart = oldSet.parts.find(p => p.questions.some(q => String(q.questionId) === String(oldQuestionId)));
+    const oldQuestion = oldPart && oldPart.questions.find(q => String(q.questionId) === String(oldQuestionId));
+    if (!oldQuestion) throw new Error(`未找到原题 ${oldQuestionId}`);
+    const targetSet = targetSetId === Number(oldSetId) ? oldSet : await this.loadSet(targetSetId);
+    if (!targetSet) throw new Error(`无法加载第${targetSetId}套题目`);
+    const targetPart = targetSet.parts.find(p => Number(p.partId) === Number(updated.partId));
+    if (!targetPart) throw new Error(`第${targetSetId}套中不存在 Part ${updated.partId}`);
+    const duplicate = targetSet.parts.some(p => p.questions.some(q =>
+      !(Number(oldSetId) === targetSetId && String(q.questionId) === String(oldQuestionId)) && String(q.questionId) === String(updated.questionId)
+    ));
+    if (duplicate) throw new Error(`题号 ${updated.questionId} 已存在`);
+
+    const now = new Date().toISOString();
+    const saved = { ...oldQuestion, ...updated, questionId: String(updated.questionId), partId: Number(updated.partId), createdAt: oldQuestion.createdAt || now, updatedAt: now };
+    if (window.toeicSupabaseReady && window.toeicSupabase) {
+      const { data: sessionData, error: sessionError } = await window.toeicSupabase.auth.getSession();
+      if (sessionError) throw sessionError;
+      if (!sessionData.session) throw new Error('登录会话已失效，请重新登录后修改。');
+      const row = { set_id: targetSetId, part_id: saved.partId, question_id: saved.questionId, title: saved.title || '', options: saved.options || {}, correct_answer: saved.correctAnswer || '', audio: saved.audio || {type:'none'}, note: saved.note || '', status: saved.status || 'unanswered', created_at: saved.createdAt, updated_at: saved.updatedAt };
+      const { error: upsertError } = await window.toeicSupabase.from('toeic_questions').upsert(row, { onConflict: 'set_id,question_id' });
+      if (upsertError) throw upsertError;
+      const changedKey = Number(oldSetId) !== targetSetId || String(oldQuestionId) !== String(saved.questionId);
+      if (changedKey) {
+        const { data: deleted, error: deleteError } = await window.toeicSupabase.from('toeic_questions').delete().eq('set_id', Number(oldSetId)).eq('question_id', String(oldQuestionId)).select('question_id');
+        if (deleteError) throw deleteError;
+        if (!deleted || deleted.length === 0) {
+          // 新记录已经写入，提示用户原记录清理失败，避免隐瞒重复数据。
+          throw new Error('新题目已保存，但旧题号/旧套题记录未能删除。请检查 DELETE RLS 策略。');
+        }
+      }
+    }
+
+    // 更新浏览器缓存；若跨套题移动，也清理原套题缓存。
+    const oldKey = `set${Number(oldSetId)}_data`;
+    let oldCache = {}; try { oldCache = JSON.parse(localStorage.getItem(oldKey) || '{}'); } catch (_) {}
+    delete oldCache[String(oldQuestionId)];
+    if (Number(oldSetId) !== targetSetId) localStorage.setItem(oldKey, JSON.stringify(oldCache));
+    const oldPartIndex = oldSet.parts.findIndex(p => p.questions.some(q => String(q.questionId) === String(oldQuestionId)));
+    if (oldPartIndex >= 0) {
+      oldSet.parts[oldPartIndex].questions = oldSet.parts[oldPartIndex].questions.filter(q => String(q.questionId) !== String(oldQuestionId));
+      oldSet.parts[oldPartIndex].questionCount = oldSet.parts[oldPartIndex].questions.length;
+    }
+    const targetExistingPart = targetSet.parts.find(p => p.questions.some(q => String(q.questionId) === String(saved.questionId)));
+    if (targetExistingPart) targetExistingPart.questions = targetExistingPart.questions.filter(q => String(q.questionId) !== String(saved.questionId));
+    targetPart.questions.push(saved);
+    targetPart.questions.sort((a,b) => String(a.questionId).localeCompare(String(b.questionId), undefined, {numeric:true}));
+    targetSet.parts.forEach(p => p.questionCount = p.questions.length);
+    this.currentSet = targetSet;
+    const targetKey = `set${targetSetId}_data`;
+    let targetCache = {}; try { targetCache = JSON.parse(localStorage.getItem(targetKey) || '{}'); } catch (_) {}
+    targetCache[saved.questionId] = saved;
+    localStorage.setItem(targetKey, JSON.stringify(targetCache));
+    this.cloudQuestionsBySet = null; this.cloudCachePromise = null;
+    return saved;
+  }
+
   /** 删除题目：先确认调用方已确认，再删除本地及云端记录。 */
   async deleteQuestion(setId, questionId) {
     if (!this.currentSet || Number(this.currentSet.setId) !== Number(setId)) {
