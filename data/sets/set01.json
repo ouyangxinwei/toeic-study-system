@@ -2,7 +2,7 @@
   "setId": 1,
   "setName": "第1套模拟题",
   "totalQuestions": 200,
-  "lastUpdated": "2026-10-29T10:00:00Z",
+  "lastUpdated": "2026-10-29T18:00:00Z",
   "parts": [
     {
       "partId": 1,
@@ -76,6 +76,41 @@
           "updatedAt": "2026-10-29T10:00:00Z"
         }
       ]
+    },
+    {
+      "partId": 3,
+      "partName": "Part 3 - Conversations",
+      "partType": "listening",
+      "questionCount": 0,
+      "questions": []
+    },
+    {
+      "partId": 4,
+      "partName": "Part 4 - Talks",
+      "partType": "listening",
+      "questionCount": 0,
+      "questions": []
+    },
+    {
+      "partId": 5,
+      "partName": "Part 5 - Incomplete Sentences",
+      "partType": "reading",
+      "questionCount": 0,
+      "questions": []
+    },
+    {
+      "partId": 6,
+      "partName": "Part 6 - Text Completion",
+      "partType": "reading",
+      "questionCount": 0,
+      "questions": []
+    },
+    {
+      "partId": 7,
+      "partName": "Part 7 - Reading Comprehension",
+      "partType": "reading",
+      "questionCount": 0,
+      "questions": []
     }
   ],
   "statistics": {

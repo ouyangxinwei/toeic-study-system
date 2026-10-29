@@ -1,7 +1,7 @@
 {
   "app": {
     "name": "TOEIC错题学习系统",
-    "version": "1.0.0",
+    "version": "5.0.0",
     "description": "15套模拟题错题整理与复习系统"
   },
   "sets": {
@@ -61,13 +61,17 @@
   ],
   "sync": {
     "enabled": true,
-    "apiUrl": "https://your-api-endpoint.com/api",
+    "provider": "supabase",
     "autoSync": false,
     "syncInterval": 300
   },
   "export": {
-    "formats": ["csv", "json"],
+    "formats": [
+      "csv",
+      "json"
+    ],
     "includeAudio": false,
     "includeNotes": true
-  }
+  },
+  "version": "6.0.0"
 }

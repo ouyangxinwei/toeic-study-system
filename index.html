@@ -13,6 +13,7 @@
         <header class="header">
             <h1>📚 TOEIC错题学习系统</h1>
             <p>15套模拟题 · 200题/套 · 错题整理与复习</p>
+            <button id="logoutBtn" class="auth-logout-btn" type="button" hidden>退出登录</button>
         </header>
 
         <!-- 搜索和筛选区域 -->
@@ -39,11 +40,10 @@
                     <option value="correct">答对</option>
                 </select>
             </div>
+            <div class="add-question-section">
+                <button id="addQuestionBtn" class="add-btn" type="button">＋ 录入新题（题干 / A-D选项 / 正确答案）</button>
+            </div>
         </section>
-<!-- 录入按钮 -->
-<div class="add-question-section">
-    <button id="addQuestionBtn" class="add-btn">➕ 录入新题</button>
-</div>
 
 <!-- 录入表单弹窗 -->
 <div id="addQuestionModal" class="modal">
@@ -58,7 +58,18 @@
                     <option value="1">第1套</option>
                     <option value="2">第2套</option>
                     <option value="3">第3套</option>
-                    <!-- ... 到15 -->
+                    <option value="4">第4套</option>
+                    <option value="5">第5套</option>
+                    <option value="6">第6套</option>
+                    <option value="7">第7套</option>
+                    <option value="8">第8套</option>
+                    <option value="9">第9套</option>
+                    <option value="10">第10套</option>
+                    <option value="11">第11套</option>
+                    <option value="12">第12套</option>
+                    <option value="13">第13套</option>
+                    <option value="14">第14套</option>
+                    <option value="15">第15套</option>
                 </select>
             </div>
             
@@ -154,6 +165,10 @@
         </div>
     </div>
 
+    <!-- Supabase JS v2：浏览器直接连接 Supabase REST API -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-client.js"></script>
+    <script src="js/auth-gate.js"></script>
     <!-- 引入JavaScript -->
     <script src="js/utils.js"></script>
     <script src="js/question-manager.js"></script>

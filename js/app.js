@@ -100,22 +100,23 @@ document.getElementById('addQuestionForm').addEventListener('submit', (e) => {
     });
 
     // 弹窗关闭按钮
-    document.querySelector('.modal .close').addEventListener('click', () => {
+    document.querySelector('#questionModal .close').addEventListener('click', () => {
       this.closeModal();
     });
 
     // 点击弹窗外部关闭
     window.addEventListener('click', (e) => {
       const modal = document.getElementById('questionModal');
-      if (e.target === modal) {
-        this.closeModal();
-      }
+      const addModal = document.getElementById('addQuestionModal');
+      if (e.target === modal) this.closeModal();
+      if (e.target === addModal) this.closeAddQuestionModal();
     });
 
     // ESC键关闭弹窗
     window.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') {
         this.closeModal();
+        this.closeAddQuestionModal();
       }
     });
   }
@@ -443,9 +444,9 @@ closeAddQuestionModal() {
 /**
  * 处理录入题目
  */
-handleAddQuestion() {
-    const setId = parseInt(document.getElementById('formSetId').value);
-    const partId = parseInt(document.getElementById('formPartId').value);
+async handleAddQuestion() {
+    const setId = Number(document.getElementById('formSetId').value);
+    const partId = Number(document.getElementById('formPartId').value);
     const questionId = document.getElementById('formQuestionId').value.trim();
     const title = document.getElementById('formTitle').value.trim();
     const optionA = document.getElementById('formOptionA').value.trim();
@@ -456,57 +457,45 @@ handleAddQuestion() {
     const audioUrl = document.getElementById('formAudioUrl').value.trim();
     const note = document.getElementById('formNote').value.trim();
 
-    // 构建题目对象
+    if (!questionId || !title || !optionA || !optionB || !optionC || !optionD) {
+      Utils.showToast('请填写题号、题干和全部四个选项', 'error');
+      return;
+    }
+
+    const now = new Date().toISOString();
     const newQuestion = {
-        questionId: questionId,
-        title: title,
-        options: {
-            A: optionA,
-            B: optionB,
-            C: optionC,
-            D: optionD
-        },
-        correctAnswer: correctAnswer,
-        audio: audioUrl ? {
-            type: audioUrl.startsWith('http') ? 'remote' : 'local',
-            path: audioUrl,
-            url: audioUrl.startsWith('http') ? audioUrl : ''
-        } : { type: 'none' },
-        note: note,
-        status: 'unanswered',
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
+      questionId,
+      title,
+      options: { A: optionA, B: optionB, C: optionC, D: optionD },
+      correctAnswer,
+      audio: audioUrl ? {
+        type: /^https?:\/\//i.test(audioUrl) ? 'remote' : 'local',
+        path: audioUrl,
+        url: /^https?:\/\//i.test(audioUrl) ? audioUrl : ''
+      } : { type: 'none' },
+      note,
+      status: 'unanswered',
+      createdAt: now,
+      updatedAt: now
     };
 
-    // 保存到 localStorage
-    this.saveQuestionToStorage(setId, partId, newQuestion);
-
-    Utils.showToast('题目录入成功！', 'success');
-    this.closeAddQuestionModal();
-    
-    // 刷新当前视图
-    if (this.currentSetId === setId) {
-        this.refreshCurrentView();
+    try {
+      await questionManager.addQuestion(setId, partId, newQuestion);
+      this.currentSetId = setId;
+      this.isSearchMode = false;
+      document.getElementById('searchInput').value = '';
+      document.getElementById('partFilter').value = '';
+      document.getElementById('statusFilter').value = '';
+      this.closeAddQuestionModal();
+      await this.openSet(setId);
+      Utils.showToast('题目录入成功，已保存到当前浏览器', 'success');
+    } catch (error) {
+      console.error('录入题目失败:', error);
+      Utils.showToast(error.message || '题目录入失败，请检查题号是否重复', 'error');
     }
 }
 
-/**
- * 保存题目到 localStorage
- */
-saveQuestionToStorage(setId, partId, question) {
-    const storageKey = `set${setId}_data`;
-    let userData = JSON.parse(localStorage.getItem(storageKey) || '{}');
-    
-    // 保存题目数据
-    userData[question.questionId] = {
-        ...question,
-        partId: partId
-    };
-    
-    localStorage.setItem(storageKey, JSON.stringify(userData));
-    
-    console.log('题目已保存:', question);
-}  
+
 }
 
 // 创建全局应用实例

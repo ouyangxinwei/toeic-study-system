@@ -43,6 +43,33 @@ class SyncManager {
    * @param {number} setId - 套题ID（可选，不传则同步所有）
    */
   async syncToRemote(setId = null) {
+    // 优先使用 Supabase；保留旧 REST API 逻辑作为兼容路径。
+    if (window.toeicSupabaseReady && window.toeicSupabase) {
+      if (this.isSyncing) { Utils.showToast('正在同步中，请稍候', 'info'); return; }
+      this.isSyncing = true;
+      try {
+        const setIds = setId ? [Number(setId)] : Array.from({ length: 15 }, (_, i) => i + 1);
+        for (const currentSetId of setIds) {
+          const setData = await questionManager.loadSet(currentSetId);
+          if (!setData) continue;
+          const rows = setData.parts.flatMap(part => part.questions.map(question => ({
+            set_id: Number(currentSetId), part_id: Number(part.partId), question_id: question.questionId,
+            title: question.title || '', options: question.options || {}, correct_answer: question.correctAnswer || '',
+            audio: question.audio || { type: 'none' }, note: question.note || '',
+            status: question.status || 'unanswered', updated_at: question.updatedAt || new Date().toISOString()
+          })));
+          if (rows.length) {
+            const { error } = await window.toeicSupabase.from('toeic_questions').upsert(rows, { onConflict: 'set_id,question_id' });
+            if (error) throw error;
+          }
+        }
+        Utils.showToast('Supabase 云端同步成功', 'success');
+      } catch (error) {
+        console.error('Supabase 同步失败:', error);
+        Utils.showToast(`Supabase 同步失败：${error.message || error.code || '请检查表和 RLS 策略'}`, 'error', 8000);
+      } finally { this.isSyncing = false; }
+      return;
+    }
     if (!this.config.enabled) {
       Utils.showToast('同步功能未启用', 'info');
       return;

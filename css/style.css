@@ -611,12 +611,18 @@ body {
 
 /* 录入按钮区域 */
 .add-question-section {
+    display: flex;
+    justify-content: center;
     text-align: center;
-    margin: 20px 0;
+    margin: 18px 0 0;
 }
 
 .add-btn {
-    padding: 15px 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 48px;
+    padding: 13px 28px;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
     border: none;
@@ -718,3 +724,27 @@ body {
 .cancel-btn:hover {
     background: #7f8c8d;
 }
+
+/* V6 Supabase Auth 登录界面 */
+.auth-gate {
+    position: fixed; inset: 0; z-index: 10000; display: flex;
+    align-items: center; justify-content: center; padding: 20px;
+    background: linear-gradient(135deg, #edf0ff 0%, #f7f3fb 100%);
+}
+.auth-gate[hidden] { display: none; }
+.auth-card {
+    width: min(100%, 420px); background: #fff; border-radius: 18px;
+    padding: 32px; box-shadow: 0 18px 55px rgba(35, 35, 80, .18);
+}
+.auth-logo { text-align: center; font-size: 42px; margin-bottom: 8px; }
+.auth-card h1 { font-size: 23px; text-align: center; color: #333; margin-bottom: 5px; }
+.auth-subtitle { text-align: center; color: #777; margin-bottom: 24px; }
+.auth-card label { display: block; font-weight: 600; margin: 14px 0 6px; }
+.auth-card input { width: 100%; padding: 12px 13px; border: 1px solid #d8d8e3; border-radius: 8px; font-size: 16px; }
+.auth-card input:focus { outline: 2px solid #667eea; border-color: #667eea; }
+.auth-card button { width: 100%; margin-top: 20px; padding: 12px; color: #fff; background: #667eea; border: 0; border-radius: 8px; font-size: 16px; cursor: pointer; }
+.auth-card button:disabled { opacity: .65; cursor: wait; }
+.auth-message { min-height: 24px; margin-top: 12px; color: #b42318; overflow-wrap: anywhere; }
+.auth-hint { font-size: 12px; color: #777; text-align: center; }
+.auth-logout-btn { display: block; margin: 12px auto 0; padding: 7px 14px; border: 1px solid rgba(255,255,255,.7); border-radius: 7px; background: transparent; color: white; cursor: pointer; }
+.auth-logout-btn[hidden] { display: none; }
