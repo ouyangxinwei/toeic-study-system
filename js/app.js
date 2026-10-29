@@ -24,13 +24,68 @@ class App {
       // 绑定事件
       this.bindEvents();
 
-      // 渲染套题列表
-      await questionManager.renderSetsList();
+      // 恢复用户上次选择的套题，并且只加载该套
+      const savedSetId = await this.loadPreferredSetId();
+      const picker = document.getElementById('currentSetSelect');
+      if (picker) {
+        picker.value = String(savedSetId);
+        picker.addEventListener('change', async () => {
+          const setId = Number(picker.value);
+          if (!Number.isInteger(setId) || setId < 1 || setId > 15) return;
+          localStorage.setItem('toeic_current_set_id', String(setId));
+          await this.savePreferredSetId(setId);
+          await questionManager.renderSetsList(setId);
+          this.currentSetId = null;
+          this.isSearchMode = false;
+        });
+      }
+      await questionManager.renderSetsList(savedSetId);
 
       Utils.showToast('应用加载成功', 'success', 2000);
     } catch (error) {
       console.error('应用初始化失败:', error);
       Utils.showToast('应用初始化失败', 'error');
+    }
+  }
+
+  async loadPreferredSetId() {
+    const localValue = Number(localStorage.getItem('toeic_current_set_id') || 1);
+    const fallback = Number.isInteger(localValue) && localValue >= 1 && localValue <= 15 ? localValue : 1;
+    if (!window.toeicSupabaseReady || !window.toeicSupabase) return fallback;
+    try {
+      const { data: authData } = await window.toeicSupabase.auth.getUser();
+      const userId = authData && authData.user && authData.user.id;
+      if (!userId) return fallback;
+      const { data, error } = await window.toeicSupabase.from('toeic_user_preferences')
+        .select('selected_set_id').eq('user_id', userId).maybeSingle();
+      if (error) throw error;
+      const setId = Number(data && data.selected_set_id);
+      if (Number.isInteger(setId) && setId >= 1 && setId <= 15) {
+        localStorage.setItem('toeic_current_set_id', String(setId));
+        return setId;
+      }
+    } catch (error) {
+      console.warn('读取云端当前套题偏好失败，使用本地选择：', error.message || error);
+    }
+    return fallback;
+  }
+
+  async savePreferredSetId(setId) {
+    if (!window.toeicSupabaseReady || !window.toeicSupabase) return;
+    try {
+      const { data: authData, error: authError } = await window.toeicSupabase.auth.getUser();
+      if (authError) throw authError;
+      const userId = authData && authData.user && authData.user.id;
+      if (!userId) return;
+      const { error } = await window.toeicSupabase.from('toeic_user_preferences').upsert({
+        user_id: userId,
+        selected_set_id: setId,
+        updated_at: new Date().toISOString()
+      }, { onConflict: 'user_id' });
+      if (error) throw error;
+    } catch (error) {
+      console.error('保存云端当前套题偏好失败：', error);
+      Utils.showToast('套题已切换，但云端记忆失败；本机仍会记住选择。请执行 V12 SQL 并检查 RLS。', 'warning', 6000);
     }
   }
 

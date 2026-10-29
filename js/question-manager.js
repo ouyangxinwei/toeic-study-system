@@ -419,20 +419,22 @@ class QuestionManager {
     return this.cloudCachePromise;
   }
 
-  async renderSetsList() {
+  async renderSetsList(setId = Number(localStorage.getItem('toeic_current_set_id') || 1)) {
     const setsList = document.getElementById('setsList');
     setsList.innerHTML = '';
-    // 一次分页读取云端全部题目，再并行读取 15 个静态 JSON；避免 15 次串行网络请求。
-    await this.loadCloudQuestionCache();
-    const loadedSets = await Promise.all(
-      Array.from({ length: 15 }, (_, i) => this.loadSet(i + 1))
-    );
-    loadedSets.forEach(setData => {
-      if (!setData) return;
-      this.currentSet = setData;
-      const stats = this.getStatistics();
-      setsList.appendChild(this.createSetCard(setData, stats));
-    });
+    const selectedSetId = Number(setId);
+    if (!Number.isInteger(selectedSetId) || selectedSetId < 1 || selectedSetId > 15) {
+      Utils.showToast('套题编号无效，请选择第 1 至第 15 套。', 'error');
+      return;
+    }
+    // 只加载所选套题，避免启动时读取全部 15 套及全量云端缓存。
+    this.cloudQuestionsBySet = null;
+    this.cloudCachePromise = null;
+    const setData = await this.loadSet(selectedSetId);
+    if (!setData) return;
+    this.currentSet = setData;
+    const stats = this.getStatistics();
+    setsList.appendChild(this.createSetCard(setData, stats));
   }
 
   /**

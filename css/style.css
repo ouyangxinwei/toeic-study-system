@@ -748,3 +748,10 @@ body {
 .auth-hint { font-size: 12px; color: #777; text-align: center; }
 .auth-logout-btn { display: block; margin: 12px auto 0; padding: 7px 14px; border: 1px solid rgba(255,255,255,.7); border-radius: 7px; background: transparent; color: white; cursor: pointer; }
 .auth-logout-btn[hidden] { display: none; }
+
+
+/* 当前套题选择器 */
+.current-set-picker { display:flex; flex-wrap:wrap; align-items:center; gap:10px; margin:18px 0; padding:14px 16px; background:var(--card-bg, #fff); border:1px solid var(--border-color, #ddd); border-radius:10px; }
+.current-set-picker label { font-weight:600; }
+.current-set-picker select { min-width:210px; padding:9px 12px; border:1px solid #bbb; border-radius:6px; background:#fff; color:#222; }
+.current-set-picker .picker-hint { color:#666; font-size:13px; }

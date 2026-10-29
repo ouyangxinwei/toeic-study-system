@@ -144,7 +144,30 @@
     </div>
 </div>
 
-        <!-- 套题列表 -->
+        <!-- 当前显示套题选择器：每次只加载一套 -->
+        <section class="current-set-picker" aria-label="选择当前套题">
+            <label for="currentSetSelect">当前显示套题</label>
+            <select id="currentSetSelect">
+                <option value="1">第 1 套模拟题</option>
+                <option value="2">第 2 套模拟题</option>
+                <option value="3">第 3 套模拟题</option>
+                <option value="4">第 4 套模拟题</option>
+                <option value="5">第 5 套模拟题</option>
+                <option value="6">第 6 套模拟题</option>
+                <option value="7">第 7 套模拟题</option>
+                <option value="8">第 8 套模拟题</option>
+                <option value="9">第 9 套模拟题</option>
+                <option value="10">第 10 套模拟题</option>
+                <option value="11">第 11 套模拟题</option>
+                <option value="12">第 12 套模拟题</option>
+                <option value="13">第 13 套模拟题</option>
+                <option value="14">第 14 套模拟题</option>
+                <option value="15">第 15 套模拟题</option>
+            </select>
+            <span class="picker-hint">只加载所选套题；选择会保存到云端账号。</span>
+        </section>
+
+        <!-- 当前选中的套题 -->
         <main class="sets-list" id="setsList">
             <!-- 动态生成 -->
         </main>
