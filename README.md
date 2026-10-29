@@ -178,7 +178,6 @@ V14 修复 Supabase 删除策略缺失导致的题目无法删除问题。请在
 - 详情中新增“显示答案 / 隐藏答案”按钮；点击后才显示正确答案并高亮对应选项，再次点击即可隐藏。
 - 答案显示状态仅作用于当前详情窗口，不会修改题库数据，也不会同步到云端。
 
-
 ## V19 云端音频（Supabase Storage）
 
 V19 将本地上传音频保存为 Supabase Storage 私有文件，所有已登录账号共享访问；音频索引存储在 `toeic_audio_files` 表，播放文件使用 IndexedDB 缓存。数据库只保存 Storage 路径，不保存短时签名 URL。
@@ -201,3 +200,19 @@ V19 将本地上传音频保存为 Supabase Storage 私有文件，所有已登�
 - 旧音频迁移目前扫描浏览器 localStorage 中的 Base64 音频；原始本地数据保留，迁移失败可以重新扫描重试。
 - 当前云端音频采用“所有登录账号共享”的权限模型。任何有效登录账号都可以读取、上传和删除共享音频，请仅向可信用户开放账号。
 - V19 不会把 Supabase service role key 放进浏览器；仅使用现有 publishable/anon key 和登录会话。
+
+
+## V19.1：统一 Supabase 同步
+
+- 修复点击“同步数据”时错误提示“未配置API地址”的问题。
+- “同步数据”现在只使用项目中已配置的 Supabase 客户端和当前登录会话，不再依赖旧版自定义 REST API 地址。
+- 可同步当前套题或全部 1–16 套题；同步不会删除云端多出的题目。
+- 旧版 Base64 本地音频不会再被塞入 PostgreSQL；会保留本地原音频并标记待迁移，需通过“扫描并迁移本地音频”上传至 Supabase Storage。
+- 云端音频文件和 IndexedDB 缓存不由题库同步按钮删除或清空。
+
+### 使用与排错
+1. 使用 `启动系统.bat` 通过 HTTP 启动，并登录 Supabase 账号。
+2. 点击“同步数据”，当前选择套题时同步当前套题；未选择套题时可同步全部套题。
+3. 不需要填写 `apiUrl`。若提示 Supabase 未连接，请检查 `js/supabase-client.js` 中的 Project URL、publishable/anon key、网络及 Supabase SDK 加载情况。
+4. 若同步返回权限错误，请检查 Supabase `toeic_questions` 表的 authenticated 角色权限和 RLS 策略。
+5. 音频文件迁移仍需先扫描、确认，再批量上传；普通题库同步不会代替音频迁移。

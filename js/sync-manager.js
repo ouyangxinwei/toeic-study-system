@@ -31,7 +31,6 @@ class SyncManager {
       // 使用默认配置
       this.config = {
         enabled: false,
-        apiUrl: '',
         autoSync: false,
         syncInterval: 300
       };
@@ -76,7 +75,9 @@ class SyncManager {
           title: q.title || '',
           options: q.options || {},
           correct_answer: q.correctAnswer || q.correct_answer || '',
-          audio: q.audio || { type: 'none' },
+          audio: (q.audio && q.audio.type === 'local' && String(q.audio.path || '').startsWith('data:audio/'))
+            ? { type: 'local', fileName: q.audio.fileName || '', pendingUpload: true }
+            : (q.audio || { type: 'none' }),
           note: q.note || '',
           status: q.status || 'unanswered',
           created_at: q.createdAt || q.created_at || new Date().toISOString(),
@@ -167,67 +168,84 @@ class SyncManager {
     }
   }
 
+  async buildLocalRowsForSet(setId) {
+    const response = await fetch(`data/sets/set${String(setId).padStart(2, '0')}.json`);
+    if (!response.ok) throw new Error(`读取本机第 ${setId} 套失败（HTTP ${response.status}）`);
+    const localSet = await response.json();
+    const localStore = JSON.parse(localStorage.getItem(`set${setId}_data`) || '{}');
+    const byId = new Map();
+    (localSet.parts || []).forEach(part => (part.questions || []).forEach(q => {
+      byId.set(String(q.questionId), { ...q, partId: Number(part.partId) });
+    }));
+    Object.values(localStore || {}).forEach(q => {
+      if (q && q.questionId) {
+        const previous = byId.get(String(q.questionId)) || {};
+        byId.set(String(q.questionId), { ...previous, ...q, partId: Number(q.partId || previous.partId || 1) });
+      }
+    });
+    return Array.from(byId.values()).map(q => {
+      const audio = q.audio || { type: 'none' };
+      const safeAudio = audio.type === 'local' && String(audio.path || '').startsWith('data:audio/')
+        ? { type: 'local', fileName: audio.fileName || '', pendingUpload: true }
+        : audio;
+      return {
+        set_id: Number(setId),
+        part_id: Number(q.partId || Number(String(q.questionId).split('-')[1]) || 1),
+        question_id: String(q.questionId),
+        title: q.title || '',
+        options: q.options || {},
+        correct_answer: q.correctAnswer || q.correct_answer || '',
+        audio: safeAudio,
+        note: q.note || '',
+        status: q.status || 'unanswered',
+        created_at: q.createdAt || q.created_at || new Date().toISOString(),
+        updated_at: q.updatedAt || q.updated_at || new Date().toISOString()
+      };
+    });
+  }
+
   /**
    * 同步到远程数据库
    * @param {number} setId - 套题ID（可选，不传则同步所有）
    */
   async syncToRemote(setId = null) {
-    // 优先使用 Supabase；保留旧 REST API 逻辑作为兼容路径。
-    if (window.toeicSupabaseReady && window.toeicSupabase) {
-      if (this.isSyncing) { Utils.showToast('正在同步中，请稍候', 'info'); return; }
-      this.isSyncing = true;
-      try {
-        const setIds = setId ? [Number(setId)] : Array.from({ length: 16 }, (_, i) => i + 1);
-        for (const currentSetId of setIds) {
-          const setData = await questionManager.loadSet(currentSetId);
-          if (!setData) continue;
-          const rows = setData.parts.flatMap(part => part.questions.map(question => ({
-            set_id: Number(currentSetId), part_id: Number(part.partId), question_id: question.questionId,
-            title: question.title || '', options: question.options || {}, correct_answer: question.correctAnswer || '',
-            audio: question.audio || { type: 'none' }, note: question.note || '',
-            status: question.status || 'unanswered', updated_at: question.updatedAt || new Date().toISOString()
-          })));
-          if (rows.length) {
-            const { error } = await window.toeicSupabase.from('toeic_questions').upsert(rows, { onConflict: 'set_id,question_id' });
-            if (error) throw error;
-          }
-        }
-        Utils.showToast('Supabase 云端同步成功', 'success');
-      } catch (error) {
-        console.error('Supabase 同步失败:', error);
-        Utils.showToast(`Supabase 同步失败：${error.message || error.code || '请检查表和 RLS 策略'}`, 'error', 8000);
-      } finally { this.isSyncing = false; }
-      return;
+    // V19.1：统一使用 Supabase，不再回退到旧版自定义 REST API。
+    if (!window.toeicSupabaseReady || !window.toeicSupabase) {
+      Utils.showToast(`Supabase 未连接：${window.toeicSupabaseError || '请检查 js/supabase-client.js 配置及网络'}`, 'error', 8000);
+      return false;
     }
-    if (!this.config.enabled) {
-      Utils.showToast('同步功能未启用', 'info');
-      return;
-    }
-
     if (this.isSyncing) {
       Utils.showToast('正在同步中，请稍候', 'info');
-      return;
+      return false;
     }
 
     this.isSyncing = true;
-
     try {
-      if (setId) {
-        // 同步指定套题
-        await this.syncSet(setId);
-      } else {
-        // 同步所有套题
-        for (let i = 1; i <= 16; i++) {
-          await this.syncSet(i);
-          // 延迟一下，避免请求过快
-          await new Promise(resolve => setTimeout(resolve, 200));
+      const { data: sessionData, error: sessionError } = await window.toeicSupabase.auth.getSession();
+      if (sessionError) throw sessionError;
+      if (!sessionData?.session) throw new Error('请先登录，再同步题库数据。');
+
+      const setIds = setId ? [Number(setId)] : Array.from({ length: 16 }, (_, i) => i + 1);
+      let syncedCount = 0;
+      for (const currentSetId of setIds) {
+        if (!Number.isInteger(currentSetId) || currentSetId < 1 || currentSetId > 16) continue;
+        // 从静态题库 + 当前浏览器本地增改记录构建上传内容，确保本地编辑不会被云端读取结果覆盖。
+        const rows = await this.buildLocalRowsForSet(currentSetId);
+
+        if (rows.length) {
+          const { error } = await window.toeicSupabase.from('toeic_questions')
+            .upsert(rows, { onConflict: 'set_id,question_id' });
+          if (error) throw new Error(`第 ${currentSetId} 套同步失败：${error.message || error.code}`);
+          syncedCount += rows.length;
+          this.updateSyncTime(currentSetId, new Date().toISOString());
         }
       }
-
-      Utils.showToast('同步成功', 'success');
+      Utils.showToast(`Supabase 同步成功：已同步 ${syncedCount} 道题。云端音频文件及 IndexedDB 缓存保持独立。`, 'success', 7000);
+      return true;
     } catch (error) {
-      console.error('同步失败:', error);
-      Utils.showToast('同步失败', 'error');
+      console.error('Supabase 同步失败:', error);
+      Utils.showToast(`同步失败：${error.message || error.code || '请检查表权限及 RLS 策略'}`, 'error', 9000);
+      return false;
     } finally {
       this.isSyncing = false;
     }
@@ -238,144 +256,8 @@ class SyncManager {
    * @param {number} setId - 套题ID
    */
   async syncSet(setId) {
-    try {
-      // 加载套题数据
-      const setData = await questionManager.loadSet(setId);
-      if (!setData) {
-        throw new Error(`加载套题${setId}失败`);
-      }
-
-      // 构建同步数据
-      const syncData = this.buildSyncData(setData);
-
-      // 发送到远程API
-      const response = await fetch(this.config.apiUrl + '/sync', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(syncData)
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP错误: ${response.status}`);
-      }
-
-      const result = await response.json();
-      
-      // 更新本地同步时间
-      this.updateSyncTime(setId, result.serverTime);
-
-      console.log(`套题${setId}同步成功:`, result);
-    } catch (error) {
-      console.error(`同步套题${setId}失败:`, error);
-      throw error;
-    }
-  }
-
-  /**
-   * 构建同步数据
-   * @param {Object} setData - 套题数据
-   * @returns {Object} 同步数据
-   */
-  buildSyncData(setData) {
-    const questions = [];
-
-    setData.parts.forEach(part => {
-      part.questions.forEach(question => {
-        questions.push({
-          questionId: question.questionId,
-          partId: part.partId,
-          title: question.title,
-          options: question.options,
-          correctAnswer: question.correctAnswer,
-          audio: question.audio,
-          note: question.note || '',
-          status: question.status,
-          createdAt: question.createdAt,
-          updatedAt: question.updatedAt
-        });
-      });
-    });
-
-    return {
-      setId: setData.setId,
-      setName: setData.setName,
-      syncTime: new Date().toISOString(),
-      totalQuestions: questions.length,
-      questions: questions
-    };
-  }
-
-  /**
-   * 从远程数据库加载数据
-   * @param {number} setId - 套题ID
-   */
-  async loadFromRemote(setId) {
-    if (!this.config.enabled) {
-      Utils.showToast('同步功能未启用', 'info');
-      return;
-    }
-
-    try {
-      const response = await fetch(`${this.config.apiUrl}/sync?setId=${setId}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP错误: ${response.status}`);
-      }
-
-      const remoteData = await response.json();
-
-      // 合并远程数据到本地
-      await this.mergeRemoteData(setId, remoteData);
-
-      Utils.showToast('数据加载成功', 'success');
-    } catch (error) {
-      console.error('加载远程数据失败:', error);
-      Utils.showToast('加载远程数据失败', 'error');
-    }
-  }
-
-  /**
-   * 合并远程数据到本地
-   * @param {number} setId - 套题ID
-   * @param {Object} remoteData - 远程数据
-   */
-  async mergeRemoteData(setId, remoteData) {
-    try {
-      // 加载本地数据
-      const localData = await questionManager.loadSet(setId);
-      if (!localData) return;
-
-      // 合并策略：以更新时间为准，取最新的
-      remoteData.questions.forEach(remoteQuestion => {
-        const localQuestion = questionManager.getQuestion(remoteQuestion.questionId);
-        
-        if (localQuestion) {
-          const localTime = new Date(localQuestion.updatedAt).getTime();
-          const remoteTime = new Date(remoteQuestion.updatedAt).getTime();
-
-          // 如果远程数据更新，则更新本地
-          if (remoteTime > localTime) {
-            localQuestion.note = remoteQuestion.note;
-            localQuestion.status = remoteQuestion.status;
-            localQuestion.audio = remoteQuestion.audio;
-            localQuestion.updatedAt = remoteQuestion.updatedAt;
-          }
-        }
-      });
-
-      // 保存合并后的数据
-      questionManager.saveUserData();
-    } catch (error) {
-      console.error('合并数据失败:', error);
-      throw error;
-    }
+    const ok = await this.syncToRemote(Number(setId));
+    if (!ok) throw new Error(`第 ${setId} 套同步失败`);
   }
 
   /**
@@ -458,16 +340,11 @@ class SyncManager {
    * @returns {boolean} 是否配置正确
    */
   checkConfig() {
-    if (!this.config.enabled) {
-      Utils.showToast('同步功能未启用，请在config.json中配置', 'info');
+    // Supabase 是唯一同步提供方；不再要求旧版 apiUrl。
+    if (!window.toeicSupabaseReady || !window.toeicSupabase) {
+      Utils.showToast(`Supabase 尚未初始化：${window.toeicSupabaseError || '请检查 js/supabase-client.js'}`, 'error', 8000);
       return false;
     }
-
-    if (!this.config.apiUrl) {
-      Utils.showToast('未配置API地址', 'error');
-      return false;
-    }
-
     return true;
   }
 }

@@ -591,7 +591,7 @@ document.getElementById('addQuestionForm').addEventListener('submit', (e) => {
       await syncManager.syncToRemote(this.currentSetId);
     } else {
       // 同步所有套题
-      const confirmSync = confirm('确定要同步所有套题数据吗？');
+      const confirmSync = confirm('确定要将本机当前题库同步到 Supabase 云端吗？将同步 1–16 套题，不会删除云端多出的题目。');
       if (confirmSync) {
         await syncManager.syncToRemote();
       }
