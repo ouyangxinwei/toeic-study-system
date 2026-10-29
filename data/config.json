@@ -1,7 +1,7 @@
 {
   "app": {
     "name": "TOEIC错题学习系统",
-    "version": "10.0.0",
+    "version": "11.0.0",
     "description": "15套模拟题错题整理与复习系统"
   },
   "sets": {

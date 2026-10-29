@@ -7,6 +7,8 @@ class QuestionManager {
   constructor() {
     this.currentSet = null;
     this.config = null;
+    this.cloudQuestionsBySet = null;
+    this.cloudCachePromise = null;
     this.init();
   }
 
@@ -86,19 +88,22 @@ class QuestionManager {
     // 统计数始终以当前实际题目数组为准，避免 JSON 中的旧 questionCount 或缓存残留造成虚高。
     this.currentSet.parts.forEach(part => { part.questionCount = Array.isArray(part.questions) ? part.questions.length : 0; });
 
-    // Supabase 为可选远程数据源；未配置时继续使用静态 JSON + localStorage。
+    // Supabase 已预加载全量缓存时直接使用缓存，避免每套题单独请求云端。
+    // 单独打开套题时也会复用同一份缓存；缓存不存在时再按套题查询。
     if (window.toeicSupabaseReady && window.toeicSupabase) {
       try {
-        const { data, error } = await window.toeicSupabase
-          .from('toeic_questions')
-          .select('*')
-          .eq('set_id', Number(setId));
-        if (error) throw error;
-        // Supabase 查询成功后，云端记录是题库唯一事实来源。
-        // 不再把旧 localStorage 中遗留的题目追加进来，否则会造成套题数量虚高，
-        // 也会让已从云端删除的题目在刷新后重新出现。笔记/状态也以云端行数据为准。
+        let rows;
+        if (this.cloudQuestionsBySet) {
+          rows = this.cloudQuestionsBySet.get(Number(setId)) || [];
+        } else {
+          const { data, error } = await window.toeicSupabase
+            .from('toeic_questions').select('*').eq('set_id', Number(setId));
+          if (error) throw error;
+          rows = data || [];
+        }
+        // 云端查询成功后，云端数据是该套题的唯一事实来源，避免旧缓存导致重复计数。
         this.currentSet.parts.forEach(part => { part.questions = []; });
-        (data || []).forEach(row => {
+        rows.forEach(row => {
           const part = this.currentSet.parts.find(item => Number(item.partId) === Number(row.part_id));
           if (!part) return;
           part.questions.push({
@@ -250,6 +255,8 @@ class QuestionManager {
         .select('set_id,part_id,question_id')
         .single();
       if (error) throw error;
+      this.cloudQuestionsBySet = null;
+      this.cloudCachePromise = null;
       return stored;
     } catch (cause) {
       console.error('[录入新题] Supabase 写入失败:', cause);
@@ -284,6 +291,10 @@ class QuestionManager {
     try { cache = JSON.parse(localStorage.getItem(key) || '{}'); } catch (_) {}
     delete cache[questionId];
     localStorage.setItem(key, JSON.stringify(cache));
+    if (this.cloudQuestionsBySet) {
+      const rows = this.cloudQuestionsBySet.get(Number(setId)) || [];
+      this.cloudQuestionsBySet.set(Number(setId), rows.filter(row => String(row.question_id) !== String(questionId)));
+    }
     return true;
   }
 
@@ -375,18 +386,53 @@ class QuestionManager {
   /**
    * 渲染套题列表
    */
+  async loadCloudQuestionCache() {
+    if (!window.toeicSupabaseReady || !window.toeicSupabase) return false;
+    if (this.cloudQuestionsBySet) return true;
+    if (this.cloudCachePromise) return this.cloudCachePromise;
+
+    this.cloudCachePromise = (async () => {
+      const grouped = new Map(Array.from({ length: 15 }, (_, i) => [i + 1, []]));
+      const pageSize = 1000;
+      let from = 0;
+      while (true) {
+        const { data, error } = await window.toeicSupabase
+          .from('toeic_questions').select('*').order('id', { ascending: true })
+          .range(from, from + pageSize - 1);
+        if (error) throw error;
+        const page = data || [];
+        page.forEach(row => {
+          const id = Number(row.set_id);
+          if (grouped.has(id)) grouped.get(id).push(row);
+        });
+        if (page.length < pageSize) break;
+        from += pageSize;
+      }
+      this.cloudQuestionsBySet = grouped;
+      return true;
+    })().catch(error => {
+      console.error('预加载云端题库失败，将改为逐套读取:', error);
+      this.cloudCachePromise = null;
+      Utils.showToast(`云端题库预加载失败，将逐套加载：${error.message || error.code || '未知错误'}`, 'warning', 6000);
+      return false;
+    });
+    return this.cloudCachePromise;
+  }
+
   async renderSetsList() {
     const setsList = document.getElementById('setsList');
     setsList.innerHTML = '';
-
-    for (let i = 1; i <= 15; i++) {
-      const setData = await this.loadSet(i);
-      if (setData) {
-        const stats = this.getStatistics();
-        const card = this.createSetCard(setData, stats);
-        setsList.appendChild(card);
-      }
-    }
+    // 一次分页读取云端全部题目，再并行读取 15 个静态 JSON；避免 15 次串行网络请求。
+    await this.loadCloudQuestionCache();
+    const loadedSets = await Promise.all(
+      Array.from({ length: 15 }, (_, i) => this.loadSet(i + 1))
+    );
+    loadedSets.forEach(setData => {
+      if (!setData) return;
+      this.currentSet = setData;
+      const stats = this.getStatistics();
+      setsList.appendChild(this.createSetCard(setData, stats));
+    });
   }
 
   /**
