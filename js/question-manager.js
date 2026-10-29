@@ -9,6 +9,8 @@ class QuestionManager {
     this.config = null;
     this.cloudQuestionsBySet = null;
     this.cloudCachePromise = null;
+    this.renderRequestId = 0;
+    this.loadRequestId = 0;
     this.init();
   }
 
@@ -41,6 +43,7 @@ class QuestionManager {
    * @returns {Promise<Object>} 套题数据
    */
   async loadSet(setId) {
+    const loadRequestId = ++this.loadRequestId;
     // 静态题库加载与浏览器本地数据解析分开处理：本地缓存损坏不应导致整套题无法打开。
     let loadedSet;
     try {
@@ -65,8 +68,6 @@ class QuestionManager {
       return null;
     }
 
-    this.currentSet = loadedSet;
-
     // 单独读取本地数据。若旧版本留下了损坏的缓存，仍可正常加载静态题库。
     const storageKey = `set${setId}_data`;
     const rawUserData = localStorage.getItem(storageKey);
@@ -74,7 +75,7 @@ class QuestionManager {
       try {
         const parsed = JSON.parse(rawUserData);
         if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
-          this.mergeUserData(parsed);
+          this.mergeUserData(parsed, loadedSet);
         } else {
           console.warn(`${storageKey} 格式不是对象，已忽略该缓存。`);
           Utils.showToast('发现无法识别的本地题目缓存，已先加载原始题库；建议导出备份后检查缓存。', 'warning', 5000);
@@ -86,7 +87,7 @@ class QuestionManager {
     }
 
     // 统计数始终以当前实际题目数组为准，避免 JSON 中的旧 questionCount 或缓存残留造成虚高。
-    this.currentSet.parts.forEach(part => { part.questionCount = Array.isArray(part.questions) ? part.questions.length : 0; });
+    loadedSet.parts.forEach(part => { part.questionCount = Array.isArray(part.questions) ? part.questions.length : 0; });
 
     // Supabase 已预加载全量缓存时直接使用缓存，避免每套题单独请求云端。
     // 单独打开套题时也会复用同一份缓存；缓存不存在时再按套题查询。
@@ -101,10 +102,11 @@ class QuestionManager {
           if (error) throw error;
           rows = data || [];
         }
-        // 云端查询成功后，云端数据是该套题的唯一事实来源，避免旧缓存导致重复计数。
-        this.currentSet.parts.forEach(part => { part.questions = []; });
+        // 只有云端确实有该套题的数据时才覆盖静态题库；云端尚未导入时保留随包附带的题目。
+        if (rows.length > 0) {
+        loadedSet.parts.forEach(part => { part.questions = []; });
         rows.forEach(row => {
-          const part = this.currentSet.parts.find(item => Number(item.partId) === Number(row.part_id));
+          const part = loadedSet.parts.find(item => Number(item.partId) === Number(row.part_id));
           if (!part) return;
           part.questions.push({
             questionId: String(row.question_id), title: row.title || '', options: row.options || {},
@@ -113,27 +115,29 @@ class QuestionManager {
             createdAt: row.created_at, updatedAt: row.updated_at
           });
         });
-        this.currentSet.parts.forEach(part => {
+        loadedSet.parts.forEach(part => {
           part.questions.sort((a, b) => String(a.questionId).localeCompare(String(b.questionId), undefined, { numeric: true }));
           part.questionCount = part.questions.length;
         });
+        }
       } catch (error) {
         console.error('Supabase 读取题库失败:', error);
         Utils.showToast(`云端题库读取失败：${error.message || error.code || '请检查 Supabase 配置、表名及 RLS 策略'}`, 'error', 8000);
       }
     }
 
-    return this.currentSet;
+    if (loadRequestId === this.loadRequestId) this.currentSet = loadedSet;
+    return loadedSet;
   }
 
   /**
    * 合并用户数据（笔记、状态等）
    * @param {Object} userData - 用户数据
    */
-  mergeUserData(userData) {
-    if (!this.currentSet || !userData) return;
+  mergeUserData(userData, targetSet = this.currentSet) {
+    if (!targetSet || !userData) return;
 
-    this.currentSet.parts.forEach(part => {
+    targetSet.parts.forEach(part => {
       part.questions.forEach(question => {
         const userQuestion = userData[question.questionId];
         if (userQuestion) {
@@ -148,17 +152,17 @@ class QuestionManager {
     // 将 localStorage 中新增、但静态 JSON 尚不存在的题目合并回题库。
     Object.values(userData).forEach(userQuestion => {
       if (!userQuestion || !userQuestion.questionId) return;
-      const alreadyExists = this.currentSet.parts.some(part =>
+      const alreadyExists = targetSet.parts.some(part =>
         part.questions.some(question => question.questionId === userQuestion.questionId)
       );
       if (alreadyExists) return;
 
       const partId = Number(userQuestion.partId);
-      const targetPart = this.currentSet.parts.find(part => part.partId === partId);
+      const targetPart = targetSet.parts.find(part => part.partId === partId);
       if (targetPart) targetPart.questions.push({ ...userQuestion });
     });
 
-    this.currentSet.parts.forEach(part => {
+    targetSet.parts.forEach(part => {
       part.questions.sort((a, b) => a.questionId.localeCompare(b.questionId, undefined, { numeric: true }));
       part.questionCount = part.questions.length;
     });
@@ -458,7 +462,7 @@ class QuestionManager {
     if (this.cloudCachePromise) return this.cloudCachePromise;
 
     this.cloudCachePromise = (async () => {
-      const grouped = new Map(Array.from({ length: 15 }, (_, i) => [i + 1, []]));
+      const grouped = new Map(Array.from({ length: 16 }, (_, i) => [i + 1, []]));
       const pageSize = 1000;
       let from = 0;
       while (true) {
@@ -486,6 +490,7 @@ class QuestionManager {
   }
 
   async renderSetsList(setId = Number(localStorage.getItem('toeic_current_set_id') || 1)) {
+    const requestId = ++this.renderRequestId;
     const setsList = document.getElementById('setsList');
     if (!setsList) {
       console.error('未找到套题列表容器 #setsList');
@@ -494,15 +499,15 @@ class QuestionManager {
     // 每次切换都先清空旧 DOM，确保页面绝不会残留其他套题卡片。
     setsList.replaceChildren();
     const selectedSetId = Number(setId);
-    if (!Number.isInteger(selectedSetId) || selectedSetId < 1 || selectedSetId > 15) {
-      Utils.showToast('套题编号无效，请选择第 1 至第 15 套。', 'error');
+    if (!Number.isInteger(selectedSetId) || selectedSetId < 1 || selectedSetId > 16) {
+      Utils.showToast('套题编号无效，请选择第 1 至第 16 套。', 'error');
       return;
     }
     // 只加载所选套题，避免启动时读取全部 15 套及全量云端缓存。
     this.cloudQuestionsBySet = null;
     this.cloudCachePromise = null;
     const setData = await this.loadSet(selectedSetId);
-    if (!setData) return;
+    if (!setData || requestId !== this.renderRequestId) return;
     this.currentSet = setData;
     const stats = this.getStatistics();
     const card = this.createSetCard(setData, stats);

@@ -235,7 +235,7 @@ class ExportManager {
    */
   async exportAllSets(format) {
     try {
-      for (let i = 1; i <= 15; i++) {
+      for (let i = 1; i <= 16; i++) {
         if (format === 'csv') {
           await this.exportCSV(i);
         } else if (format === 'json') {

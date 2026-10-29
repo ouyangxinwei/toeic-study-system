@@ -51,13 +51,13 @@ class SyncManager {
       Utils.showToast('正在执行数据传输，请稍候。', 'info');
       return;
     }
-    const confirmed = confirm('将把本机 15 套题库（静态题库及浏览器本地新增/修改数据）上传到云端。云端同题号会被本机数据覆盖，但不会删除云端多出的题目。确定继续吗？');
+    const confirmed = confirm('将把本机 16 套题库（静态题库及浏览器本地新增/修改数据）上传到云端。云端同题号会被本机数据覆盖，但不会删除云端多出的题目。确定继续吗？');
     if (!confirmed) return;
 
     this.isSyncing = true;
     let total = 0;
     try {
-      for (let setId = 1; setId <= 15; setId++) {
+      for (let setId = 1; setId <= 16; setId++) {
         const response = await fetch(`data/sets/set${String(setId).padStart(2, '0')}.json`);
         if (!response.ok) throw new Error(`读取本机第 ${setId} 套失败（HTTP ${response.status}）`);
         const localSet = await response.json();
@@ -129,7 +129,7 @@ class SyncManager {
       }
 
       const bySet = new Map();
-      for (let setId = 1; setId <= 15; setId++) bySet.set(setId, {});
+      for (let setId = 1; setId <= 16; setId++) bySet.set(setId, {});
       allRows.forEach(row => {
         const setId = Number(row.set_id);
         if (!bySet.has(setId)) return;
@@ -177,7 +177,7 @@ class SyncManager {
       if (this.isSyncing) { Utils.showToast('正在同步中，请稍候', 'info'); return; }
       this.isSyncing = true;
       try {
-        const setIds = setId ? [Number(setId)] : Array.from({ length: 15 }, (_, i) => i + 1);
+        const setIds = setId ? [Number(setId)] : Array.from({ length: 16 }, (_, i) => i + 1);
         for (const currentSetId of setIds) {
           const setData = await questionManager.loadSet(currentSetId);
           if (!setData) continue;
@@ -217,7 +217,7 @@ class SyncManager {
         await this.syncSet(setId);
       } else {
         // 同步所有套题
-        for (let i = 1; i <= 15; i++) {
+        for (let i = 1; i <= 16; i++) {
           await this.syncSet(i);
           // 延迟一下，避免请求过快
           await new Promise(resolve => setTimeout(resolve, 200));

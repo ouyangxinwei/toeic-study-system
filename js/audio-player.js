@@ -25,7 +25,7 @@ class AudioPlayer {
       // 有音频：显示播放器
       audioSection.innerHTML = `
         <audio class="audio-player" controls preload="none">
-          <source src="${this.getAudioSrc(question.audio)}" type="audio/mpeg">
+          <source src="${question.audio.type === 'cloud' ? '' : this.getAudioSrc(question.audio)}" type="${question.audio.mimeType || 'audio/mpeg'}">
           您的浏览器不支持音频播放
         </audio>
         <div class="audio-actions">
@@ -52,6 +52,10 @@ class AudioPlayer {
     }
 
     container.appendChild(audioSection);
+    if (hasAudio && question.audio.type === 'cloud') {
+      const player = audioSection.querySelector('audio');
+      audioStorageManager.getPlaybackUrl(question.audio).then(src => { if (player && player.isConnected) { player.src = src; player.load(); } }).catch(err => { console.error('云端音频读取失败', err); Utils.showToast('云端音频读取失败：' + (err.message || ''), 'error'); });
+    }
 
     // 绑定事件
     this.bindAudioEvents(audioSection, question);
@@ -69,8 +73,9 @@ class AudioPlayer {
       // 本地文件：检查路径是否有值
       return audio.path && audio.path.trim() !== '';
     } else if (audio.type === 'remote') {
-      // 远程链接：检查URL是否有值
       return audio.url && audio.url.trim() !== '';
+    } else if (audio.type === 'cloud') {
+      return !!audio.storagePath;
     }
     
     return false;
@@ -88,6 +93,8 @@ class AudioPlayer {
       return audio.path;
     } else if (audio.type === 'remote') {
       return audio.url;
+    } else if (audio.type === 'cloud') {
+      return '';
     }
     
     return '';
@@ -129,42 +136,16 @@ class AudioPlayer {
    * @param {string} questionId - 题目ID
    */
   async uploadLocalAudio(questionId) {
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = 'audio/*';
-    
-    input.onchange = async (e) => {
-      const file = e.target.files[0];
-      if (!file) return;
-
-      try {
-        // 读取文件为DataURL
-        const dataUrl = await Utils.readFile(file);
-        
-        // 更新题目音频信息
-        const question = questionManager.getQuestion(questionId);
-        if (question) {
-          question.audio = {
-            type: 'local',
-            path: dataUrl,
-            fileName: file.name,
-            fileSize: Utils.formatFileSize(file.size)
-          };
-          question.updatedAt = new Date().toISOString();
-          questionManager.saveUserData();
-          
-          Utils.showToast('音频上传成功', 'success');
-          
-          // 重新渲染音频区域
-          this.refreshAudioSection(question);
-        }
-      } catch (error) {
-        console.error('上传音频失败:', error);
-        Utils.showToast('上传音频失败', 'error');
-      }
-    };
-    
-    input.click();
+    const input = document.createElement('input'); input.type='file'; input.accept='audio/mpeg,audio/wav,audio/mp4,audio/x-m4a,audio/*';
+    input.onchange = async e => { const file=e.target.files[0]; if(!file)return; const question=questionManager.getQuestion(questionId); if(!question)return;
+      try { const setId=Number(question.setId||document.getElementById('currentSetSelect')?.value||1); const partId=Number(question.partId||1); const old=question.audio;
+        Utils.showToast('正在上传音频到云端…','info');
+        const audio=await audioStorageManager.upload(file,{setId,partId,questionId,onProgress:p=>{}});
+        question.audio=audio; question.updatedAt=new Date().toISOString(); questionManager.saveUserData();
+        if(old?.type==='cloud'&&old.storagePath!==audio.storagePath){try{await audioStorageManager.remove(old);}catch(err){console.warn('旧音频清理失败，稍后可手动清理',err);}}
+        Utils.showToast('音频已上传并保存到云端，所有登录账号均可使用','success'); this.refreshAudioSection(question);
+      } catch(error){console.error('云端上传失败:',error);Utils.showToast('上传失败：'+(error.message||String(error)),'error',8000);}
+    }; input.click();
   }
 
   /**

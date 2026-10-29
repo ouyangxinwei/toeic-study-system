@@ -31,12 +31,18 @@ class App {
         picker.value = String(savedSetId);
         picker.addEventListener('change', async () => {
           const setId = Number(picker.value);
-          if (!Number.isInteger(setId) || setId < 1 || setId > 15) return;
+          if (!Number.isInteger(setId) || setId < 1 || setId > 16) return;
+          // 先立即记录本地选择，再保存云端偏好；即使云端暂时不可用，本机也会记住。
           localStorage.setItem('toeic_current_set_id', String(setId));
-          await this.savePreferredSetId(setId);
-          await questionManager.renderSetsList(setId);
           this.currentSetId = null;
           this.isSearchMode = false;
+          picker.disabled = true;
+          try {
+            await questionManager.renderSetsList(setId);
+            await this.savePreferredSetId(setId);
+          } finally {
+            picker.disabled = false;
+          }
         });
       }
       await questionManager.renderSetsList(savedSetId);
@@ -50,7 +56,7 @@ class App {
 
   async loadPreferredSetId() {
     const localValue = Number(localStorage.getItem('toeic_current_set_id') || 1);
-    const fallback = Number.isInteger(localValue) && localValue >= 1 && localValue <= 15 ? localValue : 1;
+    const fallback = Number.isInteger(localValue) && localValue >= 1 && localValue <= 16 ? localValue : 1;
     if (!window.toeicSupabaseReady || !window.toeicSupabase) return fallback;
     try {
       const { data: authData } = await window.toeicSupabase.auth.getUser();
@@ -60,7 +66,7 @@ class App {
         .select('selected_set_id').eq('user_id', userId).maybeSingle();
       if (error) throw error;
       const setId = Number(data && data.selected_set_id);
-      if (Number.isInteger(setId) && setId >= 1 && setId <= 15) {
+      if (Number.isInteger(setId) && setId >= 1 && setId <= 16) {
         localStorage.setItem('toeic_current_set_id', String(setId));
         return setId;
       }
@@ -235,6 +241,7 @@ document.getElementById('addQuestionForm').addEventListener('submit', (e) => {
       }
 
       // 显示套题详情
+      questionManager.currentSet = setData;
       this.displaySetDetail(setData);
 
       Utils.showToast(`已打开${setData.setName}`, 'success', 1500);
@@ -390,7 +397,7 @@ document.getElementById('addQuestionForm').addEventListener('submit', (e) => {
           <span class="close" id="closeEditQuestionModal">&times;</span>
           <h2>修改题目</h2>
           <form id="editQuestionForm">
-            <div class="form-group"><label>套题编号 *</label><select id="editSetId" required>${Array.from({length:15},(_,i)=>`<option value="${i+1}">第${i+1}套</option>`).join('')}</select></div>
+            <div class="form-group"><label>套题编号 *</label><select id="editSetId" required>${Array.from({length:16},(_,i)=>`<option value="${i+1}">第${i+1}套</option>`).join('')}</select></div>
             <div class="form-group"><label>Part *</label><select id="editPartId" required>${Array.from({length:7},(_,i)=>`<option value="${i+1}">Part ${i+1}</option>`).join('')}</select></div>
             <div class="form-group"><label>题号 *</label><input id="editQuestionId" required></div>
             <div class="form-group"><label>题目标题/题干 *</label><textarea id="editTitle" rows="4" required></textarea></div>
@@ -495,26 +502,43 @@ document.getElementById('addQuestionForm').addEventListener('submit', (e) => {
     // 音频播放器
     audioPlayer.renderAudioPlayer(question, detailContent);
 
-    // 选项列表
+    // 选项列表：详情默认不标记正确选项，避免提前看到答案
     const optionsList = document.createElement('div');
     optionsList.className = 'options-list';
-    
+    const optionElements = [];
+
     for (const key in question.options) {
       const option = document.createElement('div');
       option.className = 'option-item';
-      if (key === question.correctAnswer) {
-        option.classList.add('correct');
-      }
+      option.dataset.optionKey = key;
       option.textContent = `${key}. ${question.options[key]}`;
       optionsList.appendChild(option);
+      optionElements.push(option);
     }
-    
     detailContent.appendChild(optionsList);
 
-    // 正确答案
+    // 答案默认隐藏，用户主动点击后才显示
+    const answerToggle = document.createElement('button');
+    answerToggle.type = 'button';
+    answerToggle.className = 'answer-toggle-btn';
+    answerToggle.textContent = '显示答案';
+    answerToggle.setAttribute('aria-pressed', 'false');
+
     const correctAnswer = document.createElement('div');
     correctAnswer.className = 'correct-answer';
-    correctAnswer.textContent = `正确答案: ${question.correctAnswer}`;
+    correctAnswer.textContent = `正确答案: ${question.correctAnswer || '未设置'}`;
+    correctAnswer.hidden = true;
+
+    answerToggle.addEventListener('click', () => {
+      const shouldShow = correctAnswer.hidden;
+      correctAnswer.hidden = !shouldShow;
+      answerToggle.textContent = shouldShow ? '隐藏答案' : '显示答案';
+      answerToggle.setAttribute('aria-pressed', String(shouldShow));
+      optionElements.forEach(option => {
+        option.classList.toggle('correct', shouldShow && option.dataset.optionKey === question.correctAnswer);
+      });
+    });
+    detailContent.appendChild(answerToggle);
     detailContent.appendChild(correctAnswer);
 
     // 笔记区域
