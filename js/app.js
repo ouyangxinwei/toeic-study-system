@@ -99,6 +99,14 @@ document.getElementById('addQuestionForm').addEventListener('submit', (e) => {
       this.handleSync();
     });
 
+    // 本机与云端的单向数据传输按钮
+    document.getElementById('uploadLocalToCloudBtn').addEventListener('click', () => {
+      syncManager.uploadLocalToCloud();
+    });
+    document.getElementById('downloadCloudToLocalBtn').addEventListener('click', () => {
+      syncManager.downloadCloudToLocal();
+    });
+
     // 弹窗关闭按钮
     document.querySelector('#questionModal .close').addEventListener('click', () => {
       this.closeModal();
