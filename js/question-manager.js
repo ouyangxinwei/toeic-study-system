@@ -94,21 +94,22 @@ class QuestionManager {
           .select('*')
           .eq('set_id', Number(setId));
         if (error) throw error;
+        // Supabase 查询成功后，云端记录是题库唯一事实来源。
+        // 不再把旧 localStorage 中遗留的题目追加进来，否则会造成套题数量虚高，
+        // 也会让已从云端删除的题目在刷新后重新出现。笔记/状态也以云端行数据为准。
+        this.currentSet.parts.forEach(part => { part.questions = []; });
         (data || []).forEach(row => {
           const part = this.currentSet.parts.find(item => Number(item.partId) === Number(row.part_id));
           if (!part) return;
-          const remoteQuestion = {
-            questionId: row.question_id, title: row.title, options: row.options || {},
+          part.questions.push({
+            questionId: String(row.question_id), title: row.title || '', options: row.options || {},
             correctAnswer: row.correct_answer || '', audio: row.audio || { type: 'none' },
             note: row.note || '', status: row.status || 'unanswered', partId: Number(row.part_id),
             createdAt: row.created_at, updatedAt: row.updated_at
-          };
-          const index = part.questions.findIndex(q => q.questionId === row.question_id);
-          if (index >= 0) part.questions[index] = { ...part.questions[index], ...remoteQuestion };
-          else part.questions.push(remoteQuestion);
+          });
         });
         this.currentSet.parts.forEach(part => {
-          part.questions.sort((a, b) => a.questionId.localeCompare(b.questionId, undefined, { numeric: true }));
+          part.questions.sort((a, b) => String(a.questionId).localeCompare(String(b.questionId), undefined, { numeric: true }));
           part.questionCount = part.questions.length;
         });
       } catch (error) {
@@ -267,13 +268,7 @@ class QuestionManager {
     }
     const part = this.currentSet.parts.find(p => p.questions.some(q => String(q.questionId) === String(questionId)));
     if (!part) throw new Error(`未找到题目 ${questionId}`);
-    part.questions = part.questions.filter(q => String(q.questionId) !== String(questionId));
-    part.questionCount = part.questions.length;
-    const key = `set${setId}_data`;
-    let cache = {};
-    try { cache = JSON.parse(localStorage.getItem(key) || '{}'); } catch (_) {}
-    delete cache[questionId];
-    localStorage.setItem(key, JSON.stringify(cache));
+    // 先删除云端，确认成功后再改本地界面，避免云端删除失败但本地已消失。
     if (window.toeicSupabaseReady && window.toeicSupabase) {
       const { data: sessionData, error: sessionError } = await window.toeicSupabase.auth.getSession();
       if (sessionError) throw sessionError;
@@ -282,6 +277,13 @@ class QuestionManager {
         .eq('set_id', Number(setId)).eq('question_id', String(questionId));
       if (error) throw error;
     }
+    part.questions = part.questions.filter(q => String(q.questionId) !== String(questionId));
+    part.questionCount = part.questions.length;
+    const key = `set${setId}_data`;
+    let cache = {};
+    try { cache = JSON.parse(localStorage.getItem(key) || '{}'); } catch (_) {}
+    delete cache[questionId];
+    localStorage.setItem(key, JSON.stringify(cache));
     return true;
   }
 
