@@ -31,7 +31,7 @@ class App {
         picker.value = String(savedSetId);
         picker.addEventListener('change', async () => {
           const setId = Number(picker.value);
-          if (!Number.isInteger(setId) || setId < 1 || setId > 15) return;
+          if (!Number.isInteger(setId) || setId < 1 || setId > 16) return;
           localStorage.setItem('toeic_current_set_id', String(setId));
           await this.savePreferredSetId(setId);
           await questionManager.renderSetsList(setId);
@@ -50,7 +50,7 @@ class App {
 
   async loadPreferredSetId() {
     const localValue = Number(localStorage.getItem('toeic_current_set_id') || 1);
-    const fallback = Number.isInteger(localValue) && localValue >= 1 && localValue <= 15 ? localValue : 1;
+    const fallback = Number.isInteger(localValue) && localValue >= 1 && localValue <= 16 ? localValue : 1;
     if (!window.toeicSupabaseReady || !window.toeicSupabase) return fallback;
     try {
       const { data: authData } = await window.toeicSupabase.auth.getUser();
@@ -60,7 +60,7 @@ class App {
         .select('selected_set_id').eq('user_id', userId).maybeSingle();
       if (error) throw error;
       const setId = Number(data && data.selected_set_id);
-      if (Number.isInteger(setId) && setId >= 1 && setId <= 15) {
+      if (Number.isInteger(setId) && setId >= 1 && setId <= 16) {
         localStorage.setItem('toeic_current_set_id', String(setId));
         return setId;
       }
@@ -390,7 +390,7 @@ document.getElementById('addQuestionForm').addEventListener('submit', (e) => {
           <span class="close" id="closeEditQuestionModal">&times;</span>
           <h2>修改题目</h2>
           <form id="editQuestionForm">
-            <div class="form-group"><label>套题编号 *</label><select id="editSetId" required>${Array.from({length:15},(_,i)=>`<option value="${i+1}">第${i+1}套</option>`).join('')}</select></div>
+            <div class="form-group"><label>套题编号 *</label><select id="editSetId" required>${Array.from({length:16},(_,i)=>`<option value="${i+1}">第${i+1}套</option>`).join('')}</select></div>
             <div class="form-group"><label>Part *</label><select id="editPartId" required>${Array.from({length:7},(_,i)=>`<option value="${i+1}">Part ${i+1}</option>`).join('')}</select></div>
             <div class="form-group"><label>题号 *</label><input id="editQuestionId" required></div>
             <div class="form-group"><label>题目标题/题干 *</label><textarea id="editTitle" rows="4" required></textarea></div>

@@ -57,7 +57,7 @@ class SyncManager {
     this.isSyncing = true;
     let total = 0;
     try {
-      for (let setId = 1; setId <= 15; setId++) {
+      for (let setId = 1; setId <= 16; setId++) {
         const response = await fetch(`data/sets/set${String(setId).padStart(2, '0')}.json`);
         if (!response.ok) throw new Error(`读取本机第 ${setId} 套失败（HTTP ${response.status}）`);
         const localSet = await response.json();
@@ -129,7 +129,7 @@ class SyncManager {
       }
 
       const bySet = new Map();
-      for (let setId = 1; setId <= 15; setId++) bySet.set(setId, {});
+      for (let setId = 1; setId <= 16; setId++) bySet.set(setId, {});
       allRows.forEach(row => {
         const setId = Number(row.set_id);
         if (!bySet.has(setId)) return;
@@ -217,7 +217,7 @@ class SyncManager {
         await this.syncSet(setId);
       } else {
         // 同步所有套题
-        for (let i = 1; i <= 15; i++) {
+        for (let i = 1; i <= 16; i++) {
           await this.syncSet(i);
           // 延迟一下，避免请求过快
           await new Promise(resolve => setTimeout(resolve, 200));

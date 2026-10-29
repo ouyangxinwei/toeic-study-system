@@ -1,0 +1,1842 @@
+{
+  "setId": 16,
+  "setName": "第16套模拟题（原创听力100题）",
+  "totalQuestions": 100,
+  "lastUpdated": "2026-10-29T12:00:00Z",
+  "parts": [
+    {
+      "partId": 1,
+      "partName": "Part 1 - Photographs",
+      "partType": "listening",
+      "questionCount": 6,
+      "questions": [
+        {
+          "questionId": "16-1-001",
+          "title": "Photo scene: A technician is kneeling beside an open server cabinet in an office.",
+          "options": {
+            "A": "A technician is repairing equipment in a server room.",
+            "B": "A worker is carrying a cabinet out of the building.",
+            "C": "Several employees are installing ceiling lights.",
+            "D": "A customer is waiting at a reception desk."
+          },
+          "correctAnswer": "A",
+          "audio": {
+            "type": "none"
+          },
+          "note": "原创 TOEIC 风格练习；目前未附音频。听力原文/场景信息见题干。",
+          "status": "unanswered",
+          "createdAt": "2026-10-29T12:00:00Z",
+          "updatedAt": "2026-10-29T12:00:00Z"
+        },
+        {
+          "questionId": "16-1-002",
+          "title": "Photo scene: Several chairs have been arranged around a long table.",
+          "options": {
+            "A": "The chairs are being loaded onto a truck.",
+            "B": "A meeting room has been prepared for a conference.",
+            "C": "People are eating lunch at the table.",
+            "D": "A table is being moved through a doorway."
+          },
+          "correctAnswer": "B",
+          "audio": {
+            "type": "none"
+          },
+          "note": "原创 TOEIC 风格练习；目前未附音频。听力原文/场景信息见题干。",
+          "status": "unanswered",
+          "createdAt": "2026-10-29T12:00:00Z",
+          "updatedAt": "2026-10-29T12:00:00Z"
+        },
+        {
+          "questionId": "16-1-003",
+          "title": "Photo scene: A woman is placing folders into a filing cabinet.",
+          "options": {
+            "A": "A woman is signing for a package.",
+            "B": "A woman is taking books off a shelf.",
+            "C": "A woman is organizing documents in a cabinet.",
+            "D": "A woman is cleaning a computer screen."
+          },
+          "correctAnswer": "C",
+          "audio": {
+            "type": "none"
+          },
+          "note": "原创 TOEIC 风格练习；目前未附音频。听力原文/场景信息见题干。",
+          "status": "unanswered",
+          "createdAt": "2026-10-29T12:00:00Z",
+          "updatedAt": "2026-10-29T12:00:00Z"
+        },
+        {
+          "questionId": "16-1-004",
+          "title": "Photo scene: Two employees are looking at a large display in a showroom.",
+          "options": {
+            "A": "They are painting a wall together.",
+            "B": "They are checking a delivery outside.",
+            "C": "They are assembling office furniture.",
+            "D": "They are examining a product display."
+          },
+          "correctAnswer": "D",
+          "audio": {
+            "type": "none"
+          },
+          "note": "原创 TOEIC 风格练习；目前未附音频。听力原文/场景信息见题干。",
+          "status": "unanswered",
+          "createdAt": "2026-10-29T12:00:00Z",
+          "updatedAt": "2026-10-29T12:00:00Z"
+        },
+        {
+          "questionId": "16-1-005",
+          "title": "Photo scene: A delivery worker is pushing a cart loaded with boxes down a corridor.",
+          "options": {
+            "A": "A worker is transporting packages on a cart.",
+            "B": "A worker is sweeping the corridor.",
+            "C": "A worker is opening a window.",
+            "D": "A worker is stacking chairs."
+          },
+          "correctAnswer": "A",
+          "audio": {
+            "type": "none"
+          },
+          "note": "原创 TOEIC 风格练习；目前未附音频。听力原文/场景信息见题干。",
+          "status": "unanswered",
+          "createdAt": "2026-10-29T12:00:00Z",
+          "updatedAt": "2026-10-29T12:00:00Z"
+        },
+        {
+          "questionId": "16-1-006",
+          "title": "Photo scene: A cyclist is locking a bicycle to a rack near an office building.",
+          "options": {
+            "A": "A cyclist is repairing a flat tire.",
+            "B": "A person is securing a bicycle to a rack.",
+            "C": "A person is washing a car.",
+            "D": "A cyclist is entering a sports shop."
+          },
+          "correctAnswer": "B",
+          "audio": {
+            "type": "none"
+          },
+          "note": "原创 TOEIC 风格练习；目前未附音频。听力原文/场景信息见题干。",
+          "status": "unanswered",
+          "createdAt": "2026-10-29T12:00:00Z",
+          "updatedAt": "2026-10-29T12:00:00Z"
+        }
+      ]
+    },
+    {
+      "partId": 2,
+      "partName": "Part 2 - Question-Response",
+      "partType": "listening",
+      "questionCount": 25,
+      "questions": [
+        {
+          "questionId": "16-2-001",
+          "title": "When will the revised budget be ready?",
+          "options": {
+            "A": "By the end of the day.",
+            "B": "It was a very useful meeting.",
+            "C": "The budget is in the blue folder."
+          },
+          "correctAnswer": "A",
+          "audio": {
+            "type": "none"
+          },
+          "note": "原创 TOEIC 风格练习；目前未附音频。听力原文/场景信息见题干。",
+          "status": "unanswered",
+          "createdAt": "2026-10-29T12:00:00Z",
+          "updatedAt": "2026-10-29T12:00:00Z"
+        },
+        {
+          "questionId": "16-2-002",
+          "title": "Why has the shipment been delayed?",
+          "options": {
+            "A": "At the loading dock.",
+            "B": "The supplier ran out of a key component.",
+            "C": "It weighs about twenty kilograms."
+          },
+          "correctAnswer": "B",
+          "audio": {
+            "type": "none"
+          },
+          "note": "原创 TOEIC 风格练习；目前未附音频。听力原文/场景信息见题干。",
+          "status": "unanswered",
+          "createdAt": "2026-10-29T12:00:00Z",
+          "updatedAt": "2026-10-29T12:00:00Z"
+        },
+        {
+          "questionId": "16-2-003",
+          "title": "Could you send me the minutes from yesterday’s meeting?",
+          "options": {
+            "A": "Certainly; I’ll email them this afternoon.",
+            "B": "The meeting room seats twelve.",
+            "C": "Yes, yesterday was unusually busy."
+          },
+          "correctAnswer": "A",
+          "audio": {
+            "type": "none"
+          },
+          "note": "原创 TOEIC 风格练习；目前未附音频。听力原文/场景信息见题干。",
+          "status": "unanswered",
+          "createdAt": "2026-10-29T12:00:00Z",
+          "updatedAt": "2026-10-29T12:00:00Z"
+        },
+        {
+          "questionId": "16-2-004",
+          "title": "Who is leading the training session next week?",
+          "options": {
+            "A": "In the main conference room.",
+            "B": "It lasts about two hours.",
+            "C": "Ms. Patel from Human Resources."
+          },
+          "correctAnswer": "C",
+          "audio": {
+            "type": "none"
+          },
+          "note": "原创 TOEIC 风格练习；目前未附音频。听力原文/场景信息见题干。",
+          "status": "unanswered",
+          "createdAt": "2026-10-29T12:00:00Z",
+          "updatedAt": "2026-10-29T12:00:00Z"
+        },
+        {
+          "questionId": "16-2-005",
+          "title": "Have you made a reservation for the client dinner?",
+          "options": {
+            "A": "Not yet, but I’ll call the restaurant now.",
+            "B": "The client arrived by train.",
+            "C": "Dinner was served at six."
+          },
+          "correctAnswer": "A",
+          "audio": {
+            "type": "none"
+          },
+          "note": "原创 TOEIC 风格练习；目前未附音频。听力原文/场景信息见题干。",
+          "status": "unanswered",
+          "createdAt": "2026-10-29T12:00:00Z",
+          "updatedAt": "2026-10-29T12:00:00Z"
+        },
+        {
+          "questionId": "16-2-006",
+          "title": "The printer on the third floor isn’t working.",
+          "options": {
+            "A": "The report is due on Friday.",
+            "B": "I’ll contact the IT help desk.",
+            "C": "There are three floors in this building."
+          },
+          "correctAnswer": "B",
+          "audio": {
+            "type": "none"
+          },
+          "note": "原创 TOEIC 风格练习；目前未附音频。听力原文/场景信息见题干。",
+          "status": "unanswered",
+          "createdAt": "2026-10-29T12:00:00Z",
+          "updatedAt": "2026-10-29T12:00:00Z"
+        },
+        {
+          "questionId": "16-2-007",
+          "title": "How often does the airport shuttle leave?",
+          "options": {
+            "A": "Every thirty minutes.",
+            "B": "At the international terminal.",
+            "C": "I took a taxi yesterday."
+          },
+          "correctAnswer": "A",
+          "audio": {
+            "type": "none"
+          },
+          "note": "原创 TOEIC 风格练习；目前未附音频。听力原文/场景信息见题干。",
+          "status": "unanswered",
+          "createdAt": "2026-10-29T12:00:00Z",
+          "updatedAt": "2026-10-29T12:00:00Z"
+        },
+        {
+          "questionId": "16-2-008",
+          "title": "Would you prefer the window seat or the aisle seat?",
+          "options": {
+            "A": "The flight was delayed.",
+            "B": "An aisle seat, if one is available.",
+            "C": "I prefer to travel in June."
+          },
+          "correctAnswer": "B",
+          "audio": {
+            "type": "none"
+          },
+          "note": "原创 TOEIC 风格练习；目前未附音频。听力原文/场景信息见题干。",
+          "status": "unanswered",
+          "createdAt": "2026-10-29T12:00:00Z",
+          "updatedAt": "2026-10-29T12:00:00Z"
+        },
+        {
+          "questionId": "16-2-009",
+          "title": "Why don’t we move the presentation to Thursday?",
+          "options": {
+            "A": "That should give everyone more time to prepare.",
+            "B": "The presentation is on the screen.",
+            "C": "Thursday’s weather was sunny."
+          },
+          "correctAnswer": "A",
+          "audio": {
+            "type": "none"
+          },
+          "note": "原创 TOEIC 风格练习；目前未附音频。听力原文/场景信息见题干。",
+          "status": "unanswered",
+          "createdAt": "2026-10-29T12:00:00Z",
+          "updatedAt": "2026-10-29T12:00:00Z"
+        },
+        {
+          "questionId": "16-2-010",
+          "title": "Where should I leave these signed contracts?",
+          "options": {
+            "A": "They were signed this morning.",
+            "B": "Please put them on Mr. Chen’s desk.",
+            "C": "The contract covers two years."
+          },
+          "correctAnswer": "B",
+          "audio": {
+            "type": "none"
+          },
+          "note": "原创 TOEIC 风格练习；目前未附音频。听力原文/场景信息见题干。",
+          "status": "unanswered",
+          "createdAt": "2026-10-29T12:00:00Z",
+          "updatedAt": "2026-10-29T12:00:00Z"
+        },
+        {
+          "questionId": "16-2-011",
+          "title": "Did the maintenance team inspect the air conditioner?",
+          "options": {
+            "A": "Yes, they checked it before lunch.",
+            "B": "The air is quite dry today.",
+            "C": "The team has six members."
+          },
+          "correctAnswer": "A",
+          "audio": {
+            "type": "none"
+          },
+          "note": "原创 TOEIC 风格练习；目前未附音频。听力原文/场景信息见题干。",
+          "status": "unanswered",
+          "createdAt": "2026-10-29T12:00:00Z",
+          "updatedAt": "2026-10-29T12:00:00Z"
+        },
+        {
+          "questionId": "16-2-012",
+          "title": "Who approved the travel expenses?",
+          "options": {
+            "A": "They were higher than expected.",
+            "B": "The trip lasted four days.",
+            "C": "Our department manager did."
+          },
+          "correctAnswer": "C",
+          "audio": {
+            "type": "none"
+          },
+          "note": "原创 TOEIC 风格练习；目前未附音频。听力原文/场景信息见题干。",
+          "status": "unanswered",
+          "createdAt": "2026-10-29T12:00:00Z",
+          "updatedAt": "2026-10-29T12:00:00Z"
+        },
+        {
+          "questionId": "16-2-013",
+          "title": "Could we get a larger room for the workshop?",
+          "options": {
+            "A": "I’ll check whether the training room is available.",
+            "B": "The workshop begins at nine.",
+            "C": "A room key is on the counter."
+          },
+          "correctAnswer": "A",
+          "audio": {
+            "type": "none"
+          },
+          "note": "原创 TOEIC 风格练习；目前未附音频。听力原文/场景信息见题干。",
+          "status": "unanswered",
+          "createdAt": "2026-10-29T12:00:00Z",
+          "updatedAt": "2026-10-29T12:00:00Z"
+        },
+        {
+          "questionId": "16-2-014",
+          "title": "Is the new employee familiar with the inventory software?",
+          "options": {
+            "A": "The inventory was counted yesterday.",
+            "B": "She used a similar system at her last job.",
+            "C": "The employee handbook is online."
+          },
+          "correctAnswer": "B",
+          "audio": {
+            "type": "none"
+          },
+          "note": "原创 TOEIC 风格练习；目前未附音频。听力原文/场景信息见题干。",
+          "status": "unanswered",
+          "createdAt": "2026-10-29T12:00:00Z",
+          "updatedAt": "2026-10-29T12:00:00Z"
+        },
+        {
+          "questionId": "16-2-015",
+          "title": "When are you planning to update the website?",
+          "options": {
+            "A": "The design team is finishing the new graphics today.",
+            "B": "It has several useful pages.",
+            "C": "I visited the website last night."
+          },
+          "correctAnswer": "A",
+          "audio": {
+            "type": "none"
+          },
+          "note": "原创 TOEIC 风格练习；目前未附音频。听力原文/场景信息见题干。",
+          "status": "unanswered",
+          "createdAt": "2026-10-29T12:00:00Z",
+          "updatedAt": "2026-10-29T12:00:00Z"
+        },
+        {
+          "questionId": "16-2-016",
+          "title": "You haven’t submitted the mileage form yet, have you?",
+          "options": {
+            "A": "The mileage is about forty kilometers.",
+            "B": "No, I’ll submit it before I leave.",
+            "C": "The form is printed in color."
+          },
+          "correctAnswer": "B",
+          "audio": {
+            "type": "none"
+          },
+          "note": "原创 TOEIC 风格练习；目前未附音频。听力原文/场景信息见题干。",
+          "status": "unanswered",
+          "createdAt": "2026-10-29T12:00:00Z",
+          "updatedAt": "2026-10-29T12:00:00Z"
+        },
+        {
+          "questionId": "16-2-017",
+          "title": "Why is the front entrance closed?",
+          "options": {
+            "A": "Please use the side entrance during repairs.",
+            "B": "The front desk opens at eight.",
+            "C": "It’s located across from the bank."
+          },
+          "correctAnswer": "A",
+          "audio": {
+            "type": "none"
+          },
+          "note": "原创 TOEIC 风格练习；目前未附音频。听力原文/场景信息见题干。",
+          "status": "unanswered",
+          "createdAt": "2026-10-29T12:00:00Z",
+          "updatedAt": "2026-10-29T12:00:00Z"
+        },
+        {
+          "questionId": "16-2-018",
+          "title": "Would you mind covering the reception desk during my break?",
+          "options": {
+            "A": "The reception area was renovated.",
+            "B": "Not at all; just let me know when you’re leaving.",
+            "C": "I usually take my break at noon."
+          },
+          "correctAnswer": "B",
+          "audio": {
+            "type": "none"
+          },
+          "note": "原创 TOEIC 风格练习；目前未附音频。听力原文/场景信息见题干。",
+          "status": "unanswered",
+          "createdAt": "2026-10-29T12:00:00Z",
+          "updatedAt": "2026-10-29T12:00:00Z"
+        },
+        {
+          "questionId": "16-2-019",
+          "title": "How did the job interview go?",
+          "options": {
+            "A": "The job posting is still online.",
+            "B": "At the downtown office.",
+            "C": "I think the panel was pleased with my presentation."
+          },
+          "correctAnswer": "C",
+          "audio": {
+            "type": "none"
+          },
+          "note": "原创 TOEIC 风格练习；目前未附音频。听力原文/场景信息见题干。",
+          "status": "unanswered",
+          "createdAt": "2026-10-29T12:00:00Z",
+          "updatedAt": "2026-10-29T12:00:00Z"
+        },
+        {
+          "questionId": "16-2-020",
+          "title": "Has anyone confirmed attendance for the seminar?",
+          "options": {
+            "A": "We’ve received replies from most of the speakers.",
+            "B": "The seminar room is on the second floor.",
+            "C": "I attended a seminar last month."
+          },
+          "correctAnswer": "A",
+          "audio": {
+            "type": "none"
+          },
+          "note": "原创 TOEIC 风格练习；目前未附音频。听力原文/场景信息见题干。",
+          "status": "unanswered",
+          "createdAt": "2026-10-29T12:00:00Z",
+          "updatedAt": "2026-10-29T12:00:00Z"
+        },
+        {
+          "questionId": "16-2-021",
+          "title": "Could you tell me which platform the train departs from?",
+          "options": {
+            "A": "The train is quite comfortable.",
+            "B": "Platform six, according to the display.",
+            "C": "It takes an hour to get there."
+          },
+          "correctAnswer": "B",
+          "audio": {
+            "type": "none"
+          },
+          "note": "原创 TOEIC 风格练习；目前未附音频。听力原文/场景信息见题干。",
+          "status": "unanswered",
+          "createdAt": "2026-10-29T12:00:00Z",
+          "updatedAt": "2026-10-29T12:00:00Z"
+        },
+        {
+          "questionId": "16-2-022",
+          "title": "Why don’t we order the replacement parts today?",
+          "options": {
+            "A": "The parts are made of steel.",
+            "B": "I ordered lunch for the team.",
+            "C": "Good idea; delivery usually takes three days."
+          },
+          "correctAnswer": "C",
+          "audio": {
+            "type": "none"
+          },
+          "note": "原创 TOEIC 风格练习；目前未附音频。听力原文/场景信息见题干。",
+          "status": "unanswered",
+          "createdAt": "2026-10-29T12:00:00Z",
+          "updatedAt": "2026-10-29T12:00:00Z"
+        },
+        {
+          "questionId": "16-2-023",
+          "title": "Do you know whether the invoice includes installation?",
+          "options": {
+            "A": "I’ll check the itemized quotation.",
+            "B": "The invoice was mailed yesterday.",
+            "C": "Installation took two hours."
+          },
+          "correctAnswer": "A",
+          "audio": {
+            "type": "none"
+          },
+          "note": "原创 TOEIC 风格练习；目前未附音频。听力原文/场景信息见题干。",
+          "status": "unanswered",
+          "createdAt": "2026-10-29T12:00:00Z",
+          "updatedAt": "2026-10-29T12:00:00Z"
+        },
+        {
+          "questionId": "16-2-024",
+          "title": "Who will be responsible for updating the contact list?",
+          "options": {
+            "A": "The list contains outdated numbers.",
+            "B": "Jordan volunteered to handle it.",
+            "C": "It is listed alphabetically."
+          },
+          "correctAnswer": "B",
+          "audio": {
+            "type": "none"
+          },
+          "note": "原创 TOEIC 风格练习；目前未附音频。听力原文/场景信息见题干。",
+          "status": "unanswered",
+          "createdAt": "2026-10-29T12:00:00Z",
+          "updatedAt": "2026-10-29T12:00:00Z"
+        },
+        {
+          "questionId": "16-2-025",
+          "title": "Would you like me to print copies of the agenda?",
+          "options": {
+            "A": "Yes, please make ten copies.",
+            "B": "The agenda was discussed yesterday.",
+            "C": "I like the new printer."
+          },
+          "correctAnswer": "A",
+          "audio": {
+            "type": "none"
+          },
+          "note": "原创 TOEIC 风格练习；目前未附音频。听力原文/场景信息见题干。",
+          "status": "unanswered",
+          "createdAt": "2026-10-29T12:00:00Z",
+          "updatedAt": "2026-10-29T12:00:00Z"
+        }
+      ]
+    },
+    {
+      "partId": 3,
+      "partName": "Part 3 - Conversations",
+      "partType": "listening",
+      "questionCount": 39,
+      "questions": [
+        {
+          "questionId": "16-3-001",
+          "title": "Conversation 1 — Office renovation\nWoman: The contractor says the conference room will be unavailable until Wednesday.\nMan: That affects our supplier meeting on Tuesday.\nWoman: I can reserve the smaller room and set up a video call for anyone who cannot fit.\nMan: Great. I’ll notify the suppliers and send the updated invitation.\nQuestion 1: What are the speakers discussing?",
+          "options": {
+            "A": "A change to a meeting location",
+            "B": "A new supplier contract",
+            "C": "A delayed product launch",
+            "D": "A staff training policy"
+          },
+          "correctAnswer": "A",
+          "audio": {
+            "type": "none"
+          },
+          "note": "原创 TOEIC 风格练习；目前未附音频。听力原文/场景信息见题干。",
+          "status": "unanswered",
+          "createdAt": "2026-10-29T12:00:00Z",
+          "updatedAt": "2026-10-29T12:00:00Z"
+        },
+        {
+          "questionId": "16-3-002",
+          "title": "Conversation 1 — Office renovation\nWoman: The contractor says the conference room will be unavailable until Wednesday.\nMan: That affects our supplier meeting on Tuesday.\nWoman: I can reserve the smaller room and set up a video call for anyone who cannot fit.\nMan: Great. I’ll notify the suppliers and send the updated invitation.\nQuestion 2: What does the woman offer to do?",
+          "options": {
+            "A": "Order new office chairs",
+            "B": "Reserve another room",
+            "C": "Contact the contractor’s manager",
+            "D": "Cancel the supplier meeting"
+          },
+          "correctAnswer": "B",
+          "audio": {
+            "type": "none"
+          },
+          "note": "原创 TOEIC 风格练习；目前未附音频。听力原文/场景信息见题干。",
+          "status": "unanswered",
+          "createdAt": "2026-10-29T12:00:00Z",
+          "updatedAt": "2026-10-29T12:00:00Z"
+        },
+        {
+          "questionId": "16-3-003",
+          "title": "Conversation 1 — Office renovation\nWoman: The contractor says the conference room will be unavailable until Wednesday.\nMan: That affects our supplier meeting on Tuesday.\nWoman: I can reserve the smaller room and set up a video call for anyone who cannot fit.\nMan: Great. I’ll notify the suppliers and send the updated invitation.\nQuestion 3: What will the man do?",
+          "options": {
+            "A": "Prepare a cost estimate",
+            "B": "Repair the conference room",
+            "C": "Inform the suppliers",
+            "D": "Arrange transportation"
+          },
+          "correctAnswer": "C",
+          "audio": {
+            "type": "none"
+          },
+          "note": "原创 TOEIC 风格练习；目前未附音频。听力原文/场景信息见题干。",
+          "status": "unanswered",
+          "createdAt": "2026-10-29T12:00:00Z",
+          "updatedAt": "2026-10-29T12:00:00Z"
+        },
+        {
+          "questionId": "16-3-004",
+          "title": "Conversation 2 — Customer order\nMan: I’m calling about order 4821. The tracking page says it was delivered, but nothing arrived.\nWoman: I’m sorry about that. The carrier’s photo shows it was left at the neighboring office.\nMan: I’ll check with them. If it isn’t there, could you arrange another shipment?\nWoman: Certainly. I’ll keep the case open until you confirm.\nQuestion 1: Why is the man calling?",
+          "options": {
+            "A": "To change a billing address",
+            "B": "To report a missing delivery",
+            "C": "To request a product catalog",
+            "D": "To cancel an order"
+          },
+          "correctAnswer": "B",
+          "audio": {
+            "type": "none"
+          },
+          "note": "原创 TOEIC 风格练习；目前未附音频。听力原文/场景信息见题干。",
+          "status": "unanswered",
+          "createdAt": "2026-10-29T12:00:00Z",
+          "updatedAt": "2026-10-29T12:00:00Z"
+        },
+        {
+          "questionId": "16-3-005",
+          "title": "Conversation 2 — Customer order\nMan: I’m calling about order 4821. The tracking page says it was delivered, but nothing arrived.\nWoman: I’m sorry about that. The carrier’s photo shows it was left at the neighboring office.\nMan: I’ll check with them. If it isn’t there, could you arrange another shipment?\nWoman: Certainly. I’ll keep the case open until you confirm.\nQuestion 2: What does the woman say about the package?",
+          "options": {
+            "A": "It was returned to the warehouse",
+            "B": "It is waiting at a pickup center",
+            "C": "It may have been left at another office",
+            "D": "It was shipped to the wrong city"
+          },
+          "correctAnswer": "C",
+          "audio": {
+            "type": "none"
+          },
+          "note": "原创 TOEIC 风格练习；目前未附音频。听力原文/场景信息见题干。",
+          "status": "unanswered",
+          "createdAt": "2026-10-29T12:00:00Z",
+          "updatedAt": "2026-10-29T12:00:00Z"
+        },
+        {
+          "questionId": "16-3-006",
+          "title": "Conversation 2 — Customer order\nMan: I’m calling about order 4821. The tracking page says it was delivered, but nothing arrived.\nWoman: I’m sorry about that. The carrier’s photo shows it was left at the neighboring office.\nMan: I’ll check with them. If it isn’t there, could you arrange another shipment?\nWoman: Certainly. I’ll keep the case open until you confirm.\nQuestion 3: What will the woman do?",
+          "options": {
+            "A": "Keep the case open",
+            "B": "Issue a refund immediately",
+            "C": "Call the neighboring office",
+            "D": "Send a new invoice"
+          },
+          "correctAnswer": "A",
+          "audio": {
+            "type": "none"
+          },
+          "note": "原创 TOEIC 风格练习；目前未附音频。听力原文/场景信息见题干。",
+          "status": "unanswered",
+          "createdAt": "2026-10-29T12:00:00Z",
+          "updatedAt": "2026-10-29T12:00:00Z"
+        },
+        {
+          "questionId": "16-3-007",
+          "title": "Conversation 3 — Staff scheduling\nWoman: Two people have requested Friday off, but we need three staff members at the information desk.\nMan: I can switch my day off to Monday if that helps.\nWoman: That would solve the problem. I’ll update the rota and tell the supervisor.\nMan: Please do; I’ll also let the team know.\nQuestion 1: What problem do the speakers discuss?",
+          "options": {
+            "A": "A shortage of desk staff on Friday",
+            "B": "A delayed payroll payment",
+            "C": "A broken information desk",
+            "D": "A supervisor’s resignation"
+          },
+          "correctAnswer": "A",
+          "audio": {
+            "type": "none"
+          },
+          "note": "原创 TOEIC 风格练习；目前未附音频。听力原文/场景信息见题干。",
+          "status": "unanswered",
+          "createdAt": "2026-10-29T12:00:00Z",
+          "updatedAt": "2026-10-29T12:00:00Z"
+        },
+        {
+          "questionId": "16-3-008",
+          "title": "Conversation 3 — Staff scheduling\nWoman: Two people have requested Friday off, but we need three staff members at the information desk.\nMan: I can switch my day off to Monday if that helps.\nWoman: That would solve the problem. I’ll update the rota and tell the supervisor.\nMan: Please do; I’ll also let the team know.\nQuestion 2: What does the man offer to do?",
+          "options": {
+            "A": "Work an extra evening shift",
+            "B": "Change his day off",
+            "C": "Train a new employee",
+            "D": "Cover the weekend shift"
+          },
+          "correctAnswer": "B",
+          "audio": {
+            "type": "none"
+          },
+          "note": "原创 TOEIC 风格练习；目前未附音频。听力原文/场景信息见题干。",
+          "status": "unanswered",
+          "createdAt": "2026-10-29T12:00:00Z",
+          "updatedAt": "2026-10-29T12:00:00Z"
+        },
+        {
+          "questionId": "16-3-009",
+          "title": "Conversation 3 — Staff scheduling\nWoman: Two people have requested Friday off, but we need three staff members at the information desk.\nMan: I can switch my day off to Monday if that helps.\nWoman: That would solve the problem. I’ll update the rota and tell the supervisor.\nMan: Please do; I’ll also let the team know.\nQuestion 3: What will the woman update?",
+          "options": {
+            "A": "The employee handbook",
+            "B": "The customer list",
+            "C": "The work schedule",
+            "D": "The office map"
+          },
+          "correctAnswer": "C",
+          "audio": {
+            "type": "none"
+          },
+          "note": "原创 TOEIC 风格练习；目前未附音频。听力原文/场景信息见题干。",
+          "status": "unanswered",
+          "createdAt": "2026-10-29T12:00:00Z",
+          "updatedAt": "2026-10-29T12:00:00Z"
+        },
+        {
+          "questionId": "16-3-010",
+          "title": "Conversation 4 — Hotel booking\nMan: The hotel confirmed our rooms, but breakfast isn’t included in the rate.\nWoman: We’ll be there for three mornings. Is it cheaper to add breakfast now?\nMan: Yes, the front desk offered a discounted package if we decide before check-in.\nWoman: Please add it. We have an early conference each day.\nQuestion 1: What are the speakers planning?",
+          "options": {
+            "A": "A company dinner",
+            "B": "A business trip",
+            "C": "A hotel renovation",
+            "D": "A conference presentation"
+          },
+          "correctAnswer": "B",
+          "audio": {
+            "type": "none"
+          },
+          "note": "原创 TOEIC 风格练习；目前未附音频。听力原文/场景信息见题干。",
+          "status": "unanswered",
+          "createdAt": "2026-10-29T12:00:00Z",
+          "updatedAt": "2026-10-29T12:00:00Z"
+        },
+        {
+          "questionId": "16-3-011",
+          "title": "Conversation 4 — Hotel booking\nMan: The hotel confirmed our rooms, but breakfast isn’t included in the rate.\nWoman: We’ll be there for three mornings. Is it cheaper to add breakfast now?\nMan: Yes, the front desk offered a discounted package if we decide before check-in.\nWoman: Please add it. We have an early conference each day.\nQuestion 2: What does the man say about breakfast?",
+          "options": {
+            "A": "It is included for all guests",
+            "B": "It is available only after 9 a.m.",
+            "C": "It can be added at a discount",
+            "D": "It must be paid for in cash"
+          },
+          "correctAnswer": "C",
+          "audio": {
+            "type": "none"
+          },
+          "note": "原创 TOEIC 风格练习；目前未附音频。听力原文/场景信息见题干。",
+          "status": "unanswered",
+          "createdAt": "2026-10-29T12:00:00Z",
+          "updatedAt": "2026-10-29T12:00:00Z"
+        },
+        {
+          "questionId": "16-3-012",
+          "title": "Conversation 4 — Hotel booking\nMan: The hotel confirmed our rooms, but breakfast isn’t included in the rate.\nWoman: We’ll be there for three mornings. Is it cheaper to add breakfast now?\nMan: Yes, the front desk offered a discounted package if we decide before check-in.\nWoman: Please add it. We have an early conference each day.\nQuestion 3: Why does the woman want breakfast?",
+          "options": {
+            "A": "They have early starts",
+            "B": "The hotel restaurant is closed",
+            "C": "Their rooms have no kitchen",
+            "D": "The conference provides no lunch"
+          },
+          "correctAnswer": "A",
+          "audio": {
+            "type": "none"
+          },
+          "note": "原创 TOEIC 风格练习；目前未附音频。听力原文/场景信息见题干。",
+          "status": "unanswered",
+          "createdAt": "2026-10-29T12:00:00Z",
+          "updatedAt": "2026-10-29T12:00:00Z"
+        },
+        {
+          "questionId": "16-3-013",
+          "title": "Conversation 5 — Software training\nWoman: I opened the new inventory system, but I can’t find the monthly report function.\nMan: It moved under Analytics in the latest update. I’ll show you after the team briefing.\nWoman: Thanks. I need to prepare the figures for Thursday’s review.\nMan: I’ll send you the updated user guide, too.\nQuestion 1: What difficulty does the woman have?",
+          "options": {
+            "A": "She cannot log in to her account",
+            "B": "She cannot locate a feature",
+            "C": "She lost a monthly report",
+            "D": "She forgot the team briefing"
+          },
+          "correctAnswer": "B",
+          "audio": {
+            "type": "none"
+          },
+          "note": "原创 TOEIC 风格练习；目前未附音频。听力原文/场景信息见题干。",
+          "status": "unanswered",
+          "createdAt": "2026-10-29T12:00:00Z",
+          "updatedAt": "2026-10-29T12:00:00Z"
+        },
+        {
+          "questionId": "16-3-014",
+          "title": "Conversation 5 — Software training\nWoman: I opened the new inventory system, but I can’t find the monthly report function.\nMan: It moved under Analytics in the latest update. I’ll show you after the team briefing.\nWoman: Thanks. I need to prepare the figures for Thursday’s review.\nMan: I’ll send you the updated user guide, too.\nQuestion 2: Where is the report function now?",
+          "options": {
+            "A": "Under Analytics",
+            "B": "In Account Settings",
+            "C": "On the home page",
+            "D": "Inside the Help Desk"
+          },
+          "correctAnswer": "A",
+          "audio": {
+            "type": "none"
+          },
+          "note": "原创 TOEIC 风格练习；目前未附音频。听力原文/场景信息见题干。",
+          "status": "unanswered",
+          "createdAt": "2026-10-29T12:00:00Z",
+          "updatedAt": "2026-10-29T12:00:00Z"
+        },
+        {
+          "questionId": "16-3-015",
+          "title": "Conversation 5 — Software training\nWoman: I opened the new inventory system, but I can’t find the monthly report function.\nMan: It moved under Analytics in the latest update. I’ll show you after the team briefing.\nWoman: Thanks. I need to prepare the figures for Thursday’s review.\nMan: I’ll send you the updated user guide, too.\nQuestion 3: What will the man send?",
+          "options": {
+            "A": "A meeting invitation",
+            "B": "A list of inventory items",
+            "C": "An updated guide",
+            "D": "A revised budget"
+          },
+          "correctAnswer": "C",
+          "audio": {
+            "type": "none"
+          },
+          "note": "原创 TOEIC 风格练习；目前未附音频。听力原文/场景信息见题干。",
+          "status": "unanswered",
+          "createdAt": "2026-10-29T12:00:00Z",
+          "updatedAt": "2026-10-29T12:00:00Z"
+        },
+        {
+          "questionId": "16-3-016",
+          "title": "Conversation 6 — Restaurant reservation\nMan: I booked a table for eight at 7 p.m., but two more colleagues are joining us.\nWoman: The restaurant can seat ten, but they need at least a day’s notice for the larger table.\nMan: The dinner is tomorrow. I’ll call them now and see if they can accommodate us.\nWoman: If not, there’s another restaurant across the street.\nQuestion 1: What change is needed?",
+          "options": {
+            "A": "The dinner date",
+            "B": "The reservation size",
+            "C": "The menu selection",
+            "D": "The payment method"
+          },
+          "correctAnswer": "B",
+          "audio": {
+            "type": "none"
+          },
+          "note": "原创 TOEIC 风格练习；目前未附音频。听力原文/场景信息见题干。",
+          "status": "unanswered",
+          "createdAt": "2026-10-29T12:00:00Z",
+          "updatedAt": "2026-10-29T12:00:00Z"
+        },
+        {
+          "questionId": "16-3-017",
+          "title": "Conversation 6 — Restaurant reservation\nMan: I booked a table for eight at 7 p.m., but two more colleagues are joining us.\nWoman: The restaurant can seat ten, but they need at least a day’s notice for the larger table.\nMan: The dinner is tomorrow. I’ll call them now and see if they can accommodate us.\nWoman: If not, there’s another restaurant across the street.\nQuestion 2: What does the woman say the restaurant requires?",
+          "options": {
+            "A": "A deposit for every guest",
+            "B": "A printed invitation",
+            "C": "Advance notice for a larger table",
+            "D": "A minimum order per person"
+          },
+          "correctAnswer": "C",
+          "audio": {
+            "type": "none"
+          },
+          "note": "原创 TOEIC 风格练习；目前未附音频。听力原文/场景信息见题干。",
+          "status": "unanswered",
+          "createdAt": "2026-10-29T12:00:00Z",
+          "updatedAt": "2026-10-29T12:00:00Z"
+        },
+        {
+          "questionId": "16-3-018",
+          "title": "Conversation 6 — Restaurant reservation\nMan: I booked a table for eight at 7 p.m., but two more colleagues are joining us.\nWoman: The restaurant can seat ten, but they need at least a day’s notice for the larger table.\nMan: The dinner is tomorrow. I’ll call them now and see if they can accommodate us.\nWoman: If not, there’s another restaurant across the street.\nQuestion 3: What might the speakers do if necessary?",
+          "options": {
+            "A": "Choose another restaurant",
+            "B": "Move the dinner to next week",
+            "C": "Invite fewer colleagues",
+            "D": "Eat at the office"
+          },
+          "correctAnswer": "A",
+          "audio": {
+            "type": "none"
+          },
+          "note": "原创 TOEIC 风格练习；目前未附音频。听力原文/场景信息见题干。",
+          "status": "unanswered",
+          "createdAt": "2026-10-29T12:00:00Z",
+          "updatedAt": "2026-10-29T12:00:00Z"
+        },
+        {
+          "questionId": "16-3-019",
+          "title": "Conversation 7 — Marketing campaign\nWoman: The online campaign is getting plenty of views, but very few people are clicking the registration link.\nMan: The landing page may be too complicated. I can ask the design team to simplify the form.\nWoman: Good. Let’s also test a shorter headline before we increase the advertising budget.\nMan: I’ll prepare two versions for comparison.\nQuestion 1: What concerns the woman?",
+          "options": {
+            "A": "The campaign has exceeded its budget",
+            "B": "The website is receiving few visits",
+            "C": "Few viewers are registering",
+            "D": "The design team missed a deadline"
+          },
+          "correctAnswer": "C",
+          "audio": {
+            "type": "none"
+          },
+          "note": "原创 TOEIC 风格练习；目前未附音频。听力原文/场景信息见题干。",
+          "status": "unanswered",
+          "createdAt": "2026-10-29T12:00:00Z",
+          "updatedAt": "2026-10-29T12:00:00Z"
+        },
+        {
+          "questionId": "16-3-020",
+          "title": "Conversation 7 — Marketing campaign\nWoman: The online campaign is getting plenty of views, but very few people are clicking the registration link.\nMan: The landing page may be too complicated. I can ask the design team to simplify the form.\nWoman: Good. Let’s also test a shorter headline before we increase the advertising budget.\nMan: I’ll prepare two versions for comparison.\nQuestion 2: What does the man offer to do?",
+          "options": {
+            "A": "Simplify the registration form",
+            "B": "Hire another designer",
+            "C": "Increase the advertising budget",
+            "D": "Write a customer newsletter"
+          },
+          "correctAnswer": "A",
+          "audio": {
+            "type": "none"
+          },
+          "note": "原创 TOEIC 风格练习；目前未附音频。听力原文/场景信息见题干。",
+          "status": "unanswered",
+          "createdAt": "2026-10-29T12:00:00Z",
+          "updatedAt": "2026-10-29T12:00:00Z"
+        },
+        {
+          "questionId": "16-3-021",
+          "title": "Conversation 7 — Marketing campaign\nWoman: The online campaign is getting plenty of views, but very few people are clicking the registration link.\nMan: The landing page may be too complicated. I can ask the design team to simplify the form.\nWoman: Good. Let’s also test a shorter headline before we increase the advertising budget.\nMan: I’ll prepare two versions for comparison.\nQuestion 3: What will the man prepare?",
+          "options": {
+            "A": "A sales forecast",
+            "B": "Two headline versions",
+            "C": "A new product sample",
+            "D": "A staff schedule"
+          },
+          "correctAnswer": "B",
+          "audio": {
+            "type": "none"
+          },
+          "note": "原创 TOEIC 风格练习；目前未附音频。听力原文/场景信息见题干。",
+          "status": "unanswered",
+          "createdAt": "2026-10-29T12:00:00Z",
+          "updatedAt": "2026-10-29T12:00:00Z"
+        },
+        {
+          "questionId": "16-3-022",
+          "title": "Conversation 8 — Office supplies\nMan: We’re almost out of printer paper, and the supplier’s usual delivery is taking a week.\nWoman: There’s a local office store that can deliver tomorrow, although the price is slightly higher.\nMan: Let’s place a small order there for now and use our regular supplier for the monthly stock.\nWoman: I’ll submit the urgent purchase request this afternoon.\nQuestion 1: What issue do the speakers discuss?",
+          "options": {
+            "A": "A printer that needs repair",
+            "B": "A shortage of office supplies",
+            "C": "An incorrect supplier invoice",
+            "D": "A change in office location"
+          },
+          "correctAnswer": "B",
+          "audio": {
+            "type": "none"
+          },
+          "note": "原创 TOEIC 风格练习；目前未附音频。听力原文/场景信息见题干。",
+          "status": "unanswered",
+          "createdAt": "2026-10-29T12:00:00Z",
+          "updatedAt": "2026-10-29T12:00:00Z"
+        },
+        {
+          "questionId": "16-3-023",
+          "title": "Conversation 8 — Office supplies\nMan: We’re almost out of printer paper, and the supplier’s usual delivery is taking a week.\nWoman: There’s a local office store that can deliver tomorrow, although the price is slightly higher.\nMan: Let’s place a small order there for now and use our regular supplier for the monthly stock.\nWoman: I’ll submit the urgent purchase request this afternoon.\nQuestion 2: Why consider the local store?",
+          "options": {
+            "A": "It offers free installation",
+            "B": "It has a wider selection",
+            "C": "It can deliver sooner",
+            "D": "It has longer payment terms"
+          },
+          "correctAnswer": "C",
+          "audio": {
+            "type": "none"
+          },
+          "note": "原创 TOEIC 风格练习；目前未附音频。听力原文/场景信息见题干。",
+          "status": "unanswered",
+          "createdAt": "2026-10-29T12:00:00Z",
+          "updatedAt": "2026-10-29T12:00:00Z"
+        },
+        {
+          "questionId": "16-3-024",
+          "title": "Conversation 8 — Office supplies\nMan: We’re almost out of printer paper, and the supplier’s usual delivery is taking a week.\nWoman: There’s a local office store that can deliver tomorrow, although the price is slightly higher.\nMan: Let’s place a small order there for now and use our regular supplier for the monthly stock.\nWoman: I’ll submit the urgent purchase request this afternoon.\nQuestion 3: What will the woman do?",
+          "options": {
+            "A": "Submit a purchase request",
+            "B": "Contact the printer manufacturer",
+            "C": "Cancel the monthly order",
+            "D": "Count the warehouse stock"
+          },
+          "correctAnswer": "A",
+          "audio": {
+            "type": "none"
+          },
+          "note": "原创 TOEIC 风格练习；目前未附音频。听力原文/场景信息见题干。",
+          "status": "unanswered",
+          "createdAt": "2026-10-29T12:00:00Z",
+          "updatedAt": "2026-10-29T12:00:00Z"
+        },
+        {
+          "questionId": "16-3-025",
+          "title": "Conversation 9 — Job candidate\nWoman: I’ve reviewed the applications for the analyst position. One candidate has strong technical skills but limited client experience.\nMan: The role requires frequent presentations, so communication is important.\nWoman: Agreed. Let’s invite her for a second interview and ask her to present a short case study.\nMan: I’ll coordinate with the hiring panel.\nQuestion 1: What are the speakers reviewing?",
+          "options": {
+            "A": "Customer complaints",
+            "B": "Applications for a job",
+            "C": "Quarterly sales results",
+            "D": "Training materials"
+          },
+          "correctAnswer": "B",
+          "audio": {
+            "type": "none"
+          },
+          "note": "原创 TOEIC 风格练习；目前未附音频。听力原文/场景信息见题干。",
+          "status": "unanswered",
+          "createdAt": "2026-10-29T12:00:00Z",
+          "updatedAt": "2026-10-29T12:00:00Z"
+        },
+        {
+          "questionId": "16-3-026",
+          "title": "Conversation 9 — Job candidate\nWoman: I’ve reviewed the applications for the analyst position. One candidate has strong technical skills but limited client experience.\nMan: The role requires frequent presentations, so communication is important.\nWoman: Agreed. Let’s invite her for a second interview and ask her to present a short case study.\nMan: I’ll coordinate with the hiring panel.\nQuestion 2: What concern does the man mention?",
+          "options": {
+            "A": "The candidate lives too far away",
+            "B": "The salary is too low",
+            "C": "Communication is important for the role",
+            "D": "The position is temporary"
+          },
+          "correctAnswer": "C",
+          "audio": {
+            "type": "none"
+          },
+          "note": "原创 TOEIC 风格练习；目前未附音频。听力原文/场景信息见题干。",
+          "status": "unanswered",
+          "createdAt": "2026-10-29T12:00:00Z",
+          "updatedAt": "2026-10-29T12:00:00Z"
+        },
+        {
+          "questionId": "16-3-027",
+          "title": "Conversation 9 — Job candidate\nWoman: I’ve reviewed the applications for the analyst position. One candidate has strong technical skills but limited client experience.\nMan: The role requires frequent presentations, so communication is important.\nWoman: Agreed. Let’s invite her for a second interview and ask her to present a short case study.\nMan: I’ll coordinate with the hiring panel.\nQuestion 3: What will the man do?",
+          "options": {
+            "A": "Arrange the interview panel",
+            "B": "Write the case study",
+            "C": "Contact a former employer",
+            "D": "Revise the job description"
+          },
+          "correctAnswer": "A",
+          "audio": {
+            "type": "none"
+          },
+          "note": "原创 TOEIC 风格练习；目前未附音频。听力原文/场景信息见题干。",
+          "status": "unanswered",
+          "createdAt": "2026-10-29T12:00:00Z",
+          "updatedAt": "2026-10-29T12:00:00Z"
+        },
+        {
+          "questionId": "16-3-028",
+          "title": "Conversation 10 — Building maintenance\nMan: The elevator near the west entrance will be serviced tomorrow morning.\nWoman: That’s the one visitors usually use from the parking garage. We should put up signs at both entrances.\nMan: I’ll ask security to direct visitors to the central elevator.\nWoman: I’ll notify the departments that have scheduled interviews.\nQuestion 1: What will happen tomorrow?",
+          "options": {
+            "A": "The parking garage will close",
+            "B": "An elevator will be serviced",
+            "C": "The west entrance will be renovated",
+            "D": "Security staff will receive training"
+          },
+          "correctAnswer": "B",
+          "audio": {
+            "type": "none"
+          },
+          "note": "原创 TOEIC 风格练习；目前未附音频。听力原文/场景信息见题干。",
+          "status": "unanswered",
+          "createdAt": "2026-10-29T12:00:00Z",
+          "updatedAt": "2026-10-29T12:00:00Z"
+        },
+        {
+          "questionId": "16-3-029",
+          "title": "Conversation 10 — Building maintenance\nMan: The elevator near the west entrance will be serviced tomorrow morning.\nWoman: That’s the one visitors usually use from the parking garage. We should put up signs at both entrances.\nMan: I’ll ask security to direct visitors to the central elevator.\nWoman: I’ll notify the departments that have scheduled interviews.\nQuestion 2: What does the woman suggest?",
+          "options": {
+            "A": "Canceling all interviews",
+            "B": "Moving the parking garage",
+            "C": "Putting up signs",
+            "D": "Hiring another security guard"
+          },
+          "correctAnswer": "C",
+          "audio": {
+            "type": "none"
+          },
+          "note": "原创 TOEIC 风格练习；目前未附音频。听力原文/场景信息见题干。",
+          "status": "unanswered",
+          "createdAt": "2026-10-29T12:00:00Z",
+          "updatedAt": "2026-10-29T12:00:00Z"
+        },
+        {
+          "questionId": "16-3-030",
+          "title": "Conversation 10 — Building maintenance\nMan: The elevator near the west entrance will be serviced tomorrow morning.\nWoman: That’s the one visitors usually use from the parking garage. We should put up signs at both entrances.\nMan: I’ll ask security to direct visitors to the central elevator.\nWoman: I’ll notify the departments that have scheduled interviews.\nQuestion 3: Who will the woman contact?",
+          "options": {
+            "A": "Departments with interviews scheduled",
+            "B": "The elevator repair company",
+            "C": "The building owner",
+            "D": "All delivery drivers"
+          },
+          "correctAnswer": "A",
+          "audio": {
+            "type": "none"
+          },
+          "note": "原创 TOEIC 风格练习；目前未附音频。听力原文/场景信息见题干。",
+          "status": "unanswered",
+          "createdAt": "2026-10-29T12:00:00Z",
+          "updatedAt": "2026-10-29T12:00:00Z"
+        },
+        {
+          "questionId": "16-3-031",
+          "title": "Conversation 11 — Conference materials\nWoman: The brochures arrived, but the event date on the back cover is incorrect.\nMan: That’s unfortunate. Can we print correction labels before registration opens?\nWoman: Yes, the print shop can deliver them by noon. We’ll need volunteers to apply them.\nMan: I’ll ask the event team to help during lunch.\nQuestion 1: What is wrong with the brochures?",
+          "options": {
+            "A": "The paper is too thin",
+            "B": "The event date is incorrect",
+            "C": "The map is missing",
+            "D": "The colors are faded"
+          },
+          "correctAnswer": "B",
+          "audio": {
+            "type": "none"
+          },
+          "note": "原创 TOEIC 风格练习；目前未附音频。听力原文/场景信息见题干。",
+          "status": "unanswered",
+          "createdAt": "2026-10-29T12:00:00Z",
+          "updatedAt": "2026-10-29T12:00:00Z"
+        },
+        {
+          "questionId": "16-3-032",
+          "title": "Conversation 11 — Conference materials\nWoman: The brochures arrived, but the event date on the back cover is incorrect.\nMan: That’s unfortunate. Can we print correction labels before registration opens?\nWoman: Yes, the print shop can deliver them by noon. We’ll need volunteers to apply them.\nMan: I’ll ask the event team to help during lunch.\nQuestion 2: What can the print shop provide?",
+          "options": {
+            "A": "Replacement tables",
+            "B": "A new event venue",
+            "C": "Correction labels",
+            "D": "Registration badges"
+          },
+          "correctAnswer": "C",
+          "audio": {
+            "type": "none"
+          },
+          "note": "原创 TOEIC 风格练习；目前未附音频。听力原文/场景信息见题干。",
+          "status": "unanswered",
+          "createdAt": "2026-10-29T12:00:00Z",
+          "updatedAt": "2026-10-29T12:00:00Z"
+        },
+        {
+          "questionId": "16-3-033",
+          "title": "Conversation 11 — Conference materials\nWoman: The brochures arrived, but the event date on the back cover is incorrect.\nMan: That’s unfortunate. Can we print correction labels before registration opens?\nWoman: Yes, the print shop can deliver them by noon. We’ll need volunteers to apply them.\nMan: I’ll ask the event team to help during lunch.\nQuestion 3: What will the man do?",
+          "options": {
+            "A": "Ask volunteers to help",
+            "B": "Cancel registration",
+            "C": "Rewrite the brochure",
+            "D": "Contact the speakers"
+          },
+          "correctAnswer": "A",
+          "audio": {
+            "type": "none"
+          },
+          "note": "原创 TOEIC 风格练习；目前未附音频。听力原文/场景信息见题干。",
+          "status": "unanswered",
+          "createdAt": "2026-10-29T12:00:00Z",
+          "updatedAt": "2026-10-29T12:00:00Z"
+        },
+        {
+          "questionId": "16-3-034",
+          "title": "Conversation 12 — Project deadline\nMan: The client has asked us to deliver the prototype a week earlier than planned.\nWoman: We can finish the design by Friday, but testing normally takes four days.\nMan: Could we have the quality team test the core functions first and check the rest next week?\nWoman: I’ll discuss that approach with the project lead before we promise anything.\nQuestion 1: What change has the client requested?",
+          "options": {
+            "A": "A lower price",
+            "B": "An earlier delivery",
+            "C": "Additional features",
+            "D": "A longer warranty"
+          },
+          "correctAnswer": "B",
+          "audio": {
+            "type": "none"
+          },
+          "note": "原创 TOEIC 风格练习；目前未附音频。听力原文/场景信息见题干。",
+          "status": "unanswered",
+          "createdAt": "2026-10-29T12:00:00Z",
+          "updatedAt": "2026-10-29T12:00:00Z"
+        },
+        {
+          "questionId": "16-3-035",
+          "title": "Conversation 12 — Project deadline\nMan: The client has asked us to deliver the prototype a week earlier than planned.\nWoman: We can finish the design by Friday, but testing normally takes four days.\nMan: Could we have the quality team test the core functions first and check the rest next week?\nWoman: I’ll discuss that approach with the project lead before we promise anything.\nQuestion 2: What does the woman say takes four days?",
+          "options": {
+            "A": "Designing the prototype",
+            "B": "Preparing the presentation",
+            "C": "Testing the product",
+            "D": "Training the client"
+          },
+          "correctAnswer": "C",
+          "audio": {
+            "type": "none"
+          },
+          "note": "原创 TOEIC 风格练习；目前未附音频。听力原文/场景信息见题干。",
+          "status": "unanswered",
+          "createdAt": "2026-10-29T12:00:00Z",
+          "updatedAt": "2026-10-29T12:00:00Z"
+        },
+        {
+          "questionId": "16-3-036",
+          "title": "Conversation 12 — Project deadline\nMan: The client has asked us to deliver the prototype a week earlier than planned.\nWoman: We can finish the design by Friday, but testing normally takes four days.\nMan: Could we have the quality team test the core functions first and check the rest next week?\nWoman: I’ll discuss that approach with the project lead before we promise anything.\nQuestion 3: What will the woman do next?",
+          "options": {
+            "A": "Discuss the proposal with the project lead",
+            "B": "Send the prototype to the client",
+            "C": "Hire temporary testers",
+            "D": "Change the product specifications"
+          },
+          "correctAnswer": "A",
+          "audio": {
+            "type": "none"
+          },
+          "note": "原创 TOEIC 风格练习；目前未附音频。听力原文/场景信息见题干。",
+          "status": "unanswered",
+          "createdAt": "2026-10-29T12:00:00Z",
+          "updatedAt": "2026-10-29T12:00:00Z"
+        },
+        {
+          "questionId": "16-3-037",
+          "title": "Conversation 13 — Travel reimbursement\nWoman: My reimbursement claim was returned because the hotel receipt wasn’t itemized.\nMan: The hotel can email a detailed copy. I had to request one after my last trip.\nWoman: I’ll contact them today. The finance department processes claims on Friday, so I hope to submit it in time.\nMan: Send me the copy if you need help uploading it.\nQuestion 1: Why was the claim returned?",
+          "options": {
+            "A": "It exceeded the travel budget",
+            "B": "A receipt lacked details",
+            "C": "The form was submitted late",
+            "D": "The trip was not approved"
+          },
+          "correctAnswer": "B",
+          "audio": {
+            "type": "none"
+          },
+          "note": "原创 TOEIC 风格练习；目前未附音频。听力原文/场景信息见题干。",
+          "status": "unanswered",
+          "createdAt": "2026-10-29T12:00:00Z",
+          "updatedAt": "2026-10-29T12:00:00Z"
+        },
+        {
+          "questionId": "16-3-038",
+          "title": "Conversation 13 — Travel reimbursement\nWoman: My reimbursement claim was returned because the hotel receipt wasn’t itemized.\nMan: The hotel can email a detailed copy. I had to request one after my last trip.\nWoman: I’ll contact them today. The finance department processes claims on Friday, so I hope to submit it in time.\nMan: Send me the copy if you need help uploading it.\nQuestion 2: What does the man suggest?",
+          "options": {
+            "A": "Requesting a detailed receipt",
+            "B": "Paying the hotel again",
+            "C": "Changing the travel dates",
+            "D": "Contacting the client"
+          },
+          "correctAnswer": "A",
+          "audio": {
+            "type": "none"
+          },
+          "note": "原创 TOEIC 风格练习；目前未附音频。听力原文/场景信息见题干。",
+          "status": "unanswered",
+          "createdAt": "2026-10-29T12:00:00Z",
+          "updatedAt": "2026-10-29T12:00:00Z"
+        },
+        {
+          "questionId": "16-3-039",
+          "title": "Conversation 13 — Travel reimbursement\nWoman: My reimbursement claim was returned because the hotel receipt wasn’t itemized.\nMan: The hotel can email a detailed copy. I had to request one after my last trip.\nWoman: I’ll contact them today. The finance department processes claims on Friday, so I hope to submit it in time.\nMan: Send me the copy if you need help uploading it.\nQuestion 3: When does finance process claims?",
+          "options": {
+            "A": "Every Monday",
+            "B": "At the end of each month",
+            "C": "On Friday",
+            "D": "Only during business trips"
+          },
+          "correctAnswer": "C",
+          "audio": {
+            "type": "none"
+          },
+          "note": "原创 TOEIC 风格练习；目前未附音频。听力原文/场景信息见题干。",
+          "status": "unanswered",
+          "createdAt": "2026-10-29T12:00:00Z",
+          "updatedAt": "2026-10-29T12:00:00Z"
+        }
+      ]
+    },
+    {
+      "partId": 4,
+      "partName": "Part 4 - Talks",
+      "partType": "listening",
+      "questionCount": 30,
+      "questions": [
+        {
+          "questionId": "16-4-001",
+          "title": "Talk 1 — Flight announcement\nGood afternoon, passengers on Flight 618 to Vancouver. Boarding has been delayed by approximately twenty minutes because the incoming aircraft arrived late. Please remain near Gate 12 and listen for further announcements. Passengers requiring assistance may speak with the gate agent.\nQuestion 1: What is being announced?",
+          "options": {
+            "A": "A gate change",
+            "B": "A boarding delay",
+            "C": "A canceled flight",
+            "D": "A baggage claim procedure"
+          },
+          "correctAnswer": "B",
+          "audio": {
+            "type": "none"
+          },
+          "note": "原创 TOEIC 风格练习；目前未附音频。听力原文/场景信息见题干。",
+          "status": "unanswered",
+          "createdAt": "2026-10-29T12:00:00Z",
+          "updatedAt": "2026-10-29T12:00:00Z"
+        },
+        {
+          "questionId": "16-4-002",
+          "title": "Talk 1 — Flight announcement\nGood afternoon, passengers on Flight 618 to Vancouver. Boarding has been delayed by approximately twenty minutes because the incoming aircraft arrived late. Please remain near Gate 12 and listen for further announcements. Passengers requiring assistance may speak with the gate agent.\nQuestion 2: What should passengers do?",
+          "options": {
+            "A": "Wait near Gate 12",
+            "B": "Proceed to customs",
+            "C": "Board a shuttle bus",
+            "D": "Collect their luggage"
+          },
+          "correctAnswer": "A",
+          "audio": {
+            "type": "none"
+          },
+          "note": "原创 TOEIC 风格练习；目前未附音频。听力原文/场景信息见题干。",
+          "status": "unanswered",
+          "createdAt": "2026-10-29T12:00:00Z",
+          "updatedAt": "2026-10-29T12:00:00Z"
+        },
+        {
+          "questionId": "16-4-003",
+          "title": "Talk 1 — Flight announcement\nGood afternoon, passengers on Flight 618 to Vancouver. Boarding has been delayed by approximately twenty minutes because the incoming aircraft arrived late. Please remain near Gate 12 and listen for further announcements. Passengers requiring assistance may speak with the gate agent.\nQuestion 3: Who can provide assistance?",
+          "options": {
+            "A": "The flight crew in the air",
+            "B": "The hotel receptionist",
+            "C": "The gate agent",
+            "D": "The baggage handler"
+          },
+          "correctAnswer": "C",
+          "audio": {
+            "type": "none"
+          },
+          "note": "原创 TOEIC 风格练习；目前未附音频。听力原文/场景信息见题干。",
+          "status": "unanswered",
+          "createdAt": "2026-10-29T12:00:00Z",
+          "updatedAt": "2026-10-29T12:00:00Z"
+        },
+        {
+          "questionId": "16-4-004",
+          "title": "Talk 2 — Store promotion\nThis weekend, Greenway Home is offering twenty percent off selected kitchen appliances. The promotion begins Saturday morning and continues through closing time on Sunday. Customers who spend more than two hundred dollars can also receive free delivery. Visit the service counter for details about eligible products.\nQuestion 1: What is the announcement about?",
+          "options": {
+            "A": "A store renovation",
+            "B": "A weekend discount",
+            "C": "A new store opening",
+            "D": "A cooking demonstration"
+          },
+          "correctAnswer": "B",
+          "audio": {
+            "type": "none"
+          },
+          "note": "原创 TOEIC 风格练习；目前未附音频。听力原文/场景信息见题干。",
+          "status": "unanswered",
+          "createdAt": "2026-10-29T12:00:00Z",
+          "updatedAt": "2026-10-29T12:00:00Z"
+        },
+        {
+          "questionId": "16-4-005",
+          "title": "Talk 2 — Store promotion\nThis weekend, Greenway Home is offering twenty percent off selected kitchen appliances. The promotion begins Saturday morning and continues through closing time on Sunday. Customers who spend more than two hundred dollars can also receive free delivery. Visit the service counter for details about eligible products.\nQuestion 2: When does the promotion end?",
+          "options": {
+            "A": "Friday evening",
+            "B": "Saturday morning",
+            "C": "Sunday at closing time",
+            "D": "Monday at noon"
+          },
+          "correctAnswer": "C",
+          "audio": {
+            "type": "none"
+          },
+          "note": "原创 TOEIC 风格练习；目前未附音频。听力原文/场景信息见题干。",
+          "status": "unanswered",
+          "createdAt": "2026-10-29T12:00:00Z",
+          "updatedAt": "2026-10-29T12:00:00Z"
+        },
+        {
+          "questionId": "16-4-006",
+          "title": "Talk 2 — Store promotion\nThis weekend, Greenway Home is offering twenty percent off selected kitchen appliances. The promotion begins Saturday morning and continues through closing time on Sunday. Customers who spend more than two hundred dollars can also receive free delivery. Visit the service counter for details about eligible products.\nQuestion 3: What can some customers receive?",
+          "options": {
+            "A": "Free delivery",
+            "B": "A gift card for every purchase",
+            "C": "A free appliance",
+            "D": "Extended store hours"
+          },
+          "correctAnswer": "A",
+          "audio": {
+            "type": "none"
+          },
+          "note": "原创 TOEIC 风格练习；目前未附音频。听力原文/场景信息见题干。",
+          "status": "unanswered",
+          "createdAt": "2026-10-29T12:00:00Z",
+          "updatedAt": "2026-10-29T12:00:00Z"
+        },
+        {
+          "questionId": "16-4-007",
+          "title": "Talk 3 — Museum tour\nWelcome to the City History Museum. Our guided tour will begin in the main hall in five minutes. Photography is permitted in the permanent exhibition, but please do not use flash in the gallery of historic documents. After the tour, visitors may join a short workshop on preserving family photographs in Room 204.\nQuestion 1: Where are the listeners?",
+          "options": {
+            "A": "At a public library",
+            "B": "At a museum",
+            "C": "At a photography studio",
+            "D": "At a university auditorium"
+          },
+          "correctAnswer": "B",
+          "audio": {
+            "type": "none"
+          },
+          "note": "原创 TOEIC 风格练习；目前未附音频。听力原文/场景信息见题干。",
+          "status": "unanswered",
+          "createdAt": "2026-10-29T12:00:00Z",
+          "updatedAt": "2026-10-29T12:00:00Z"
+        },
+        {
+          "questionId": "16-4-008",
+          "title": "Talk 3 — Museum tour\nWelcome to the City History Museum. Our guided tour will begin in the main hall in five minutes. Photography is permitted in the permanent exhibition, but please do not use flash in the gallery of historic documents. After the tour, visitors may join a short workshop on preserving family photographs in Room 204.\nQuestion 2: What restriction is mentioned?",
+          "options": {
+            "A": "Food is prohibited in the lobby",
+            "B": "Visitors must leave bags outside",
+            "C": "Flash photography is not allowed in one gallery",
+            "D": "The permanent exhibition is closed"
+          },
+          "correctAnswer": "C",
+          "audio": {
+            "type": "none"
+          },
+          "note": "原创 TOEIC 风格练习；目前未附音频。听力原文/场景信息见题干。",
+          "status": "unanswered",
+          "createdAt": "2026-10-29T12:00:00Z",
+          "updatedAt": "2026-10-29T12:00:00Z"
+        },
+        {
+          "questionId": "16-4-009",
+          "title": "Talk 3 — Museum tour\nWelcome to the City History Museum. Our guided tour will begin in the main hall in five minutes. Photography is permitted in the permanent exhibition, but please do not use flash in the gallery of historic documents. After the tour, visitors may join a short workshop on preserving family photographs in Room 204.\nQuestion 3: What can visitors do after the tour?",
+          "options": {
+            "A": "Attend a workshop",
+            "B": "Meet the museum director",
+            "C": "Buy historic documents",
+            "D": "Watch a film outdoors"
+          },
+          "correctAnswer": "A",
+          "audio": {
+            "type": "none"
+          },
+          "note": "原创 TOEIC 风格练习；目前未附音频。听力原文/场景信息见题干。",
+          "status": "unanswered",
+          "createdAt": "2026-10-29T12:00:00Z",
+          "updatedAt": "2026-10-29T12:00:00Z"
+        },
+        {
+          "questionId": "16-4-010",
+          "title": "Talk 4 — Company voicemail\nHello, this is Nina from the purchasing department. The replacement monitors have arrived, but the delivery team left them in the storage area rather than distributing them to individual offices. Please ask your department coordinator to confirm the number of monitors needed by 3 p.m. today. We’ll arrange delivery tomorrow morning.\nQuestion 1: Why is Nina calling?",
+          "options": {
+            "A": "To announce a purchasing policy",
+            "B": "To report a late meeting",
+            "C": "To explain a monitor delivery",
+            "D": "To request travel receipts"
+          },
+          "correctAnswer": "C",
+          "audio": {
+            "type": "none"
+          },
+          "note": "原创 TOEIC 风格练习；目前未附音频。听力原文/场景信息见题干。",
+          "status": "unanswered",
+          "createdAt": "2026-10-29T12:00:00Z",
+          "updatedAt": "2026-10-29T12:00:00Z"
+        },
+        {
+          "questionId": "16-4-011",
+          "title": "Talk 4 — Company voicemail\nHello, this is Nina from the purchasing department. The replacement monitors have arrived, but the delivery team left them in the storage area rather than distributing them to individual offices. Please ask your department coordinator to confirm the number of monitors needed by 3 p.m. today. We’ll arrange delivery tomorrow morning.\nQuestion 2: What must department coordinators do?",
+          "options": {
+            "A": "Install the monitors",
+            "B": "Confirm the quantity needed",
+            "C": "Return old computers",
+            "D": "Contact the delivery company"
+          },
+          "correctAnswer": "B",
+          "audio": {
+            "type": "none"
+          },
+          "note": "原创 TOEIC 风格练习；目前未附音频。听力原文/场景信息见题干。",
+          "status": "unanswered",
+          "createdAt": "2026-10-29T12:00:00Z",
+          "updatedAt": "2026-10-29T12:00:00Z"
+        },
+        {
+          "questionId": "16-4-012",
+          "title": "Talk 4 — Company voicemail\nHello, this is Nina from the purchasing department. The replacement monitors have arrived, but the delivery team left them in the storage area rather than distributing them to individual offices. Please ask your department coordinator to confirm the number of monitors needed by 3 p.m. today. We’ll arrange delivery tomorrow morning.\nQuestion 3: When will the monitors be distributed?",
+          "options": {
+            "A": "This afternoon",
+            "B": "Tomorrow morning",
+            "C": "Next Monday",
+            "D": "At the end of the month"
+          },
+          "correctAnswer": "B",
+          "audio": {
+            "type": "none"
+          },
+          "note": "原创 TOEIC 风格练习；目前未附音频。听力原文/场景信息见题干。",
+          "status": "unanswered",
+          "createdAt": "2026-10-29T12:00:00Z",
+          "updatedAt": "2026-10-29T12:00:00Z"
+        },
+        {
+          "questionId": "16-4-013",
+          "title": "Talk 5 — Weather update\nThe regional weather service expects heavy rain across the coastal area this evening, with stronger winds after 9 p.m. Ferry operators have advised passengers to check departure notices before leaving home. The rain should ease by tomorrow morning, although some roads near the harbor may remain flooded.\nQuestion 1: What is the report mainly about?",
+          "options": {
+            "A": "A ferry fare increase",
+            "B": "A coastal weather forecast",
+            "C": "A road construction project",
+            "D": "A harbor festival"
+          },
+          "correctAnswer": "B",
+          "audio": {
+            "type": "none"
+          },
+          "note": "原创 TOEIC 风格练习；目前未附音频。听力原文/场景信息见题干。",
+          "status": "unanswered",
+          "createdAt": "2026-10-29T12:00:00Z",
+          "updatedAt": "2026-10-29T12:00:00Z"
+        },
+        {
+          "questionId": "16-4-014",
+          "title": "Talk 5 — Weather update\nThe regional weather service expects heavy rain across the coastal area this evening, with stronger winds after 9 p.m. Ferry operators have advised passengers to check departure notices before leaving home. The rain should ease by tomorrow morning, although some roads near the harbor may remain flooded.\nQuestion 2: What are ferry passengers advised to do?",
+          "options": {
+            "A": "Arrive a day early",
+            "B": "Use the train instead",
+            "C": "Check departure notices",
+            "D": "Bring identification photographs"
+          },
+          "correctAnswer": "C",
+          "audio": {
+            "type": "none"
+          },
+          "note": "原创 TOEIC 风格练习；目前未附音频。听力原文/场景信息见题干。",
+          "status": "unanswered",
+          "createdAt": "2026-10-29T12:00:00Z",
+          "updatedAt": "2026-10-29T12:00:00Z"
+        },
+        {
+          "questionId": "16-4-015",
+          "title": "Talk 5 — Weather update\nThe regional weather service expects heavy rain across the coastal area this evening, with stronger winds after 9 p.m. Ferry operators have advised passengers to check departure notices before leaving home. The rain should ease by tomorrow morning, although some roads near the harbor may remain flooded.\nQuestion 3: What may still be affected tomorrow?",
+          "options": {
+            "A": "Roads near the harbor",
+            "B": "Flights to the north",
+            "C": "The city water supply",
+            "D": "Museum opening hours"
+          },
+          "correctAnswer": "A",
+          "audio": {
+            "type": "none"
+          },
+          "note": "原创 TOEIC 风格练习；目前未附音频。听力原文/场景信息见题干。",
+          "status": "unanswered",
+          "createdAt": "2026-10-29T12:00:00Z",
+          "updatedAt": "2026-10-29T12:00:00Z"
+        },
+        {
+          "questionId": "16-4-016",
+          "title": "Talk 6 — Training seminar\nThank you for registering for our leadership seminar. The morning session will cover setting team goals, and the afternoon session will focus on resolving workplace conflicts. Printed materials are available at the registration desk. If you requested a vegetarian lunch, please collect a green meal ticket before entering the dining room.\nQuestion 1: What event is taking place?",
+          "options": {
+            "A": "A leadership seminar",
+            "B": "A product launch",
+            "C": "A job fair",
+            "D": "A sales exhibition"
+          },
+          "correctAnswer": "A",
+          "audio": {
+            "type": "none"
+          },
+          "note": "原创 TOEIC 风格练习；目前未附音频。听力原文/场景信息见题干。",
+          "status": "unanswered",
+          "createdAt": "2026-10-29T12:00:00Z",
+          "updatedAt": "2026-10-29T12:00:00Z"
+        },
+        {
+          "questionId": "16-4-017",
+          "title": "Talk 6 — Training seminar\nThank you for registering for our leadership seminar. The morning session will cover setting team goals, and the afternoon session will focus on resolving workplace conflicts. Printed materials are available at the registration desk. If you requested a vegetarian lunch, please collect a green meal ticket before entering the dining room.\nQuestion 2: Where can attendees get printed materials?",
+          "options": {
+            "A": "In the dining room",
+            "B": "At the registration desk",
+            "C": "Outside the parking garage",
+            "D": "In the speaker’s office"
+          },
+          "correctAnswer": "B",
+          "audio": {
+            "type": "none"
+          },
+          "note": "原创 TOEIC 风格练习；目前未附音频。听力原文/场景信息见题干。",
+          "status": "unanswered",
+          "createdAt": "2026-10-29T12:00:00Z",
+          "updatedAt": "2026-10-29T12:00:00Z"
+        },
+        {
+          "questionId": "16-4-018",
+          "title": "Talk 6 — Training seminar\nThank you for registering for our leadership seminar. The morning session will cover setting team goals, and the afternoon session will focus on resolving workplace conflicts. Printed materials are available at the registration desk. If you requested a vegetarian lunch, please collect a green meal ticket before entering the dining room.\nQuestion 3: Who should collect a green ticket?",
+          "options": {
+            "A": "All seminar speakers",
+            "B": "Attendees leaving early",
+            "C": "People requesting vegetarian lunch",
+            "D": "Visitors without registration"
+          },
+          "correctAnswer": "C",
+          "audio": {
+            "type": "none"
+          },
+          "note": "原创 TOEIC 风格练习；目前未附音频。听力原文/场景信息见题干。",
+          "status": "unanswered",
+          "createdAt": "2026-10-29T12:00:00Z",
+          "updatedAt": "2026-10-29T12:00:00Z"
+        },
+        {
+          "questionId": "16-4-019",
+          "title": "Talk 7 — Real estate message\nThank you for contacting Northside Properties about the two-bedroom apartment on Willow Street. The current tenant will move out at the end of the month, and the apartment can be viewed starting next Tuesday. Please bring a photo identification document to the viewing. Applications received by Friday will be considered first.\nQuestion 1: What is the message about?",
+          "options": {
+            "A": "A property viewing",
+            "B": "A mortgage payment",
+            "C": "A neighborhood meeting",
+            "D": "A building repair"
+          },
+          "correctAnswer": "A",
+          "audio": {
+            "type": "none"
+          },
+          "note": "原创 TOEIC 风格练习；目前未附音频。听力原文/场景信息见题干。",
+          "status": "unanswered",
+          "createdAt": "2026-10-29T12:00:00Z",
+          "updatedAt": "2026-10-29T12:00:00Z"
+        },
+        {
+          "questionId": "16-4-020",
+          "title": "Talk 7 — Real estate message\nThank you for contacting Northside Properties about the two-bedroom apartment on Willow Street. The current tenant will move out at the end of the month, and the apartment can be viewed starting next Tuesday. Please bring a photo identification document to the viewing. Applications received by Friday will be considered first.\nQuestion 2: When can the apartment be viewed?",
+          "options": {
+            "A": "Today",
+            "B": "At the end of the month",
+            "C": "Starting next Tuesday",
+            "D": "Only on Friday"
+          },
+          "correctAnswer": "C",
+          "audio": {
+            "type": "none"
+          },
+          "note": "原创 TOEIC 风格练习；目前未附音频。听力原文/场景信息见题干。",
+          "status": "unanswered",
+          "createdAt": "2026-10-29T12:00:00Z",
+          "updatedAt": "2026-10-29T12:00:00Z"
+        },
+        {
+          "questionId": "16-4-021",
+          "title": "Talk 7 — Real estate message\nThank you for contacting Northside Properties about the two-bedroom apartment on Willow Street. The current tenant will move out at the end of the month, and the apartment can be viewed starting next Tuesday. Please bring a photo identification document to the viewing. Applications received by Friday will be considered first.\nQuestion 3: What should visitors bring?",
+          "options": {
+            "A": "A utility bill",
+            "B": "Photo identification",
+            "C": "A rental deposit in cash",
+            "D": "A reference letter"
+          },
+          "correctAnswer": "B",
+          "audio": {
+            "type": "none"
+          },
+          "note": "原创 TOEIC 风格练习；目前未附音频。听力原文/场景信息见题干。",
+          "status": "unanswered",
+          "createdAt": "2026-10-29T12:00:00Z",
+          "updatedAt": "2026-10-29T12:00:00Z"
+        },
+        {
+          "questionId": "16-4-022",
+          "title": "Talk 8 — Library notice\nThe central library will close at 6 p.m. this Thursday for scheduled electrical maintenance. Items due on Thursday may be returned through the outdoor book drop, and no late fees will be charged for those items. The reading room will reopen at its regular time on Friday morning.\nQuestion 1: Why will the library close early?",
+          "options": {
+            "A": "A staff meeting",
+            "B": "Electrical maintenance",
+            "C": "A public lecture",
+            "D": "A book inventory"
+          },
+          "correctAnswer": "B",
+          "audio": {
+            "type": "none"
+          },
+          "note": "原创 TOEIC 风格练习；目前未附音频。听力原文/场景信息见题干。",
+          "status": "unanswered",
+          "createdAt": "2026-10-29T12:00:00Z",
+          "updatedAt": "2026-10-29T12:00:00Z"
+        },
+        {
+          "questionId": "16-4-023",
+          "title": "Talk 8 — Library notice\nThe central library will close at 6 p.m. this Thursday for scheduled electrical maintenance. Items due on Thursday may be returned through the outdoor book drop, and no late fees will be charged for those items. The reading room will reopen at its regular time on Friday morning.\nQuestion 2: How can patrons return books?",
+          "options": {
+            "A": "Through the outdoor book drop",
+            "B": "At the city hall",
+            "C": "By mailing them to the publisher",
+            "D": "At the reading room entrance only"
+          },
+          "correctAnswer": "A",
+          "audio": {
+            "type": "none"
+          },
+          "note": "原创 TOEIC 风格练习；目前未附音频。听力原文/场景信息见题干。",
+          "status": "unanswered",
+          "createdAt": "2026-10-29T12:00:00Z",
+          "updatedAt": "2026-10-29T12:00:00Z"
+        },
+        {
+          "questionId": "16-4-024",
+          "title": "Talk 8 — Library notice\nThe central library will close at 6 p.m. this Thursday for scheduled electrical maintenance. Items due on Thursday may be returned through the outdoor book drop, and no late fees will be charged for those items. The reading room will reopen at its regular time on Friday morning.\nQuestion 3: What is true about late fees?",
+          "options": {
+            "A": "They will double",
+            "B": "They apply as usual",
+            "C": "They will be waived for items due Thursday",
+            "D": "They are paid at the reading room"
+          },
+          "correctAnswer": "C",
+          "audio": {
+            "type": "none"
+          },
+          "note": "原创 TOEIC 风格练习；目前未附音频。听力原文/场景信息见题干。",
+          "status": "unanswered",
+          "createdAt": "2026-10-29T12:00:00Z",
+          "updatedAt": "2026-10-29T12:00:00Z"
+        },
+        {
+          "questionId": "16-4-025",
+          "title": "Talk 9 — Product webinar\nToday’s webinar demonstrates the latest features of our scheduling platform. We’ll begin with calendar sharing, then show how managers can generate weekly staffing reports. The session is being recorded, and registered participants will receive a link tomorrow. Please type questions into the Q&A panel rather than the chat window.\nQuestion 1: What is the webinar about?",
+          "options": {
+            "A": "A scheduling platform",
+            "B": "A new accounting law",
+            "C": "A recruitment campaign",
+            "D": "A customer survey"
+          },
+          "correctAnswer": "A",
+          "audio": {
+            "type": "none"
+          },
+          "note": "原创 TOEIC 风格练习；目前未附音频。听力原文/场景信息见题干。",
+          "status": "unanswered",
+          "createdAt": "2026-10-29T12:00:00Z",
+          "updatedAt": "2026-10-29T12:00:00Z"
+        },
+        {
+          "questionId": "16-4-026",
+          "title": "Talk 9 — Product webinar\nToday’s webinar demonstrates the latest features of our scheduling platform. We’ll begin with calendar sharing, then show how managers can generate weekly staffing reports. The session is being recorded, and registered participants will receive a link tomorrow. Please type questions into the Q&A panel rather than the chat window.\nQuestion 2: What will managers learn to generate?",
+          "options": {
+            "A": "Invoices",
+            "B": "Weekly staffing reports",
+            "C": "Product advertisements",
+            "D": "Travel itineraries"
+          },
+          "correctAnswer": "B",
+          "audio": {
+            "type": "none"
+          },
+          "note": "原创 TOEIC 风格练习；目前未附音频。听力原文/场景信息见题干。",
+          "status": "unanswered",
+          "createdAt": "2026-10-29T12:00:00Z",
+          "updatedAt": "2026-10-29T12:00:00Z"
+        },
+        {
+          "questionId": "16-4-027",
+          "title": "Talk 9 — Product webinar\nToday’s webinar demonstrates the latest features of our scheduling platform. We’ll begin with calendar sharing, then show how managers can generate weekly staffing reports. The session is being recorded, and registered participants will receive a link tomorrow. Please type questions into the Q&A panel rather than the chat window.\nQuestion 3: How will participants receive the recording?",
+          "options": {
+            "A": "On a USB drive today",
+            "B": "Through a link tomorrow",
+            "C": "By postal mail next week",
+            "D": "From the chat window"
+          },
+          "correctAnswer": "B",
+          "audio": {
+            "type": "none"
+          },
+          "note": "原创 TOEIC 风格练习；目前未附音频。听力原文/场景信息见题干。",
+          "status": "unanswered",
+          "createdAt": "2026-10-29T12:00:00Z",
+          "updatedAt": "2026-10-29T12:00:00Z"
+        },
+        {
+          "questionId": "16-4-028",
+          "title": "Talk 10 — Charity run\nThe annual Riverside Charity Run takes place this Sunday. Participants should collect their race numbers from the tent beside the north entrance between 7 and 8 a.m. The five-kilometer route begins at 8:30, followed by the ten-kilometer race at 9. Water stations will be located at every kilometer marker.\nQuestion 1: What event is being advertised?",
+          "options": {
+            "A": "A river cleanup",
+            "B": "A charity run",
+            "C": "A cycling competition",
+            "D": "A food festival"
+          },
+          "correctAnswer": "B",
+          "audio": {
+            "type": "none"
+          },
+          "note": "原创 TOEIC 风格练习；目前未附音频。听力原文/场景信息见题干。",
+          "status": "unanswered",
+          "createdAt": "2026-10-29T12:00:00Z",
+          "updatedAt": "2026-10-29T12:00:00Z"
+        },
+        {
+          "questionId": "16-4-029",
+          "title": "Talk 10 — Charity run\nThe annual Riverside Charity Run takes place this Sunday. Participants should collect their race numbers from the tent beside the north entrance between 7 and 8 a.m. The five-kilometer route begins at 8:30, followed by the ten-kilometer race at 9. Water stations will be located at every kilometer marker.\nQuestion 2: Where should participants collect race numbers?",
+          "options": {
+            "A": "At the north entrance tent",
+            "B": "Inside the sports center",
+            "C": "At the finish line",
+            "D": "Near the parking exit"
+          },
+          "correctAnswer": "A",
+          "audio": {
+            "type": "none"
+          },
+          "note": "原创 TOEIC 风格练习；目前未附音频。听力原文/场景信息见题干。",
+          "status": "unanswered",
+          "createdAt": "2026-10-29T12:00:00Z",
+          "updatedAt": "2026-10-29T12:00:00Z"
+        },
+        {
+          "questionId": "16-4-030",
+          "title": "Talk 10 — Charity run\nThe annual Riverside Charity Run takes place this Sunday. Participants should collect their race numbers from the tent beside the north entrance between 7 and 8 a.m. The five-kilometer route begins at 8:30, followed by the ten-kilometer race at 9. Water stations will be located at every kilometer marker.\nQuestion 3: What is mentioned about the route?",
+          "options": {
+            "A": "It includes a bridge closure",
+            "B": "It starts at 9 a.m.",
+            "C": "Water stations are placed along it",
+            "D": "All races begin together"
+          },
+          "correctAnswer": "C",
+          "audio": {
+            "type": "none"
+          },
+          "note": "原创 TOEIC 风格练习；目前未附音频。听力原文/场景信息见题干。",
+          "status": "unanswered",
+          "createdAt": "2026-10-29T12:00:00Z",
+          "updatedAt": "2026-10-29T12:00:00Z"
+        }
+      ]
+    },
+    {
+      "partId": 5,
+      "partName": "Part 5 - Incomplete Sentences",
+      "partType": "reading",
+      "questionCount": 0,
+      "questions": []
+    },
+    {
+      "partId": 6,
+      "partName": "Part 6 - Text Completion",
+      "partType": "reading",
+      "questionCount": 0,
+      "questions": []
+    },
+    {
+      "partId": 7,
+      "partName": "Part 7 - Reading Comprehension",
+      "partType": "reading",
+      "questionCount": 0,
+      "questions": []
+    }
+  ],
+  "statistics": {
+    "totalAnswered": 0,
+    "correct": 0,
+    "wrong": 0,
+    "reviewed": 0
+  }
+}
