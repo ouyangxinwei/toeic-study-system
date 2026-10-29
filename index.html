@@ -40,6 +40,98 @@
                 </select>
             </div>
         </section>
+<!-- 录入按钮 -->
+<div class="add-question-section">
+    <button id="addQuestionBtn" class="add-btn">➕ 录入新题</button>
+</div>
+
+<!-- 录入表单弹窗 -->
+<div id="addQuestionModal" class="modal">
+    <div class="modal-content modal-large">
+        <span class="close" id="closeAddModal">&times;</span>
+        <h2>录入新题</h2>
+        
+        <form id="addQuestionForm">
+            <div class="form-group">
+                <label>套题编号 *</label>
+                <select id="formSetId" required>
+                    <option value="1">第1套</option>
+                    <option value="2">第2套</option>
+                    <option value="3">第3套</option>
+                    <!-- ... 到15 -->
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label>Part *</label>
+                <select id="formPartId" required>
+                    <option value="1">Part 1 - 照片描述</option>
+                    <option value="2">Part 2 - 问答应答</option>
+                    <option value="3">Part 3 - 短对话</option>
+                    <option value="4">Part 4 - 独白/短文</option>
+                    <option value="5">Part 5 - 句子填空</option>
+                    <option value="6">Part 6 - 段落填空</option>
+                    <option value="7">Part 7 - 阅读理解</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label>题号 *</label>
+                <input type="text" id="formQuestionId" placeholder="例如：1-1-003" required>
+            </div>
+            
+            <div class="form-group">
+                <label>题目标题/题干 *</label>
+                <textarea id="formTitle" rows="4" required></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label>选项 A *</label>
+                <input type="text" id="formOptionA" required>
+            </div>
+            
+            <div class="form-group">
+                <label>选项 B *</label>
+                <input type="text" id="formOptionB" required>
+            </div>
+            
+            <div class="form-group">
+                <label>选项 C *</label>
+                <input type="text" id="formOptionC" required>
+            </div>
+            
+            <div class="form-group">
+                <label>选项 D *</label>
+                <input type="text" id="formOptionD" required>
+            </div>
+            
+            <div class="form-group">
+                <label>正确答案 *</label>
+                <select id="formCorrectAnswer" required>
+                    <option value="A">A</option>
+                    <option value="B">B</option>
+                    <option value="C">C</option>
+                    <option value="D">D</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label>音频链接（可选）</label>
+                <input type="text" id="formAudioUrl" placeholder="本地路径或外部链接">
+            </div>
+            
+            <div class="form-group">
+                <label>笔记（可选）</label>
+                <textarea id="formNote" rows="3"></textarea>
+            </div>
+            
+            <div class="form-actions">
+                <button type="submit" class="submit-btn">保存题目</button>
+                <button type="button" class="cancel-btn" id="cancelAddBtn">取消</button>
+            </div>
+        </form>
+    </div>
+</div>
 
         <!-- 套题列表 -->
         <main class="sets-list" id="setsList">

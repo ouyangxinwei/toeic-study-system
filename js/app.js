@@ -38,6 +38,26 @@ class App {
    * 绑定事件
    */
   bindEvents() {
+  
+  // 录入按钮
+document.getElementById('addQuestionBtn').addEventListener('click', () => {
+    this.showAddQuestionModal();
+});
+
+// 关闭录入弹窗
+document.getElementById('closeAddModal').addEventListener('click', () => {
+    this.closeAddQuestionModal();
+});
+
+document.getElementById('cancelAddBtn').addEventListener('click', () => {
+    this.closeAddQuestionModal();
+});
+
+// 提交表单
+document.getElementById('addQuestionForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    this.handleAddQuestion();
+});
     // 搜索按钮
     document.getElementById('searchBtn').addEventListener('click', () => {
       this.handleSearch();
@@ -397,6 +417,96 @@ class App {
       questionManager.renderSetsList();
     }
   }
+  
+/**
+ * 显示录入弹窗
+ */
+showAddQuestionModal() {
+    const modal = document.getElementById('addQuestionModal');
+    modal.style.display = 'block';
+    
+    // 如果当前已选择套题，自动填充
+    if (this.currentSetId) {
+        document.getElementById('formSetId').value = this.currentSetId;
+    }
+}
+
+/**
+ * 关闭录入弹窗
+ */
+closeAddQuestionModal() {
+    const modal = document.getElementById('addQuestionModal');
+    modal.style.display = 'none';
+    document.getElementById('addQuestionForm').reset();
+}
+
+/**
+ * 处理录入题目
+ */
+handleAddQuestion() {
+    const setId = parseInt(document.getElementById('formSetId').value);
+    const partId = parseInt(document.getElementById('formPartId').value);
+    const questionId = document.getElementById('formQuestionId').value.trim();
+    const title = document.getElementById('formTitle').value.trim();
+    const optionA = document.getElementById('formOptionA').value.trim();
+    const optionB = document.getElementById('formOptionB').value.trim();
+    const optionC = document.getElementById('formOptionC').value.trim();
+    const optionD = document.getElementById('formOptionD').value.trim();
+    const correctAnswer = document.getElementById('formCorrectAnswer').value;
+    const audioUrl = document.getElementById('formAudioUrl').value.trim();
+    const note = document.getElementById('formNote').value.trim();
+
+    // 构建题目对象
+    const newQuestion = {
+        questionId: questionId,
+        title: title,
+        options: {
+            A: optionA,
+            B: optionB,
+            C: optionC,
+            D: optionD
+        },
+        correctAnswer: correctAnswer,
+        audio: audioUrl ? {
+            type: audioUrl.startsWith('http') ? 'remote' : 'local',
+            path: audioUrl,
+            url: audioUrl.startsWith('http') ? audioUrl : ''
+        } : { type: 'none' },
+        note: note,
+        status: 'unanswered',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+    };
+
+    // 保存到 localStorage
+    this.saveQuestionToStorage(setId, partId, newQuestion);
+
+    Utils.showToast('题目录入成功！', 'success');
+    this.closeAddQuestionModal();
+    
+    // 刷新当前视图
+    if (this.currentSetId === setId) {
+        this.refreshCurrentView();
+    }
+}
+
+/**
+ * 保存题目到 localStorage
+ */
+saveQuestionToStorage(setId, partId, question) {
+    const storageKey = `set${setId}_data`;
+    let userData = JSON.parse(localStorage.getItem(storageKey) || '{}');
+    
+    // 保存题目数据
+    userData[question.questionId] = {
+        ...question,
+        partId: partId
+    };
+    
+    localStorage.setItem(storageKey, JSON.stringify(userData));
+    
+    console.log('题目已保存:', question);
+}  
 }
 
 // 创建全局应用实例
