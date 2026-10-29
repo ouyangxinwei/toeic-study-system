@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TOEIC错题学习系统</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/mobile.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 头部 -->
+        <header class="header">
+            <h1>📚 TOEIC错题学习系统</h1>
+            <p>15套模拟题 · 200题/套 · 错题整理与复习</p>
+        </header>
+
+        <!-- 搜索和筛选区域 -->
+        <section class="search-section">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="输入关键词搜索（标题、选项、答案、笔记）">
+                <button id="searchBtn">搜索</button>
+            </div>
+            <div class="filter-box">
+                <select id="partFilter">
+                    <option value="">全部Part</option>
+                    <option value="1">Part 1 - 照片描述</option>
+                    <option value="2">Part 2 - 问答应答</option>
+                    <option value="3">Part 3 - 短对话</option>
+                    <option value="4">Part 4 - 独白/短文</option>
+                    <option value="5">Part 5 - 句子填空</option>
+                    <option value="6">Part 6 - 段落填空</option>
+                    <option value="7">Part 7 - 阅读理解</option>
+                </select>
+                <select id="statusFilter">
+                    <option value="">全部状态</option>
+                    <option value="wrong">错题</option>
+                    <option value="reviewed">已复习</option>
+                    <option value="correct">答对</option>
+                </select>
+            </div>
+        </section>
+
+        <!-- 套题列表 -->
+        <main class="sets-list" id="setsList">
+            <!-- 动态生成 -->
+        </main>
+
+        <!-- 导出和同步按钮 -->
+        <footer class="footer-actions">
+            <button id="exportCSVBtn">导出CSV</button>
+            <button id="exportJSONBtn">导出JSON</button>
+            <button id="syncBtn">同步数据</button>
+        </footer>
+    </div>
+
+    <!-- 题目详情弹窗 -->
+    <div id="questionModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div id="questionDetail"></div>
+        </div>
+    </div>
+
+    <!-- 引入JavaScript -->
+    <script src="js/utils.js"></script>
+    <script src="js/question-manager.js"></script>
+    <script src="js/audio-player.js"></script>
+    <script src="js/note-manager.js"></script>
+    <script src="js/search-engine.js"></script>
+    <script src="js/export-manager.js"></script>
+    <script src="js/sync-manager.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

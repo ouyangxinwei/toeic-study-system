@@ -1,0 +1,73 @@
+{
+  "app": {
+    "name": "TOEIC错题学习系统",
+    "version": "1.0.0",
+    "description": "15套模拟题错题整理与复习系统"
+  },
+  "sets": {
+    "total": 15,
+    "questionsPerSet": 200
+  },
+  "parts": [
+    {
+      "partId": 1,
+      "name": "Part 1 - Photographs",
+      "chineseName": "照片描述",
+      "type": "listening",
+      "questionCount": 6
+    },
+    {
+      "partId": 2,
+      "name": "Part 2 - Question-Response",
+      "chineseName": "问答应答",
+      "type": "listening",
+      "questionCount": 25
+    },
+    {
+      "partId": 3,
+      "name": "Part 3 - Conversations",
+      "chineseName": "短对话",
+      "type": "listening",
+      "questionCount": 39
+    },
+    {
+      "partId": 4,
+      "name": "Part 4 - Talks",
+      "chineseName": "独白/短文",
+      "type": "listening",
+      "questionCount": 30
+    },
+    {
+      "partId": 5,
+      "name": "Part 5 - Incomplete Sentences",
+      "chineseName": "句子填空",
+      "type": "reading",
+      "questionCount": 30
+    },
+    {
+      "partId": 6,
+      "name": "Part 6 - Text Completion",
+      "chineseName": "段落填空",
+      "type": "reading",
+      "questionCount": 16
+    },
+    {
+      "partId": 7,
+      "name": "Part 7 - Reading Comprehension",
+      "chineseName": "阅读理解",
+      "type": "reading",
+      "questionCount": 54
+    }
+  ],
+  "sync": {
+    "enabled": true,
+    "apiUrl": "https://your-api-endpoint.com/api",
+    "autoSync": false,
+    "syncInterval": 300
+  },
+  "export": {
+    "formats": ["csv", "json"],
+    "includeAudio": false,
+    "includeNotes": true
+  }
+}

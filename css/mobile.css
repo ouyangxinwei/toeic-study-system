@@ -1,0 +1,124 @@
+/* 移动端适配样式 */
+
+/* 平板 */
+@media (max-width: 1024px) {
+    .container {
+        padding: 15px;
+    }
+
+    .header h1 {
+        font-size: 2em;
+    }
+
+    .modal-content {
+        width: 95%;
+        padding: 20px;
+    }
+}
+
+/* 手机 */
+@media (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
+
+    .header {
+        padding: 20px 15px;
+    }
+
+    .header h1 {
+        font-size: 1.8em;
+    }
+
+    .header p {
+        font-size: 1em;
+    }
+
+    /* 搜索区域 */
+    .search-section {
+        padding: 15px;
+    }
+
+    .search-box {
+        flex-direction: column;
+    }
+
+    .search-box input,
+    .search-box button {
+        width: 100%;
+    }
+
+    .filter-box {
+        flex-direction: column;
+    }
+
+    .filter-box select {
+        width: 100%;
+    }
+
+    /* 套题卡片 */
+    .set-card {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    .set-actions {
+        width: 100%;
+    }
+
+    .set-actions button {
+        width: 100%;
+    }
+
+    /* 底部按钮 */
+    .footer-actions {
+        flex-direction: column;
+    }
+
+    .footer-actions button {
+        width: 100%;
+    }
+
+    /* 弹窗 */
+    .modal-content {
+        margin: 10% auto;
+        padding: 15px;
+    }
+
+    .question-title {
+        font-size: 1.2em;
+    }
+
+    .option-item {
+        padding: 10px 12px;
+        font-size: 14px;
+    }
+
+    /* 阅读区域 */
+    .reading-content {
+        max-height: 300px;
+        padding: 15px;
+    }
+
+    /* 音频播放器 */
+    .audio-player {
+        height: 40px;
+    }
+}
+
+/* 小屏手机 */
+@media (max-width: 480px) {
+    .header h1 {
+        font-size: 1.5em;
+    }
+
+    .set-stats {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .note-textarea {
+        font-size: 14px;
+    }
+}

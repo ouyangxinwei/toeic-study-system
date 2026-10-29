@@ -1,0 +1,610 @@
+/* 全局样式 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background-color: #f5f5f5;
+    color: #333;
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* 头部样式 */
+.header {
+    text-align: center;
+    padding: 30px 20px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 12px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.header h1 {
+    font-size: 2.5em;
+    margin-bottom: 10px;
+}
+
+.header p {
+    font-size: 1.1em;
+    opacity: 0.9;
+}
+
+/* 搜索和筛选区域 */
+.search-section {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.search-box {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.search-box input {
+    flex: 1;
+    padding: 12px 16px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: border-color 0.3s;
+}
+
+.search-box input:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+.search-box button {
+    padding: 12px 24px;
+    background: #667eea;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.search-box button:hover {
+    background: #5568d3;
+}
+
+.filter-box {
+    display: flex;
+    gap: 10px;
+}
+
+.filter-box select {
+    flex: 1;
+    padding: 12px 16px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 16px;
+    background: white;
+    cursor: pointer;
+}
+
+/* 套题列表 */
+.sets-list {
+    display: grid;
+    gap: 15px;
+}
+
+.set-card {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.set-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.set-info h3 {
+    font-size: 1.3em;
+    margin-bottom: 8px;
+    color: #333;
+}
+
+.set-stats {
+    display: flex;
+    gap: 15px;
+    font-size: 0.9em;
+    color: #666;
+}
+
+.stat-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.stat-item.wrong {
+    color: #e74c3c;
+}
+
+.stat-item.reviewed {
+    color: #27ae60;
+}
+
+.set-actions button {
+    padding: 10px 20px;
+    background: #667eea;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.set-actions button:hover {
+    background: #5568d3;
+}
+
+/* 底部操作按钮 */
+.footer-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 30px;
+    padding: 20px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.footer-actions button {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+#exportCSVBtn {
+    background: #27ae60;
+    color: white;
+}
+
+#exportCSVBtn:hover {
+    background: #229954;
+}
+
+#exportJSONBtn {
+    background: #3498db;
+    color: white;
+}
+
+#exportJSONBtn:hover {
+    background: #2980b9;
+}
+
+#syncBtn {
+    background: #9b59b6;
+    color: white;
+}
+
+#syncBtn:hover {
+    background: #8e44ad;
+}
+
+/* 弹窗样式 */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    overflow-y: auto;
+}
+
+.modal-content {
+    background-color: white;
+    margin: 5% auto;
+    padding: 30px;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 800px;
+    position: relative;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.close {
+    position: absolute;
+    right: 20px;
+    top: 15px;
+    font-size: 32px;
+    font-weight: bold;
+    color: #aaa;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.close:hover {
+    color: #000;
+}
+
+/* 题目详情样式 */
+.question-detail {
+    padding: 20px 0;
+}
+
+.question-title {
+    font-size: 1.4em;
+    margin-bottom: 20px;
+    color: #333;
+    line-height: 1.6;
+}
+
+.audio-section {
+    margin-bottom: 20px;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.audio-player {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.upload-btn {
+    padding: 8px 16px;
+    background: #f39c12;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.upload-btn:hover {
+    background: #e67e22;
+}
+
+.options-list {
+    margin-bottom: 20px;
+}
+
+.option-item {
+    padding: 12px 16px;
+    margin-bottom: 10px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.option-item:hover {
+    background: #e9ecef;
+}
+
+.option-item.correct {
+    background: #d4edda;
+    border-color: #27ae60;
+}
+
+.option-item.wrong {
+    background: #f8d7da;
+    border-color: #e74c3c;
+}
+
+.correct-answer {
+    padding: 15px;
+    background: #d4edda;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-weight: bold;
+    color: #155724;
+}
+
+/* 笔记区域 */
+.note-section {
+    margin-top: 20px;
+}
+
+.note-toggle {
+    padding: 10px 20px;
+    background: #6c757d;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.note-toggle:hover {
+    background: #5a6268;
+}
+
+.note-content {
+    display: none;
+    padding: 15px;
+    background: #fff3cd;
+    border-radius: 8px;
+    border-left: 4px solid #ffc107;
+}
+
+.note-content.show {
+    display: block;
+}
+
+.note-textarea {
+    width: 100%;
+    min-height: 100px;
+    padding: 12px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: inherit;
+    resize: vertical;
+}
+
+.note-save-btn {
+    margin-top: 10px;
+    padding: 8px 16px;
+    background: #27ae60;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.note-save-btn:hover {
+    background: #229954;
+}
+
+/* 阅读部分滚动区域 */
+.reading-content {
+    max-height: 400px;
+    overflow-y: auto;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    line-height: 1.8;
+}
+
+.reading-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.reading-content::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.reading-content::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+.reading-content::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* 自动整理按钮 */
+.auto-format-btn {
+    padding: 8px 16px;
+    background: #17a2b8;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.auto-format-btn:hover {
+    background: #138496;
+}
+
+/* 套题详情页样式 */
+.back-btn {
+  padding: 10px 20px;
+  background: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+.back-btn:hover {
+  background: #5a6268;
+}
+
+.set-detail-title {
+  font-size: 2em;
+  margin-bottom: 30px;
+  color: #333;
+}
+
+.part-section {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.part-title {
+  font-size: 1.5em;
+  margin-bottom: 20px;
+  color: #333;
+  border-bottom: 2px solid #667eea;
+  padding-bottom: 10px;
+}
+
+.questions-list {
+  display: grid;
+  gap: 15px;
+}
+
+.question-card {
+  background: #f8f9fa;
+  padding: 15px;
+  border-radius: 8px;
+  border-left: 4px solid #667eea;
+  transition: all 0.3s;
+}
+
+.question-card:hover {
+  background: #e9ecef;
+  transform: translateX(5px);
+}
+
+.question-card.status-wrong {
+  border-left-color: #e74c3c;
+}
+
+.question-card.status-correct {
+  border-left-color: #27ae60;
+}
+
+.question-card.status-reviewed {
+  border-left-color: #f39c12;
+}
+
+.question-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.question-id {
+  font-weight: bold;
+  color: #667eea;
+}
+
+.status-badge {
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.status-badge.status-unanswered {
+  background: #e0e0e0;
+  color: #666;
+}
+
+.status-badge.status-correct {
+  background: #d4edda;
+  color: #155724;
+}
+
+.status-badge.status-wrong {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.status-badge.status-reviewed {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.question-preview {
+  color: #666;
+  margin-bottom: 15px;
+  line-height: 1.6;
+}
+
+.question-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.question-actions button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  transition: all 0.3s;
+}
+
+.view-detail-btn {
+  background: #667eea;
+  color: white;
+}
+
+.view-detail-btn:hover {
+  background: #5568d3;
+}
+
+.mark-wrong-btn {
+  background: #e74c3c;
+  color: white;
+}
+
+.mark-wrong-btn:hover {
+  background: #c0392b;
+}
+
+.mark-reviewed-btn {
+  background: #f39c12;
+  color: white;
+}
+
+.mark-reviewed-btn:hover {
+  background: #e67e22;
+}
+
+.no-results {
+  text-align: center;
+  padding: 40px;
+  color: #999;
+  font-size: 1.2em;
+}
+
+/* 音频上传选项 */
+.audio-upload-options {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.no-audio {
+  text-align: center;
+  padding: 20px;
+  background: #fff3cd;
+  border-radius: 8px;
+  border: 2px dashed #ffc107;
+}
+
+.no-audio p {
+  margin-bottom: 15px;
+  color: #856404;
+  font-weight: bold;
+}
