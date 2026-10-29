@@ -116,3 +116,7 @@ SQL 初始数据仅导入项目现有 JSON 文件中实际存在的示例题（�
 - 只有 Supabase upsert 成功才提示“已写入 Supabase 云端数据库”。
 - 若云端失败，页面仍显示已保存在当前浏览器的题目，并显示 Supabase 返回的错误；请按错误检查 `toeic_questions` 表、authenticated 角色权限及 RLS。
 - 浏览器开发者工具（F12 → Console）会记录完整错误。
+
+### V8 题目数量与删除
+- 每个 Part 的显示题数以当前加载到的实际题目数组为准。
+- 题目卡片的“删除题目”会先弹出确认框；确认后删除本地缓存并尝试删除 Supabase `toeic_questions` 对应记录。请谨慎操作，删除无法撤销。

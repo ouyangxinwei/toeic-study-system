@@ -267,6 +267,9 @@ document.getElementById('addQuestionForm').addEventListener('submit', (e) => {
         <button class="mark-reviewed-btn" data-question-id="${question.questionId}">
           标记为已复习
         </button>
+        <button class="delete-question-btn" data-question-id="${question.questionId}">
+          删除题目
+        </button>
       </div>
     `;
 
@@ -288,6 +291,19 @@ document.getElementById('addQuestionForm').addEventListener('submit', (e) => {
       questionManager.updateStatus(question.questionId, 'reviewed');
       Utils.showToast('已标记为已复习', 'success', 1500);
       this.refreshCurrentView();
+    });
+
+    card.querySelector('.delete-question-btn').addEventListener('click', async () => {
+      const confirmed = window.confirm(`确定删除题目 ${question.questionId} 吗？\n此操作会删除本地缓存及 Supabase 云端记录，无法撤销。`);
+      if (!confirmed) return;
+      try {
+        await questionManager.deleteQuestion(this.currentSetId, question.questionId);
+        Utils.showToast(`题目 ${question.questionId} 已删除`, 'success', 2500);
+        await this.openSet(this.currentSetId);
+      } catch (error) {
+        console.error('删除题目失败:', error);
+        Utils.showToast(`删除失败：${error.message || '未知错误'}`, 'error', 8000);
+      }
     });
 
     return card;

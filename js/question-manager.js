@@ -83,6 +83,9 @@ class QuestionManager {
       }
     }
 
+    // 统计数始终以当前实际题目数组为准，避免 JSON 中的旧 questionCount 或缓存残留造成虚高。
+    this.currentSet.parts.forEach(part => { part.questionCount = Array.isArray(part.questions) ? part.questions.length : 0; });
+
     // Supabase 为可选远程数据源；未配置时继续使用静态 JSON + localStorage。
     if (window.toeicSupabaseReady && window.toeicSupabase) {
       try {
@@ -254,6 +257,32 @@ class QuestionManager {
       error.cause = cause;
       throw error;
     }
+  }
+
+  /** 删除题目：先确认调用方已确认，再删除本地及云端记录。 */
+  async deleteQuestion(setId, questionId) {
+    if (!this.currentSet || Number(this.currentSet.setId) !== Number(setId)) {
+      const loaded = await this.loadSet(setId);
+      if (!loaded) throw new Error(`无法加载第${setId}套题目`);
+    }
+    const part = this.currentSet.parts.find(p => p.questions.some(q => String(q.questionId) === String(questionId)));
+    if (!part) throw new Error(`未找到题目 ${questionId}`);
+    part.questions = part.questions.filter(q => String(q.questionId) !== String(questionId));
+    part.questionCount = part.questions.length;
+    const key = `set${setId}_data`;
+    let cache = {};
+    try { cache = JSON.parse(localStorage.getItem(key) || '{}'); } catch (_) {}
+    delete cache[questionId];
+    localStorage.setItem(key, JSON.stringify(cache));
+    if (window.toeicSupabaseReady && window.toeicSupabase) {
+      const { data: sessionData, error: sessionError } = await window.toeicSupabase.auth.getSession();
+      if (sessionError) throw sessionError;
+      if (!sessionData.session) throw new Error('登录已失效，请重新登录后删除云端题目。');
+      const { error } = await window.toeicSupabase.from('toeic_questions').delete()
+        .eq('set_id', Number(setId)).eq('question_id', String(questionId));
+      if (error) throw error;
+    }
+    return true;
   }
 
   /**
