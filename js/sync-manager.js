@@ -51,7 +51,7 @@ class SyncManager {
       Utils.showToast('正在执行数据传输，请稍候。', 'info');
       return;
     }
-    const confirmed = confirm('将把本机 15 套题库（静态题库及浏览器本地新增/修改数据）上传到云端。云端同题号会被本机数据覆盖，但不会删除云端多出的题目。确定继续吗？');
+    const confirmed = confirm('将把本机 16 套题库（静态题库及浏览器本地新增/修改数据）上传到云端。云端同题号会被本机数据覆盖，但不会删除云端多出的题目。确定继续吗？');
     if (!confirmed) return;
 
     this.isSyncing = true;
@@ -177,7 +177,7 @@ class SyncManager {
       if (this.isSyncing) { Utils.showToast('正在同步中，请稍候', 'info'); return; }
       this.isSyncing = true;
       try {
-        const setIds = setId ? [Number(setId)] : Array.from({ length: 15 }, (_, i) => i + 1);
+        const setIds = setId ? [Number(setId)] : Array.from({ length: 16 }, (_, i) => i + 1);
         for (const currentSetId of setIds) {
           const setData = await questionManager.loadSet(currentSetId);
           if (!setData) continue;

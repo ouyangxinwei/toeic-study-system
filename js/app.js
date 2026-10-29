@@ -32,11 +32,17 @@ class App {
         picker.addEventListener('change', async () => {
           const setId = Number(picker.value);
           if (!Number.isInteger(setId) || setId < 1 || setId > 16) return;
+          // 先立即记录本地选择，再保存云端偏好；即使云端暂时不可用，本机也会记住。
           localStorage.setItem('toeic_current_set_id', String(setId));
-          await this.savePreferredSetId(setId);
-          await questionManager.renderSetsList(setId);
           this.currentSetId = null;
           this.isSearchMode = false;
+          picker.disabled = true;
+          try {
+            await questionManager.renderSetsList(setId);
+            await this.savePreferredSetId(setId);
+          } finally {
+            picker.disabled = false;
+          }
         });
       }
       await questionManager.renderSetsList(savedSetId);
@@ -235,6 +241,7 @@ document.getElementById('addQuestionForm').addEventListener('submit', (e) => {
       }
 
       // 显示套题详情
+      questionManager.currentSet = setData;
       this.displaySetDetail(setData);
 
       Utils.showToast(`已打开${setData.setName}`, 'success', 1500);
