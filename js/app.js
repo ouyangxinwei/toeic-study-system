@@ -502,26 +502,43 @@ document.getElementById('addQuestionForm').addEventListener('submit', (e) => {
     // 音频播放器
     audioPlayer.renderAudioPlayer(question, detailContent);
 
-    // 选项列表
+    // 选项列表：详情默认不标记正确选项，避免提前看到答案
     const optionsList = document.createElement('div');
     optionsList.className = 'options-list';
-    
+    const optionElements = [];
+
     for (const key in question.options) {
       const option = document.createElement('div');
       option.className = 'option-item';
-      if (key === question.correctAnswer) {
-        option.classList.add('correct');
-      }
+      option.dataset.optionKey = key;
       option.textContent = `${key}. ${question.options[key]}`;
       optionsList.appendChild(option);
+      optionElements.push(option);
     }
-    
     detailContent.appendChild(optionsList);
 
-    // 正确答案
+    // 答案默认隐藏，用户主动点击后才显示
+    const answerToggle = document.createElement('button');
+    answerToggle.type = 'button';
+    answerToggle.className = 'answer-toggle-btn';
+    answerToggle.textContent = '显示答案';
+    answerToggle.setAttribute('aria-pressed', 'false');
+
     const correctAnswer = document.createElement('div');
     correctAnswer.className = 'correct-answer';
-    correctAnswer.textContent = `正确答案: ${question.correctAnswer}`;
+    correctAnswer.textContent = `正确答案: ${question.correctAnswer || '未设置'}`;
+    correctAnswer.hidden = true;
+
+    answerToggle.addEventListener('click', () => {
+      const shouldShow = correctAnswer.hidden;
+      correctAnswer.hidden = !shouldShow;
+      answerToggle.textContent = shouldShow ? '隐藏答案' : '显示答案';
+      answerToggle.setAttribute('aria-pressed', String(shouldShow));
+      optionElements.forEach(option => {
+        option.classList.toggle('correct', shouldShow && option.dataset.optionKey === question.correctAnswer);
+      });
+    });
+    detailContent.appendChild(answerToggle);
     detailContent.appendChild(correctAnswer);
 
     // 笔记区域
