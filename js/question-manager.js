@@ -218,17 +218,42 @@ class QuestionManager {
     part.questions.sort((a, b) => a.questionId.localeCompare(b.questionId, undefined, { numeric: true }));
     part.questionCount = part.questions.length;
     this.currentSet = setData;
+    // 先同步写入 localStorage，保证网络错误时题目仍可在当前浏览器恢复。
     this.saveUserData();
-    if (window.toeicSupabaseReady && window.toeicSupabase) {
-      const { error } = await window.toeicSupabase.from('toeic_questions').upsert({
-        set_id: Number(setId), part_id: Number(partId), question_id: stored.questionId,
-        title: stored.title, options: stored.options || {}, correct_answer: stored.correctAnswer || '',
-        audio: stored.audio || { type: 'none' }, note: stored.note || '',
-        status: stored.status || 'unanswered', updated_at: stored.updatedAt || new Date().toISOString()
-      }, { onConflict: 'set_id,question_id' });
-      if (error) throw new Error(`本地已保存，但写入 Supabase 失败：${error.message}`);
+
+    if (!window.toeicSupabaseReady || !window.toeicSupabase) {
+      const error = new Error('Supabase 客户端未初始化；题目已保存在本地，但尚未写入云端。请检查 js/supabase-client.js。');
+      error.localSaved = true;
+      throw error;
     }
-    return stored;
+
+    try {
+      const { data: sessionData, error: sessionError } = await window.toeicSupabase.auth.getSession();
+      if (sessionError) throw sessionError;
+      if (!sessionData.session) throw new Error('当前登录会话已失效，请重新登录后再保存。');
+
+      const row = {
+        set_id: Number(setId), part_id: Number(partId), question_id: String(stored.questionId),
+        title: String(stored.title || ''), options: stored.options || {}, correct_answer: stored.correctAnswer || '',
+        audio: stored.audio || { type: 'none' }, note: stored.note || '',
+        status: stored.status || 'unanswered',
+        created_at: stored.createdAt || new Date().toISOString(),
+        updated_at: stored.updatedAt || new Date().toISOString()
+      };
+      const { error } = await window.toeicSupabase
+        .from('toeic_questions')
+        .upsert(row, { onConflict: 'set_id,question_id' })
+        .select('set_id,part_id,question_id')
+        .single();
+      if (error) throw error;
+      return stored;
+    } catch (cause) {
+      console.error('[录入新题] Supabase 写入失败:', cause);
+      const error = new Error(`题目已保存在本地，但云端写入失败：${cause.message || cause.code || '未知错误'}。请检查 toeic_questions 表、authenticated 的 INSERT/UPDATE 权限及 RLS 策略。`);
+      error.localSaved = true;
+      error.cause = cause;
+      throw error;
+    }
   }
 
   /**

@@ -109,3 +109,10 @@ SQL 初始数据仅导入项目现有 JSON 文件中实际存在的示例题（�
 4. 通过 `启动系统.bat` 打开页面，使用用户名 `oooo`、密码 `683253` 登录。登录验证由 Supabase Auth 完成，密码不会存入自建资料表。
 
 **安全说明：** Supabase Auth 用户不能通过普通 SQL 安全地创建/设置密码；请在 Dashboard 的 Authentication → Users 中创建用户。当前用户名登录通过 `username@example.com` 映射，因此当前映射用户名为 `oooo`。题库 RLS 策略适用于所有已登录用户（共享题库），并非每个用户独立隔离。
+
+
+## V7 新题保存排查
+- 保存时按钮会显示“正在保存…”。
+- 只有 Supabase upsert 成功才提示“已写入 Supabase 云端数据库”。
+- 若云端失败，页面仍显示已保存在当前浏览器的题目，并显示 Supabase 返回的错误；请按错误检查 `toeic_questions` 表、authenticated 角色权限及 RLS。
+- 浏览器开发者工具（F12 → Console）会记录完整错误。

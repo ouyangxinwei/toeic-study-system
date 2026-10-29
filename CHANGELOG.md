@@ -57,3 +57,11 @@
 - 新增 `supabase_auth_v6.sql`：创建用户资料表、绑定用户名，并将题库 RLS 权限限制为已登录用户。
 - 更新 README，说明必须先在 Supabase Authentication 中创建 Auth 用户，再执行 SQL 绑定资料。
 - 注意：本地静态前端登录门禁不是服务器端页面授权；数据安全由 Supabase Auth 与 RLS 策略共同保障。
+
+
+## V7 - fix_question_insert_feedback_and_cloud_write（2026-10-29）
+- 修复新增题目在云端写入失败时，表单报错后页面不显示已保存本地题目的问题。
+- 保存按钮显示“正在保存…”，防止重复提交。
+- 新题写入前检查 Supabase 登录会话，并等待 upsert 返回结果。
+- 云端写入成功才提示成功；失败时展示具体错误，并刷新页面显示本地已保存题目。
+- 增加对表权限、RLS、登录会话问题的诊断提示。

@@ -479,6 +479,11 @@ async handleAddQuestion() {
       updatedAt: now
     };
 
+    const form = document.getElementById('addQuestionForm');
+    const submitButton = form.querySelector('button[type="submit"]');
+    const originalButtonText = submitButton.textContent;
+    submitButton.disabled = true;
+    submitButton.textContent = '正在保存…';
     try {
       await questionManager.addQuestion(setId, partId, newQuestion);
       this.currentSetId = setId;
@@ -488,10 +493,26 @@ async handleAddQuestion() {
       document.getElementById('statusFilter').value = '';
       this.closeAddQuestionModal();
       await this.openSet(setId);
-      Utils.showToast('题目录入成功，已保存到当前浏览器', 'success');
+      Utils.showToast('题目录入成功，已写入 Supabase 云端数据库。', 'success', 5000);
     } catch (error) {
-      console.error('录入题目失败:', error);
-      Utils.showToast(error.message || '题目录入失败，请检查题号是否重复', 'error');
+      console.error('录入题目失败:', error, error.cause || '');
+      // 云端写入失败时，addQuestion 已先保存到 localStorage；仍刷新页面让用户看到题目。
+      if (error.localSaved) {
+        this.currentSetId = setId;
+        this.isSearchMode = false;
+        try {
+          const setData = await questionManager.loadSet(setId);
+          if (setData) this.displaySetDetail(setData);
+        } catch (refreshError) {
+          console.error('刷新本地题目视图失败:', refreshError);
+        }
+        Utils.showToast(error.message || '题目已保存在本地，但云端写入失败。', 'error', 10000);
+      } else {
+        Utils.showToast(error.message || '题目录入失败，请检查题号是否重复', 'error', 8000);
+      }
+    } finally {
+      submitButton.disabled = false;
+      submitButton.textContent = originalButtonText;
     }
 }
 
