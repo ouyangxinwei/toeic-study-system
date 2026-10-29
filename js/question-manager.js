@@ -421,7 +421,12 @@ class QuestionManager {
 
   async renderSetsList(setId = Number(localStorage.getItem('toeic_current_set_id') || 1)) {
     const setsList = document.getElementById('setsList');
-    setsList.innerHTML = '';
+    if (!setsList) {
+      console.error('未找到套题列表容器 #setsList');
+      return;
+    }
+    // 每次切换都先清空旧 DOM，确保页面绝不会残留其他套题卡片。
+    setsList.replaceChildren();
     const selectedSetId = Number(setId);
     if (!Number.isInteger(selectedSetId) || selectedSetId < 1 || selectedSetId > 15) {
       Utils.showToast('套题编号无效，请选择第 1 至第 15 套。', 'error');
@@ -434,7 +439,15 @@ class QuestionManager {
     if (!setData) return;
     this.currentSet = setData;
     const stats = this.getStatistics();
-    setsList.appendChild(this.createSetCard(setData, stats));
+    const card = this.createSetCard(setData, stats);
+    card.dataset.setId = String(selectedSetId);
+    setsList.replaceChildren(card);
+    // 额外防护：仅允许当前选择的套题卡片留在列表中。
+    setsList.querySelectorAll('.set-card').forEach(item => {
+      if (item.dataset.setId !== String(selectedSetId)) item.remove();
+    });
+    const picker = document.getElementById('currentSetSelect');
+    if (picker && picker.value !== String(selectedSetId)) picker.value = String(selectedSetId);
   }
 
   /**
