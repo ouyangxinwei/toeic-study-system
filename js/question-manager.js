@@ -89,6 +89,7 @@ class QuestionManager {
     // 统计数始终以当前实际题目数组为准，避免 JSON 中的旧 questionCount 或缓存残留造成虚高。
     loadedSet.parts.forEach(part => { part.questionCount = Array.isArray(part.questions) ? part.questions.length : 0; });
 
+    const cloudDeletedQuestionIds = new Set();
     // Supabase 已预加载全量缓存时直接使用缓存，避免每套题单独请求云端。
     // 单独打开套题时也会复用同一份缓存；缓存不存在时再按套题查询。
     if (window.toeicSupabaseReady && window.toeicSupabase) {
@@ -104,10 +105,15 @@ class QuestionManager {
         }
         // 只有云端确实有该套题的数据时才覆盖静态题库；云端尚未导入时保留随包附带的题目。
         if (rows.length > 0) {
+        const previousQuestionsById = new Map(loadedSet.parts.flatMap(p => p.questions || []).map(q => [String(q.questionId), q]));
         loadedSet.parts.forEach(part => { part.questions = []; });
         rows.forEach(row => {
           const part = loadedSet.parts.find(item => Number(item.partId) === Number(row.part_id));
           if (!part) return;
+          const previousQuestion = previousQuestionsById.get(String(row.question_id));
+          if (row.audio?.missingCloudAudioId && previousQuestion?.audio?.type === 'cloud' && previousQuestion.audio.storagePath && window.audioStorageManager) {
+            window.audioStorageManager.cacheDelete(previousQuestion.audio.storagePath).catch(e => console.warn('清除已删除共享音频缓存失败', e));
+          }
           part.questions.push({
             questionId: String(row.question_id), title: row.title || '', options: row.options || {},
             correctAnswer: row.correct_answer || '', audio: row.audio || { type: 'none' },
@@ -120,12 +126,24 @@ class QuestionManager {
           part.questionCount = part.questions.length;
         });
         }
+        const {data:deletedRows,error:deletedError}=await window.toeicSupabase.from('toeic_question_deletions').select('question_id').eq('set_id',Number(setId));
+        if(deletedError)throw deletedError;
+        (deletedRows||[]).forEach(row=>cloudDeletedQuestionIds.add(String(row.question_id)));
       } catch (error) {
         console.error('Supabase 读取题库失败:', error);
         Utils.showToast(`云端题库读取失败：${error.message || error.code || '请检查 Supabase 配置、表名及 RLS 策略'}`, 'error', 8000);
       }
     }
 
+    // V20 删除墓碑优先于静态题库，避免普通同步再次把已删除题目上传/恢复。
+    try {
+      const tombstones = JSON.parse(localStorage.getItem('toeic_v20_deleted_questions') || '{}');
+      const prefix = `${Number(setId)}:`;
+      loadedSet.parts.forEach(part => {
+        part.questions = part.questions.filter(q => !tombstones[`${prefix}${String(q.questionId)}`] && !cloudDeletedQuestionIds.has(String(q.questionId)));
+        part.questionCount = part.questions.length;
+      });
+    } catch (e) { console.warn('读取题目删除记录失败', e); }
     if (loadRequestId === this.loadRequestId) this.currentSet = loadedSet;
     return loadedSet;
   }
@@ -227,6 +245,7 @@ class QuestionManager {
     if (duplicate) throw new Error(`题号 ${question.questionId} 已存在，请更换题号`);
 
     const stored = { ...question, partId };
+    try { const tombstones=JSON.parse(localStorage.getItem('toeic_v20_deleted_questions')||'{}'); delete tombstones[`${Number(setId)}:${String(stored.questionId)}`]; localStorage.setItem('toeic_v20_deleted_questions',JSON.stringify(tombstones)); } catch (_) {}
     part.questions.push(stored);
     part.questions.sort((a, b) => a.questionId.localeCompare(b.questionId, undefined, { numeric: true }));
     part.questionCount = part.questions.length;
@@ -245,6 +264,8 @@ class QuestionManager {
       if (sessionError) throw sessionError;
       if (!sessionData.session) throw new Error('当前登录会话已失效，请重新登录后再保存。');
 
+      const {error:tombstoneError}=await window.toeicSupabase.from('toeic_question_deletions').delete().eq('set_id',Number(setId)).eq('question_id',String(stored.questionId));
+      if(tombstoneError)throw tombstoneError;
       const row = {
         set_id: Number(setId), part_id: Number(partId), question_id: String(stored.questionId),
         title: String(stored.title || ''), options: stored.options || {}, correct_answer: stored.correctAnswer || '',
@@ -294,20 +315,21 @@ class QuestionManager {
       const { data: sessionData, error: sessionError } = await window.toeicSupabase.auth.getSession();
       if (sessionError) throw sessionError;
       if (!sessionData.session) throw new Error('登录会话已失效，请重新登录后修改。');
+      const {error:restoreTombstoneError}=await window.toeicSupabase.from('toeic_question_deletions').delete().eq('set_id',targetSetId).eq('question_id',String(saved.questionId));
+      if(restoreTombstoneError)throw restoreTombstoneError;
       const row = { set_id: targetSetId, part_id: saved.partId, question_id: saved.questionId, title: saved.title || '', options: saved.options || {}, correct_answer: saved.correctAnswer || '', audio: saved.audio || {type:'none'}, note: saved.note || '', status: saved.status || 'unanswered', created_at: saved.createdAt, updated_at: saved.updatedAt };
       const { error: upsertError } = await window.toeicSupabase.from('toeic_questions').upsert(row, { onConflict: 'set_id,question_id' });
       if (upsertError) throw upsertError;
       const changedKey = Number(oldSetId) !== targetSetId || String(oldQuestionId) !== String(saved.questionId);
       if (changedKey) {
-        const { data: deleted, error: deleteError } = await window.toeicSupabase.from('toeic_questions').delete().eq('set_id', Number(oldSetId)).eq('question_id', String(oldQuestionId)).select('question_id');
-        if (deleteError) throw deleteError;
-        if (!deleted || deleted.length === 0) {
-          // 新记录已经写入，提示用户原记录清理失败，避免隐瞒重复数据。
-          throw new Error('新题目已保存，但旧题号/旧套题记录未能删除。请检查 DELETE RLS 策略。');
-        }
+        const {data:deleteResult,error:deleteError}=await window.toeicSupabase.rpc('toeic_prepare_question_delete',{p_set_id:Number(oldSetId),p_question_id:String(oldQuestionId)});
+        if(deleteError)throw new Error(`新题目已保存，但旧题目清理失败：${deleteError.message}`);
+        if(deleteResult?.job_id){const cleanup=await window.audioStorageManager.runCleanupJob(deleteResult.job_id);if(!cleanup.completed)console.warn('旧题目音频待清理',cleanup);}
       }
     }
 
+    // 云端修改成功后再写本地删除墓碑，避免失败时把原题从本机隐藏。
+    try { const tombstones=JSON.parse(localStorage.getItem('toeic_v20_deleted_questions')||'{}'); if(Number(oldSetId)!==targetSetId || String(oldQuestionId)!==String(saved.questionId)) tombstones[`${Number(oldSetId)}:${String(oldQuestionId)}`]=now; delete tombstones[`${targetSetId}:${String(saved.questionId)}`]; localStorage.setItem('toeic_v20_deleted_questions',JSON.stringify(tombstones)); } catch (_) {}
     // 更新浏览器缓存；若跨套题移动，也清理原套题缓存。
     const oldKey = `set${Number(oldSetId)}_data`;
     let oldCache = {}; try { oldCache = JSON.parse(localStorage.getItem(oldKey) || '{}'); } catch (_) {}
@@ -332,7 +354,7 @@ class QuestionManager {
     return saved;
   }
 
-  /** 删除题目：先确认调用方已确认，再删除本地及云端记录。 */
+  /** V20 安全删除：服务端事务删除题目/解绑音频并建立可重试的 Storage 清理任务。 */
   async deleteQuestion(setId, questionId) {
     if (!this.currentSet || Number(this.currentSet.setId) !== Number(setId)) {
       const loaded = await this.loadSet(setId);
@@ -340,32 +362,67 @@ class QuestionManager {
     }
     const part = this.currentSet.parts.find(p => p.questions.some(q => String(q.questionId) === String(questionId)));
     if (!part) throw new Error(`未找到题目 ${questionId}`);
-    // 先删除云端，确认成功后再改本地界面，避免云端删除失败但本地已消失。
+    const question = part.questions.find(q => String(q.questionId) === String(questionId));
+    if (window.audioPlayer?.stopForQuestion) window.audioPlayer.stopForQuestion(questionId, setId);
+
+    let cloudResult = { question_deleted: true, delete_audio: false };
     if (window.toeicSupabaseReady && window.toeicSupabase) {
       const { data: sessionData, error: sessionError } = await window.toeicSupabase.auth.getSession();
       if (sessionError) throw sessionError;
-      if (!sessionData.session) throw new Error('登录已失效，请重新登录后删除云端题目。');
-      // select() 返回实际删除的行数；Supabase 在 RLS 不允许删除时可能返回空数组而非明显错误。
-      const { data: deletedRows, error } = await window.toeicSupabase.from('toeic_questions').delete()
-        .eq('set_id', Number(setId)).eq('question_id', String(questionId))
-        .select('set_id, question_id');
-      if (error) throw error;
-      if (!Array.isArray(deletedRows) || deletedRows.length === 0) {
-        throw new Error(`云端没有删除任何记录。请在 Supabase 执行 supabase_v14_delete_policy.sql，并确认 set_id=${setId}、question_id=${questionId} 的记录存在。`);
+      if (!sessionData.session) throw new Error('登录已失效，请重新登录后删除题目。');
+      const { data, error } = await window.toeicSupabase.rpc('toeic_prepare_question_delete', {
+        p_set_id: Number(setId), p_question_id: String(questionId)
+      });
+      if (error) {
+        const offline = navigator.onLine === false || /network|fetch|offline|failed to fetch/i.test(error.message || '');
+        if (!offline) throw new Error(`云端删除准备失败：${error.message || error.code}。请先执行 supabase_v20_delete_audio.sql。`);
+        const queue = JSON.parse(localStorage.getItem('toeic_v20_pending_deletions') || '[]');
+        if (!queue.some(x => Number(x.setId) === Number(setId) && String(x.questionId) === String(questionId))) queue.push({ setId:Number(setId), questionId:String(questionId), audio:question?.audio || null, createdAt:new Date().toISOString() });
+        localStorage.setItem('toeic_v20_pending_deletions', JSON.stringify(queue));
+        cloudResult = { question_deleted:true, pending_server:true, delete_audio:false };
+      } else {
+        cloudResult = data || cloudResult;
+      }
+      if (cloudResult.job_id) {
+        const cleanup = await window.audioStorageManager.runCleanupJob(cloudResult.job_id);
+        cloudResult.cleanup = cleanup;
       }
     }
+
+    // 记录删除墓碑，避免 V19.1 的静态 JSON 在下一次同步时重新上传已删除题目。
+    try { const tombstones=JSON.parse(localStorage.getItem('toeic_v20_deleted_questions')||'{}'); tombstones[`${Number(setId)}:${String(questionId)}`]=new Date().toISOString(); localStorage.setItem('toeic_v20_deleted_questions',JSON.stringify(tombstones)); } catch (_) {}
+    // 云端事务已确认题目删除或已进入离线队列后，才清除本地题目与相关缓存。
     part.questions = part.questions.filter(q => String(q.questionId) !== String(questionId));
     part.questionCount = part.questions.length;
     const key = `set${setId}_data`;
-    let cache = {};
-    try { cache = JSON.parse(localStorage.getItem(key) || '{}'); } catch (_) {}
+    let cache = {}; try { cache = JSON.parse(localStorage.getItem(key) || '{}'); } catch (_) {}
     delete cache[questionId];
     localStorage.setItem(key, JSON.stringify(cache));
     if (this.cloudQuestionsBySet) {
       const rows = this.cloudQuestionsBySet.get(Number(setId)) || [];
       this.cloudQuestionsBySet.set(Number(setId), rows.filter(row => String(row.question_id) !== String(questionId)));
     }
-    return true;
+    if (cloudResult.delete_audio && question?.audio?.storagePath) {
+      try { await window.audioStorageManager.cacheDelete(question.audio.storagePath); } catch (e) { console.warn('本地音频缓存清理待重试', e); }
+    }
+    return { ...cloudResult, question_deleted: true };
+  }
+
+  async processPendingDeletes() {
+    if (!window.toeicSupabaseReady || !window.toeicSupabase || navigator.onLine === false) return { done:0, failed:0 };
+    let queue=[]; try { queue=JSON.parse(localStorage.getItem('toeic_v20_pending_deletions')||'[]'); } catch (_) {}
+    if (!queue.length) return { done:0, failed:0 };
+    const remaining=[]; let done=0;
+    for (const item of queue) {
+      try {
+        const {data,error}=await window.toeicSupabase.rpc('toeic_prepare_question_delete',{p_set_id:Number(item.setId),p_question_id:String(item.questionId)});
+        if(error) throw error;
+        if(data?.job_id) { const cleanup=await window.audioStorageManager.runCleanupJob(data.job_id); if(!cleanup.completed) console.warn('离线删除对应音频仍待清理',cleanup); }
+        done++;
+      } catch(e) { remaining.push(item); }
+    }
+    localStorage.setItem('toeic_v20_pending_deletions',JSON.stringify(remaining));
+    return {done,failed:remaining.length};
   }
 
   /**

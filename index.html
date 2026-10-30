@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TOEIC错题学习系统</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/mobile.css">
+    <link rel="stylesheet" href="css/style.css?v=20.0">
+    <link rel="stylesheet" href="css/mobile.css?v=20.0">
 </head>
 <body>
     <div class="container">
@@ -42,6 +42,8 @@
             </div>
             <div class="add-question-section">
                 <button id="addQuestionBtn" class="add-btn" type="button">＋ 录入新题（题干 / A-D选项 / 正确答案）</button>
+                <button id="cloudAudioManagerBtn" class="secondary-btn" type="button">☁ 云端音频管理</button>
+                <button id="bulkDeleteQuestionsBtn" class="secondary-btn" type="button">批量删除选中题目</button>
             </div>
         </section>
 
@@ -195,17 +197,17 @@
 
     <!-- Supabase JS v2：浏览器直接连接 Supabase REST API -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="js/supabase-client.js?v=19.1"></script>
-    <script src="js/auth-gate.js?v=19.1"></script>
+    <script src="js/supabase-client.js?v=20.0"></script>
+    <script src="js/auth-gate.js?v=20.0"></script>
     <!-- 引入JavaScript -->
-    <script src="js/utils.js?v=19.1"></script>
-    <script src="js/question-manager.js?v=19.1"></script>
-    <script src="js/audio-storage-manager.js?v=19.1"></script>
-    <script src="js/audio-player.js?v=19.1"></script>
-    <script src="js/note-manager.js?v=19.1"></script>
-    <script src="js/search-engine.js?v=19.1"></script>
-    <script src="js/export-manager.js?v=19.1"></script>
-    <script src="js/sync-manager.js?v=19.1"></script>
-    <script src="js/app.js?v=19.1"></script>
+    <script src="js/utils.js?v=20.0"></script>
+    <script src="js/question-manager.js?v=20.0"></script>
+    <script src="js/audio-storage-manager.js?v=20.0"></script>
+    <script src="js/audio-player.js?v=20.0"></script>
+    <script src="js/note-manager.js?v=20.0"></script>
+    <script src="js/search-engine.js?v=20.0"></script>
+    <script src="js/export-manager.js?v=20.0"></script>
+    <script src="js/sync-manager.js?v=20.0"></script>
+    <script src="js/app.js?v=20.0"></script>
 </body>
 </html>

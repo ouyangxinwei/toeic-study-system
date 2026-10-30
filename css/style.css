@@ -776,3 +776,15 @@ body {
 .current-set-picker label { font-weight:600; }
 .current-set-picker select { min-width:210px; padding:9px 12px; border:1px solid #bbb; border-radius:6px; background:#fff; color:#222; }
 .current-set-picker .picker-hint { color:#666; font-size:13px; }
+
+/* V20 云端音频管理 */
+.audio-manager-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px;margin:8px 0;border:1px solid var(--border-color,#ddd);border-radius:8px;flex-wrap:wrap}
+.audio-manager-row>div{min-width:180px;overflow-wrap:anywhere}
+#cloudAudioManagerBtn{margin-left:8px}
+.audio-manager-filters{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+.audio-manager-filters input{flex:1;min-width:180px}
+.audio-manager-actions{display:flex;gap:6px;flex-wrap:wrap}
+.audio-manager-row[hidden]{display:none}
+.bulk-delete-toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 0;margin:8px 0;border-bottom:1px solid var(--border-color,#ddd)}
+.bulk-select-label{display:inline-flex;align-items:center;gap:4px;font-size:13px}
+.bulk-select-question{width:auto}

@@ -68,7 +68,8 @@ class SyncManager {
         Object.values(localStore || {}).forEach(q => {
           if (q && q.questionId) byId.set(String(q.questionId), { ...byId.get(String(q.questionId)), ...q });
         });
-        const rows = Array.from(byId.values()).map(q => ({
+        let tombstones={}; try { tombstones=JSON.parse(localStorage.getItem('toeic_v20_deleted_questions')||'{}'); } catch (_) {}
+        const rows = Array.from(byId.values()).filter(q => !tombstones[`${setId}:${String(q.questionId)}`]).map(q => ({
           set_id: setId,
           part_id: Number(q.partId || Number(String(q.questionId).split('-')[1]) || 1),
           question_id: String(q.questionId),
@@ -183,7 +184,8 @@ class SyncManager {
         byId.set(String(q.questionId), { ...previous, ...q, partId: Number(q.partId || previous.partId || 1) });
       }
     });
-    return Array.from(byId.values()).map(q => {
+    let tombstones={}; try { tombstones=JSON.parse(localStorage.getItem('toeic_v20_deleted_questions')||'{}'); } catch (_) {}
+    return Array.from(byId.values()).filter(q => !tombstones[`${Number(setId)}:${String(q.questionId)}`]).map(q => {
       const audio = q.audio || { type: 'none' };
       const safeAudio = audio.type === 'local' && String(audio.path || '').startsWith('data:audio/')
         ? { type: 'local', fileName: audio.fileName || '', pendingUpload: true }

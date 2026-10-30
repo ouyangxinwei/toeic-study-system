@@ -17,6 +17,8 @@ class AudioPlayer {
   renderAudioPlayer(question, container) {
     const audioSection = document.createElement('div');
     audioSection.className = 'audio-section';
+    audioSection.dataset.questionId = String(question.questionId);
+    audioSection.dataset.setId = String(question.setId || document.getElementById('currentSetSelect')?.value || '');
 
     // 检查音频是否可用
     const hasAudio = this.checkAudioExists(question.audio);
@@ -24,7 +26,7 @@ class AudioPlayer {
     if (hasAudio) {
       // 有音频：显示播放器
       audioSection.innerHTML = `
-        <audio class="audio-player" controls preload="none">
+        <audio class="audio-player" data-question-id="${question.questionId}" data-audio-id="${question.audio?.audioId || ''}" data-set-id="${question.setId || document.getElementById('currentSetSelect')?.value || ''}" controls preload="none">
           <source src="${question.audio.type === 'cloud' ? '' : this.getAudioSrc(question.audio)}" type="${question.audio.mimeType || 'audio/mpeg'}">
           您的浏览器不支持音频播放
         </audio>
@@ -54,7 +56,7 @@ class AudioPlayer {
     container.appendChild(audioSection);
     if (hasAudio && question.audio.type === 'cloud') {
       const player = audioSection.querySelector('audio');
-      audioStorageManager.getPlaybackUrl(question.audio).then(src => { if (player && player.isConnected) { player.src = src; player.load(); } }).catch(err => { console.error('云端音频读取失败', err); Utils.showToast('云端音频读取失败：' + (err.message || ''), 'error'); });
+      audioStorageManager.getPlaybackUrl(question.audio).then(src => { if (player && player.isConnected && !player.dataset.deleting) { player.src = src; player.load(); player.addEventListener('ended', () => audioStorageManager.revokeUrl(src), { once: true }); } else { audioStorageManager.revokeUrl(src); } }).catch(err => { console.error('云端音频读取失败', err); Utils.showToast('云端音频读取失败：' + (err.message || ''), 'error'); });
     }
 
     // 绑定事件
@@ -141,8 +143,13 @@ class AudioPlayer {
       try { const setId=Number(question.setId||document.getElementById('currentSetSelect')?.value||1); const partId=Number(question.partId||1); const old=question.audio;
         Utils.showToast('正在上传音频到云端…','info');
         const audio=await audioStorageManager.upload(file,{setId,partId,questionId,onProgress:p=>{}});
-        question.audio=audio; question.updatedAt=new Date().toISOString(); questionManager.saveUserData();
-        if(old?.type==='cloud'&&old.storagePath!==audio.storagePath){try{await audioStorageManager.remove(old);}catch(err){console.warn('旧音频清理失败，稍后可手动清理',err);}}
+        const updatedAt=new Date().toISOString();
+        const sb=await audioStorageManager.client();
+        const {data:updatedRows,error:questionError}=await sb.from('toeic_questions').update({audio,updated_at:updatedAt}).eq('set_id',setId).eq('question_id',String(questionId)).select('question_id');
+        if(questionError){try{await audioStorageManager.queueUnreferencedAudio(audio.audioId);}catch(_){}throw new Error(`音频已上传，但题目云端关联更新失败：${questionError.message}`);}
+        if(!updatedRows?.length){const {error:insertError}=await sb.from('toeic_questions').upsert({set_id:setId,part_id:partId,question_id:String(questionId),title:question.title||'',options:question.options||{},correct_answer:question.correctAnswer||'',audio,note:question.note||'',status:question.status||'unanswered',created_at:question.createdAt||updatedAt,updated_at:updatedAt},{onConflict:'set_id,question_id'});if(insertError){try{await audioStorageManager.queueUnreferencedAudio(audio.audioId);}catch(_){}throw new Error(`音频已上传，但题目云端关联创建失败：${insertError.message}`);}}
+        question.audio=audio; question.updatedAt=updatedAt; questionManager.saveUserData();
+        if(old?.type==='cloud'&&old.audioId&&old.audioId!==audio.audioId){try{await audioStorageManager.remove(old);}catch(err){console.warn('旧音频清理失败，稍后可重试',err);}}
         Utils.showToast('音频已上传并保存到云端，所有登录账号均可使用','success'); this.refreshAudioSection(question);
       } catch(error){console.error('云端上传失败:',error);Utils.showToast('上传失败：'+(error.message||String(error)),'error',8000);}
     }; input.click();
@@ -222,6 +229,7 @@ class AudioPlayer {
     
     // 创建新的音频对象
     this.currentAudio = new Audio(audioSrc);
+    this.currentQuestionId = String(questionId);
     this.currentAudio.play().catch(error => {
       console.error('播放失败:', error);
       Utils.showToast('播放失败', 'error');
@@ -241,13 +249,31 @@ class AudioPlayer {
    * 停止音频
    */
   stop() {
-    if (this.currentAudio) {
-      this.currentAudio.pause();
-      this.currentAudio.currentTime = 0;
-      this.currentAudio = null;
-    }
+    if (this.currentAudio) { this.currentAudio.pause(); this.currentAudio.currentTime = 0; this.currentAudio.src = ''; this.currentAudio.load(); this.currentAudio = null; }
+    document.querySelectorAll('audio.audio-player').forEach(player => { player.pause(); try { player.currentTime = 0; } catch (_) {} const src=player.src; if(src&&src.startsWith('blob:'))audioStorageManager.revokeUrl(src); player.removeAttribute('src'); player.load(); });
+  }
+
+  stopForQuestion(questionId, setId) {
+    const qid = String(questionId); const sid = setId == null ? null : String(setId);
+    document.querySelectorAll('audio.audio-player').forEach(player => {
+      if (String(player.dataset.questionId) === qid && (sid === null || String(player.dataset.setId) === sid)) {
+        player.dataset.deleting = 'true'; player.pause(); try { player.currentTime = 0; } catch (_) {}
+        const src = player.src; player.removeAttribute('src'); player.querySelectorAll('source').forEach(source => source.removeAttribute('src')); player.load();
+        if (src && src.startsWith('blob:')) audioStorageManager.revokeUrl(src);
+      }
+    });
+    if (this.currentAudio && String(this.currentQuestionId) === qid) { this.currentAudio.pause(); this.currentAudio.currentTime = 0; this.currentAudio = null; this.currentQuestionId = null; }
+  }
+
+  stopForAudioId(audioId) {
+    const target=String(audioId);
+    document.querySelectorAll('audio.audio-player').forEach(player=>{
+      if(String(player.dataset.audioId)===target){player.dataset.deleting='true';player.pause();try{player.currentTime=0;}catch(_){}const src=player.src;player.removeAttribute('src');player.load();if(src&&src.startsWith('blob:'))audioStorageManager.revokeUrl(src);}
+    });
+    this.stopCloudAudioPreview?.(audioId);
   }
 }
+
 
 // 创建全局实例
 const audioPlayer = new AudioPlayer();

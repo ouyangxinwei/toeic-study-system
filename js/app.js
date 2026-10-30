@@ -7,6 +7,7 @@ class App {
   constructor() {
     this.currentSetId = null;
     this.isSearchMode = false;
+    this.selectedQuestionIds = new Set();
     this.init();
   }
 
@@ -46,6 +47,9 @@ class App {
         });
       }
       await questionManager.renderSetsList(savedSetId);
+      // 登录后自动恢复离线删除和云端音频清理任务。
+      try { const pending = await questionManager.processPendingDeletes(); const cleanup = await audioStorageManager.retryPendingCleanup(); if (pending.done || cleanup.length) console.info('V20 删除恢复任务', pending, cleanup); } catch (e) { console.warn('V20 删除恢复任务暂不可执行', e); }
+      window.addEventListener('online', async () => { try { const pending = await questionManager.processPendingDeletes(); await audioStorageManager.retryPendingCleanup(); if (pending.done && this.currentSetId) await this.openSet(this.currentSetId); } catch (e) { console.warn('网络恢复后的删除任务重试失败', e); } });
 
       Utils.showToast('应用加载成功', 'success', 2000);
     } catch (error) {
@@ -160,6 +164,9 @@ document.getElementById('addQuestionForm').addEventListener('submit', (e) => {
       this.handleSync();
     });
 
+    document.getElementById('cloudAudioManagerBtn')?.addEventListener('click', () => this.showCloudAudioManager());
+    document.getElementById('bulkDeleteQuestionsBtn')?.addEventListener('click', () => this.bulkDeleteSelectedQuestions());
+
     // 本机与云端的单向数据传输按钮
     document.getElementById('uploadLocalToCloudBtn').addEventListener('click', () => {
       syncManager.uploadLocalToCloud();
@@ -256,6 +263,7 @@ document.getElementById('addQuestionForm').addEventListener('submit', (e) => {
    * @param {Object} setData - 套题数据
    */
   displaySetDetail(setData) {
+    this.selectedQuestionIds.clear();
     const setsList = document.getElementById('setsList');
     setsList.innerHTML = '';
 
@@ -275,6 +283,10 @@ document.getElementById('addQuestionForm').addEventListener('submit', (e) => {
     title.className = 'set-detail-title';
     title.textContent = setData.setName;
     setsList.appendChild(title);
+    const bulkBar=document.createElement('div'); bulkBar.className='bulk-delete-toolbar';
+    const hint=document.createElement('span'); hint.textContent='勾选需要删除的题目：';
+    const bulkBtn=document.createElement('button'); bulkBtn.type='button'; bulkBtn.className='secondary-btn'; bulkBtn.textContent='删除选中题目（0）'; bulkBtn.addEventListener('click',()=>this.bulkDeleteSelectedQuestions());
+    bulkBar.append(hint,bulkBtn); setsList.appendChild(bulkBar);
 
     // 按Part显示题目
     setData.parts.forEach(part => {
@@ -321,6 +333,7 @@ document.getElementById('addQuestionForm').addEventListener('submit', (e) => {
 
     card.innerHTML = `
       <div class="question-header">
+        <label class="bulk-select-label"><input type="checkbox" class="bulk-select-question" data-question-id="${question.questionId}"> 选择</label>
         <span class="question-id">${question.questionId}</span>
         <span class="${statusClass}">${statusText}</span>
       </div>
@@ -347,6 +360,8 @@ document.getElementById('addQuestionForm').addEventListener('submit', (e) => {
     `;
 
     // 绑定事件
+    const bulkCheckbox=card.querySelector('.bulk-select-question');
+    bulkCheckbox.addEventListener('change',()=>{ if(bulkCheckbox.checked)this.selectedQuestionIds.add(String(question.questionId)); else this.selectedQuestionIds.delete(String(question.questionId)); const btn=document.querySelector('.bulk-delete-toolbar button'); if(btn)btn.textContent=`删除选中题目（${this.selectedQuestionIds.size}）`; });
     const viewBtn = card.querySelector('.view-detail-btn');
     viewBtn.addEventListener('click', () => {
       this.showQuestionDetail(question.questionId);
@@ -371,11 +386,31 @@ document.getElementById('addQuestionForm').addEventListener('submit', (e) => {
     });
 
     card.querySelector('.delete-question-btn').addEventListener('click', async () => {
-      const confirmed = window.confirm(`确定删除题目 ${question.questionId} 吗？\n此操作会删除本地缓存及 Supabase 云端记录，无法撤销。`);
+      // 用户进入删除流程时先停止该题正在播放的 HTMLAudioElement。
+      audioPlayer.stopForQuestion(question.questionId, this.currentSetId);
+      if (question.audio?.audioId) this.stopCloudAudioPreview(question.audio.audioId);
+      let preview = null;
+      try {
+        if (question.audio?.type === 'cloud' && question.audio.audioId) preview = await audioStorageManager.getDeletePreview(question.audio.audioId);
+      } catch (e) {
+        if (navigator.onLine !== false && !/network|fetch|offline|failed to fetch/i.test(e.message || '')) { Utils.showToast(`读取音频引用关系失败，暂不能安全删除：${e.message || e}`, 'error', 8000); return; }
+        preview = null;
+      }
+      const refCount = preview?.references?.length || 0;
+      const audioText = question.audio?.type === 'cloud' && !preview
+        ? '云端音频引用关系目前离线不可读取；题目会先进入本地待删除队列，恢复网络后由服务器检查共享引用，再决定是否删除文件。'
+        : question.audio?.type === 'cloud'
+        ? (refCount > 1 ? `云端音频：${preview.audio.file_name}；目前被 ${refCount} 道题目共用，删除本题只解除本题关联，其他题目继续使用。` : `云端音频：${preview?.audio?.file_name || question.audio.fileName || '已关联音频'}；若无其他引用，将同时删除服务器文件。`)
+        : (question.audio?.type === 'local' ? '本题为本地旧音频；删除题目时清除本地关联，不会删除原始音频文件以外的其他文件。' : '本题没有云端音频文件。');
+      const confirmed = window.confirm(`确定删除第 ${this.currentSetId} 套题目 ${question.questionId} 吗？\n\n${audioText}\n\n正在播放的音频已停止。删除后将清理本题缓存和关联，操作无法撤销。`);
       if (!confirmed) return;
       try {
-        await questionManager.deleteQuestion(this.currentSetId, question.questionId);
-        Utils.showToast(`题目 ${question.questionId} 已删除`, 'success', 2500);
+        const result = await questionManager.deleteQuestion(this.currentSetId, question.questionId);
+        let message = `题目 ${question.questionId} 已删除`;
+        if (result.pending_server) message += '；服务器删除已加入待同步队列，联网后自动处理';
+        else if (result.delete_audio) message += result.cleanup?.completed ? '；云端音频及索引已删除' : '；云端音频待重试清理';
+        else if (result.audio_id) message += `；共享音频保留（仍有 ${result.references_remaining || 0} 道题目引用）`;
+        Utils.showToast(message, result.cleanup && !result.cleanup.completed ? 'warning' : 'success', 6000);
         await this.openSet(this.currentSetId);
       } catch (error) {
         console.error('删除题目失败:', error);
@@ -581,6 +616,59 @@ document.getElementById('addQuestionForm').addEventListener('submit', (e) => {
   /**
    * 处理同步
    */
+  async bulkDeleteSelectedQuestions() {
+    const ids=Array.from(this.selectedQuestionIds);
+    if(!this.currentSetId || !ids.length){Utils.showToast('请先勾选需要删除的题目','info');return;}
+    if(!confirm(`确定批量删除第 ${this.currentSetId} 套的 ${ids.length} 道题目吗？\n\n系统会逐题停止播放、检查共享音频引用，并且只清理不再被任何题目使用的云端音频。网络中断时会建立待同步删除任务。`))return;
+    const succeeded=[]; const failed=[];
+    for(const id of ids){
+      try{const q=questionManager.getQuestion(id);audioPlayer.stopForQuestion(id,this.currentSetId);if(q?.audio?.audioId)this.stopCloudAudioPreview(q.audio.audioId);await questionManager.deleteQuestion(this.currentSetId,id);succeeded.push(id);}
+      catch(e){failed.push({id,error:e.message||String(e)});}
+    }
+    this.selectedQuestionIds.clear();
+    await this.openSet(this.currentSetId);
+    const detail=failed.length?`；失败 ${failed.length} 道：${failed.map(x=>`${x.id}（${x.error}）`).join('；')}`:'';
+    Utils.showToast(`批量删除完成：成功 ${succeeded.length} 道${detail}`,failed.length?'warning':'success',9000);
+  }
+
+  stopCloudAudioPreview(audioId) {
+    const player=this.cloudAudioPreviewPlayer;
+    if(player && (!audioId || String(player.dataset.audioId)===String(audioId))) { player.pause(); try { player.currentTime=0; } catch(_) {} const src=player.src; if(src&&src.startsWith('blob:'))audioStorageManager.revokeUrl(src); player.src=''; player.load(); this.cloudAudioPreviewPlayer=null; }
+  }
+
+  async showCloudAudioManager() {
+    try {
+      if (!window.toeicSupabaseReady || !window.toeicSupabase) throw new Error('请先登录并连接 Supabase');
+      const sb = window.toeicSupabase;
+      const { data, error } = await sb.from('toeic_audio_files').select('id,file_name,file_size,mime_type,storage_path,status,set_id,part_id,created_at').order('created_at', { ascending: false });
+      if (error) throw error;
+      let modal = document.getElementById('cloudAudioManagerModal');
+      if (!modal) { modal = document.createElement('div'); modal.id = 'cloudAudioManagerModal'; modal.className = 'modal'; document.body.appendChild(modal); }
+      modal.innerHTML = `<div class="modal-content modal-large"><span class="close" id="closeCloudAudioManager">&times;</span><h2>云端音频管理</h2><p>所有登录账号共享。主动删除音频会影响所有引用它的题目。</p><div class="audio-manager-filters"><input id="audioManagerSearch" placeholder="搜索音频文件名"><select id="audioManagerSet"><option value="">全部套题</option>${Array.from({length:16},(_,i)=>`<option value="${i+1}">第${i+1}套</option>`).join('')}</select><select id="audioManagerPart"><option value="">全部 Part</option>${Array.from({length:7},(_,i)=>`<option value="${i+1}">Part ${i+1}</option>`).join('')}</select></div><div id="cloudAudioList"></div><button type="button" id="retryAudioCleanupBtn" class="secondary-btn">重试待清理音频</button></div>`;
+      const list = modal.querySelector('#cloudAudioList');
+      if (!data?.length) list.textContent = '目前没有云端音频记录。';
+      for (const audio of (data || [])) {
+        const row = document.createElement('div'); row.className = 'audio-manager-row'; row.dataset.name = (audio.file_name || '').toLowerCase(); row.dataset.set = String(audio.set_id || ''); row.dataset.part = String(audio.part_id || '');
+        const info = document.createElement('div'); info.textContent = `${audio.file_name} · ${(Number(audio.file_size || 0) / 1024 / 1024).toFixed(2)} MB · 第${audio.set_id}套 Part ${audio.part_id} · ${audio.status || 'active'} · ${audio.storage_path}`;
+        const actions = document.createElement('div'); actions.className = 'audio-manager-actions';
+        const play = document.createElement('button'); play.type='button'; play.textContent='播放';
+        play.addEventListener('click', async () => { try { const src=await audioStorageManager.getPlaybackUrl({type:'cloud',audioId:audio.id,storagePath:audio.storage_path}); const player=new Audio(src); player.dataset.audioId=audio.id; this.cloudAudioPreviewPlayer=player; player.addEventListener('ended',()=>audioStorageManager.revokeUrl(src),{once:true}); await player.play(); } catch(e) { Utils.showToast(`播放失败：${e.message||e}`,'error',6000); } });
+        const download = document.createElement('button'); download.type='button'; download.textContent='下载';
+        download.addEventListener('click', async () => { try { const blob=await audioStorageManager.getBlob(audio.storage_path,{audioId:audio.id}); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download=audio.file_name||'toeic-audio'; a.click(); setTimeout(()=>URL.revokeObjectURL(url),1000); } catch(e) { Utils.showToast(`下载失败：${e.message||e}`,'error',6000); } });
+        const refsBtn = document.createElement('button'); refsBtn.type='button'; refsBtn.textContent='查看引用';
+        refsBtn.addEventListener('click', async () => { try { const p=await audioStorageManager.getDeletePreview(audio.id); const refs=p.references.length?p.references.map(r=>`第${r.set_id}套 / ${r.question_id}`).join('、'):'无题目引用'; alert(`引用数量：${p.references.length}\n${refs}`); } catch(e) { Utils.showToast(`读取引用失败：${e.message||e}`,'error'); } });
+        const del = document.createElement('button'); del.type='button'; del.className='delete-question-btn'; del.textContent='删除共享音频';
+        del.addEventListener('click', async () => { try { this.stopCloudAudioPreview(audio.id); audioPlayer.stopForAudioId(audio.id); const preview=await audioStorageManager.getDeletePreview(audio.id); const refText=preview.references.length?preview.references.map(r=>`第${r.set_id}套 / ${r.question_id}`).join('、'):'无题目引用'; if(!confirm(`确定删除共享音频「${audio.file_name}」吗？\n\n引用数量：${preview.references.length}\n引用题目：${refText}\n\n所有引用题目将被标记为音频缺失，所有登录账号都会受到影响。`))return; const result=await audioStorageManager.deleteSharedAudio(audio.id); Utils.showToast(result.cleanup?.completed?'共享音频已从云端删除':'共享音频删除失败，已加入待重试队列',result.cleanup?.completed?'success':'warning',7000); modal.remove(); await this.showCloudAudioManager(); if(this.currentSetId)await this.openSet(this.currentSetId); } catch(e) { Utils.showToast(`删除共享音频失败：${e.message||e}`,'error',8000); } });
+        actions.append(play,download,refsBtn,del); row.append(info,actions); list.appendChild(row);
+      }
+      const applyFilters=()=>{const term=modal.querySelector('#audioManagerSearch').value.trim().toLowerCase();const set=modal.querySelector('#audioManagerSet').value;const part=modal.querySelector('#audioManagerPart').value;list.querySelectorAll('.audio-manager-row').forEach(row=>{row.hidden=!(row.dataset.name.includes(term)&&(!set||row.dataset.set===set)&&(!part||row.dataset.part===part));});};
+      modal.querySelector('#audioManagerSearch').addEventListener('input',applyFilters); modal.querySelector('#audioManagerSet').addEventListener('change',applyFilters); modal.querySelector('#audioManagerPart').addEventListener('change',applyFilters);
+      modal.querySelector('#closeCloudAudioManager').addEventListener('click', () => modal.remove());
+      modal.querySelector('#retryAudioCleanupBtn').addEventListener('click', async () => { try { const results=await audioStorageManager.retryPendingCleanup(); const failed=results.filter(x=>!x.completed).length; Utils.showToast(`清理任务处理完成：${results.length-failed} 成功，${failed} 待重试`,failed?'warning':'success',7000); } catch(e) { Utils.showToast(`重试失败：${e.message||e}`,'error',8000); } });
+      modal.style.display='block';
+    } catch(error) { Utils.showToast(`打开云端音频管理失败：${error.message||error}`,'error',8000); }
+  }
+
   async handleSync() {
     if (!syncManager.checkConfig()) {
       return;

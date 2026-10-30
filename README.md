@@ -10,7 +10,8 @@
 
 - ✅ 16套模拟题，第16套内置原创听力100题
 - ✅ 听力4部分 + 阅读3部分
-- ✅ 音频播放（本地文件 + 外部链接）
+- ✅ 音频播放（本地文件 + 外部链接 + Supabase 云端音频）
+- ✅ V20 安全删除题目、共享音频引用保护、IndexedDB 缓存清理和失败重试
 - ✅ 题目详情默认隐藏正确答案，可手动显示/隐藏答案
 - ✅ 笔记功能
 - ✅ 搜索与筛选
@@ -96,7 +97,7 @@ python -m http.server 8000
 4. 浏览器开发者工具 Console 可查看 Supabase 错误详情。确认 Supabase 项目 API 已启用且 `toeic_questions` 表在 `public` schema。
 
 ### 安全提醒
-当前版本尚未实现用户登录。为了让现有界面可直接使用，SQL 给 `anon` 角色开放了题库读取、插入和更新权限，任何人拿到网站地址及公开 key 都可能修改共享题库。该策略只适合个人测试/可信小范围使用。正式公开部署前应加入 Supabase Auth，并把写入策略限制为 `authenticated` 用户，最好再按用户/角色细分权限。公开 key 可用于浏览器，service_role/secret key 绝不能放进前端。
+以上为 V5 历史版本说明。当前 V19.1/V20 已接入 Supabase Auth；实际权限以项目中后续版本 SQL 策略为准。浏览器只使用公开 anon/publishable key，严禁将 service_role/secret key 放入前端代码。
 
 ### 数据说明
 SQL 初始数据仅导入项目现有 JSON 文件中实际存在的示例题（当前为少量演示题），不会凭空生成完整 15 套 200 题。重复执行 SQL 会按套题和题号更新现有记录。
@@ -216,3 +217,34 @@ V19 将本地上传音频保存为 Supabase Storage 私有文件，所有已登�
 3. 不需要填写 `apiUrl`。若提示 Supabase 未连接，请检查 `js/supabase-client.js` 中的 Project URL、publishable/anon key、网络及 Supabase SDK 加载情况。
 4. 若同步返回权限错误，请检查 Supabase `toeic_questions` 表的 authenticated 角色权限和 RLS 策略。
 5. 音频文件迁移仍需先扫描、确认，再批量上传；普通题库同步不会代替音频迁移。
+
+## V20：安全删除题目与共享云端音频清理
+
+V20 在 V19.1 基础上增加安全删除机制。所有已登录账号都可以删除题目和共享云端音频。
+
+### 首次升级必须执行 SQL
+
+在 Supabase Dashboard → SQL Editor 中执行项目根目录的 `supabase_v20_delete_audio.sql`。该脚本依赖 V19 的 `toeic_audio_files` 表、`toeic_questions` 表和 `toeic-audio` Storage Bucket。执行前建议先备份数据库。
+
+### 删除题目
+
+- 删除流程开始时立即停止该题正在播放的音频。
+- 确认框显示套题、题号、音频文件名和共享引用数量。
+- 服务器端在一个数据库事务中删除题目并解除音频关联。
+- 仅当共享音频不再被任何题目引用时，才删除 Storage 文件和音频索引。
+- 清除当前浏览器对应的 IndexedDB 音频缓存及本地题目缓存。
+- 网络断开时，题目删除进入本地待同步队列；恢复网络后自动执行服务器删除。
+
+### 云端音频管理
+
+页面顶部的「云端音频管理」可查看共享音频、查看引用关系、删除共享音频以及重试失败清理任务。主动删除共享音频会影响所有引用该文件的题目，并将这些题目的音频状态标记为缺失。所有登录账号均拥有该删除权限。
+
+### 清理失败与重试
+
+Storage 删除任务保存在 `toeic_audio_cleanup_jobs`。删除失败会显示待重试状态；重新登录/重新进入系统、网络恢复或在音频管理页点击「重试待清理音频」时会重试。普通题库同步不会清空整个 IndexedDB。
+
+### 安全说明
+
+前端只使用 Supabase 项目公开 anon/publishable key，不包含 service-role key。数据库 RPC 校验登录身份；Storage 文件删除仍受 `storage.objects` policy 保护。云端音频播放前会重新检查音频索引状态，处于 deleting/failed 或已不存在的音频不能通过本地缓存绕过删除状态。
+
+V20 另提供题目卡片勾选和批量删除。批量删除逐题调用同一套服务器端安全删除流程，并汇总成功和失败结果；共享音频只在全局引用数归零时清理。
