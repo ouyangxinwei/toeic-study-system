@@ -441,17 +441,50 @@ document.getElementById('addQuestionForm').addEventListener('submit', (e) => {
             <div class="form-group"><label>选项 C *</label><input id="editOptionC" required></div>
             <div class="form-group"><label>选项 D *</label><input id="editOptionD" required></div>
             <div class="form-group"><label>正确答案 *</label><select id="editCorrectAnswer" required><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option></select></div>
-            <div class="form-group"><label>音频链接（可选）</label><input id="editAudioUrl" placeholder="本地路径或外部链接"></div>
+            <section class="edit-audio-panel">
+              <h3>题目音频</h3>
+              <p id="editCurrentAudioInfo" class="edit-audio-status">正在读取当前音频…</p>
+              <div class="form-group"><label for="editAudioFile">上传新音频（上传后替换当前题目音频）</label><input id="editAudioFile" type="file" accept="audio/mpeg,audio/wav,audio/mp4,audio/x-m4a,audio/aac,audio/ogg,audio/webm,audio/*"></div>
+              <div class="form-group"><label for="editSharedAudioSelect">或者关联已有共享云端音频</label><select id="editSharedAudioSelect"><option value="">保持当前音频</option></select></div>
+              <div class="form-group"><label for="editAudioUrl">或者使用外部音频链接</label><input id="editAudioUrl" placeholder="https://… 或本地 DataURL"></div>
+              <div class="edit-audio-actions"><button type="button" class="secondary-btn" id="editPreviewAudioBtn">试听当前音频</button><button type="button" class="danger-btn" id="editRemoveAudioBtn">移除本题音频</button></div>
+              <p class="edit-audio-hint">每道题关联一段音频；同一云端音频可以被多道题共享。替换只影响当前题目，其他题目不会被修改。</p>
+              <p id="editAudioUploadStatus" class="edit-audio-status" aria-live="polite"></p>
+            </section>
             <div class="form-group"><label>笔记（可选）</label><textarea id="editNote" rows="3"></textarea></div>
             <div class="form-group"><label>状态</label><select id="editStatus"><option value="unanswered">未作答</option><option value="wrong">错题</option><option value="correct">答对</option><option value="reviewed">已复习</option><option value="mastered">已掌握</option></select></div>
             <div class="form-actions"><button type="submit" class="submit-btn">保存修改</button><button type="button" class="cancel-btn" id="cancelEditQuestion">取消</button></div>
           </form>
         </div>`;
       document.body.appendChild(modal);
-      const close = () => { modal.style.display = 'none'; };
+      const close = () => { this.stopEditAudioPreview(); modal.style.display = 'none'; };
       modal.querySelector('#closeEditQuestionModal').addEventListener('click', close);
       modal.querySelector('#cancelEditQuestion').addEventListener('click', close);
       modal.addEventListener('click', e => { if (e.target === modal) close(); });
+      modal.querySelector('#editAudioFile').addEventListener('change', e => {
+        const file=e.target.files?.[0];
+        modal.querySelector('#editAudioUploadStatus').textContent=file ? `已选择：${file.name}（${(file.size/1024/1024).toFixed(2)} MB），保存题目时上传。` : '';
+        if(file) { modal.querySelector('#editSharedAudioSelect').value=''; modal.dataset.removeAudio='false'; }
+      });
+      modal.querySelector('#editSharedAudioSelect').addEventListener('change', e => {
+        if(e.target.value) { modal.querySelector('#editAudioFile').value=''; modal.querySelector('#editAudioUrl').value=''; modal.dataset.removeAudio='false'; }
+      });
+      modal.querySelector('#editAudioUrl').addEventListener('input', () => { if(modal.querySelector('#editAudioUrl').value.trim()) modal.dataset.removeAudio='false'; });
+      modal.querySelector('#editRemoveAudioBtn').addEventListener('click', () => {
+        modal.dataset.removeAudio='true'; modal.querySelector('#editAudioFile').value=''; modal.querySelector('#editSharedAudioSelect').value=''; modal.querySelector('#editAudioUrl').value='';
+        modal.querySelector('#editCurrentAudioInfo').textContent='保存时将解除本题音频关联；如果没有其他题目引用，云端文件会进入清理队列。';
+        modal.querySelector('#editAudioUploadStatus').textContent='已选择移除本题音频（尚未保存）。';
+      });
+      modal.querySelector('#editPreviewAudioBtn').addEventListener('click', async () => {
+        try {
+          const a=modal._originalAudio;
+          if(!a || a.type==='none') throw new Error('当前题目没有音频');
+          this.stopEditAudioPreview();
+          const src=await audioStorageManager.getPlaybackUrl(a);
+          const player=new Audio(src); modal._editPreview={player,src}; await player.play();
+          player.addEventListener('ended',()=>this.stopEditAudioPreview(),{once:true});
+        } catch(err) { Utils.showToast(`试听失败：${err.message||err}`,'error'); }
+      });
       modal.querySelector('#editQuestionForm').addEventListener('submit', async e => {
         e.preventDefault();
         const form = e.currentTarget;
@@ -464,34 +497,60 @@ document.getElementById('addQuestionForm').addEventListener('submit', (e) => {
         const partId = Number(document.getElementById('editPartId').value);
         const questionId = document.getElementById('editQuestionId').value.trim();
         const audioUrl = document.getElementById('editAudioUrl').value.trim();
-        const updated = {
-          questionId,
-          title: document.getElementById('editTitle').value.trim(),
-          options: { A: document.getElementById('editOptionA').value.trim(), B: document.getElementById('editOptionB').value.trim(), C: document.getElementById('editOptionC').value.trim(), D: document.getElementById('editOptionD').value.trim() },
-          correctAnswer: document.getElementById('editCorrectAnswer').value,
-          audio: audioUrl ? { type: /^https?:\/\//i.test(audioUrl) ? 'remote' : 'local', path: audioUrl, url: /^https?:\/\//i.test(audioUrl) ? audioUrl : '' } : { type: 'none' },
-          note: document.getElementById('editNote').value.trim(),
-          status: document.getElementById('editStatus').value,
-          partId, updatedAt: new Date().toISOString()
-        };
+        const originalAudio = modal._originalAudio || {type:'none'};
+        let nextAudio = originalAudio;
+        let newlyUploadedAudio = null;
+        const selectedSharedId = modal.querySelector('#editSharedAudioSelect').value;
         try {
-          await questionManager.editQuestion(oldSetId, oldQuestionId, setId, updated);
+          const file=modal.querySelector('#editAudioFile').files?.[0];
+          if(file) {
+            if(file.size > 20*1024*1024) throw new Error('音频文件不能超过20 MB');
+            if(!file.type.startsWith('audio/')) throw new Error('请选择有效的音频文件');
+            modal.querySelector('#editAudioUploadStatus').textContent='正在上传新音频…';
+            newlyUploadedAudio=await audioStorageManager.upload(file,{setId,partId,questionId,onProgress:p=>{modal.querySelector('#editAudioUploadStatus').textContent=`正在上传新音频… ${p}%`;}});
+            nextAudio=newlyUploadedAudio;
+          } else if(selectedSharedId) {
+            const sb=await audioStorageManager.client();
+            const {data,error}=await sb.from('toeic_audio_files').select('id,file_name,file_size,mime_type,storage_path,status').eq('id',selectedSharedId).eq('status','active').maybeSingle();
+            if(error) throw error; if(!data) throw new Error('所选共享音频已不可用，请重新选择');
+            nextAudio={type:'cloud',audioId:data.id,storagePath:data.storage_path,fileName:data.file_name,fileSize:data.file_size,mimeType:data.mime_type};
+          } else if(modal.dataset.removeAudio==='true') {
+            nextAudio={type:'none'};
+          } else if(audioUrl) {
+            nextAudio=/^https?:\/\//i.test(audioUrl)?{type:'remote',url:audioUrl}:{type:'local',path:audioUrl};
+          }
+          const updated = {
+            questionId,
+            title: document.getElementById('editTitle').value.trim(),
+            options: { A: document.getElementById('editOptionA').value.trim(), B: document.getElementById('editOptionB').value.trim(), C: document.getElementById('editOptionC').value.trim(), D: document.getElementById('editOptionD').value.trim() },
+            correctAnswer: document.getElementById('editCorrectAnswer').value,
+            audio: nextAudio,
+            note: document.getElementById('editNote').value.trim(),
+            status: document.getElementById('editStatus').value,
+            partId, updatedAt: new Date().toISOString()
+          };
+          if(originalAudio?.type==='cloud' && originalAudio.audioId && originalAudio.audioId!==nextAudio?.audioId) audioPlayer.stopForAudioId(originalAudio.audioId);
+          const savedQuestion = await questionManager.editQuestion(oldSetId, oldQuestionId, setId, updated);
+          this.stopEditAudioPreview();
           modal.style.display = 'none';
           this.currentSetId = setId;
           const picker = document.getElementById('currentSetSelect'); if (picker) picker.value = String(setId);
           localStorage.setItem('toeic_current_set_id', String(setId));
           await this.savePreferredSetId(setId);
           await questionManager.renderSetsList(setId);
-          Utils.showToast('题目修改成功，已同步到 Supabase。', 'success', 4000);
+          Utils.showToast(savedQuestion?.audioCleanupPending ? '题目和新音频关联已保存；旧云端音频清理失败，系统会自动重试。' : '题目修改成功，音频关联已保存。', savedQuestion?.audioCleanupPending ? 'warning' : 'success', 6000);
         } catch (error) {
+          if(newlyUploadedAudio?.audioId) { try { const queued=await audioStorageManager.queueUnreferencedAudio(newlyUploadedAudio.audioId); if(queued?.job_id) await audioStorageManager.runCleanupJob(queued.job_id); } catch(cleanupError) { console.warn('保存失败的新音频已保留待清理',cleanupError); } }
           console.error('修改题目失败:', error);
           Utils.showToast(`修改失败：${error.message || '未知错误'}`, 'error', 9000);
         } finally { submit.disabled = false; submit.textContent = originalText; }
       });
     }
-    const audio = question.audio || {};
+    const audio = question.audio || {type:'none'};
     modal.dataset.oldSetId = String(this.currentSetId || questionManager.currentSet?.setId || 1);
     modal.dataset.oldQuestionId = String(question.questionId);
+    modal.dataset.removeAudio='false';
+    modal._originalAudio={...audio};
     document.getElementById('editSetId').value = modal.dataset.oldSetId;
     document.getElementById('editPartId').value = String(question.partId || 1);
     document.getElementById('editQuestionId').value = question.questionId || '';
@@ -501,10 +560,36 @@ document.getElementById('addQuestionForm').addEventListener('submit', (e) => {
     document.getElementById('editOptionC').value = question.options?.C || '';
     document.getElementById('editOptionD').value = question.options?.D || '';
     document.getElementById('editCorrectAnswer').value = question.correctAnswer || 'A';
-    document.getElementById('editAudioUrl').value = audio.url || audio.path || '';
+    document.getElementById('editAudioUrl').value = audio.type==='remote' ? (audio.url||'') : (audio.type==='local' ? (audio.path||'') : '');
+    document.getElementById('editAudioFile').value='';
+    document.getElementById('editSharedAudioSelect').value='';
     document.getElementById('editNote').value = question.note || '';
     document.getElementById('editStatus').value = question.status || 'unanswered';
+    modal.querySelector('#editCurrentAudioInfo').textContent=audio.type==='cloud'?`当前云端音频：${audio.fileName||audio.storagePath||'已关联'}（共享音频）`:audio.type==='remote'?`当前外部音频：${audio.url||''}`:audio.type==='local'?`当前本地音频：${audio.fileName||'本地音频'}`:'当前没有音频';
+    modal.querySelector('#editAudioUploadStatus').textContent='';
+    this.loadSharedAudioChoices(modal, audio.audioId).catch(err=>console.warn('加载共享音频列表失败',err));
     modal.style.display = 'block';
+  }
+
+  stopEditAudioPreview() {
+    const modal=document.getElementById('editQuestionModal'); const preview=modal?._editPreview;
+    if(preview?.player){preview.player.pause();try{preview.player.currentTime=0;}catch(_){}preview.player.src='';}
+    if(preview?.src?.startsWith('blob:')) audioStorageManager.revokeUrl(preview.src);
+    if(modal) modal._editPreview=null;
+  }
+
+  async loadSharedAudioChoices(modal, currentAudioId='') {
+    const select=modal.querySelector('#editSharedAudioSelect');
+    select.innerHTML='<option value="">保持当前音频</option>';
+    if(!window.toeicSupabaseReady || !window.toeicSupabase) return;
+    const sb=await audioStorageManager.client();
+    const {data,error}=await sb.from('toeic_audio_files').select('id,file_name,file_size,status').eq('status','active').order('created_at',{ascending:false}).limit(200);
+    if(error) throw error;
+    for(const item of (data||[])) {
+      const option=document.createElement('option'); option.value=item.id;
+      option.textContent=`${item.file_name} · ${(Number(item.file_size||0)/1024/1024).toFixed(2)} MB${item.id===currentAudioId?'（当前音频）':''}`;
+      select.appendChild(option);
+    }
   }
 
   /**

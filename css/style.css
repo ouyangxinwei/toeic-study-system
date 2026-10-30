@@ -788,3 +788,11 @@ body {
 .bulk-delete-toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 0;margin:8px 0;border-bottom:1px solid var(--border-color,#ddd)}
 .bulk-select-label{display:inline-flex;align-items:center;gap:4px;font-size:13px}
 .bulk-select-question{width:auto}
+
+
+/* V20.1 编辑题目音频关联管理 */
+.edit-audio-panel{border:1px solid var(--border-color,#d8dce3);border-radius:12px;padding:16px;margin:18px 0;background:var(--card-bg,#f8fafc)}
+.edit-audio-panel h3{margin:0 0 10px}.edit-audio-status{font-size:.92rem;color:var(--text-color,#334155);overflow-wrap:anywhere}.edit-audio-hint{font-size:.82rem;color:var(--muted-color,#64748b);line-height:1.55}.edit-audio-actions{display:flex;gap:10px;flex-wrap:wrap}.edit-audio-actions button{min-height:38px}.edit-audio-panel input[type=file],.edit-audio-panel select{width:100%;max-width:100%}
+.edit-audio-actions .danger-btn{background:#b91c1c;color:#fff;border:0;border-radius:6px;padding:8px 12px;cursor:pointer}
+.edit-audio-actions .secondary-btn{background:#475569;color:#fff;border:0;border-radius:6px;padding:8px 12px;cursor:pointer}
+.edit-audio-actions button:disabled{opacity:.55;cursor:not-allowed}

@@ -310,21 +310,21 @@ class QuestionManager {
     if (duplicate) throw new Error(`题号 ${updated.questionId} 已存在`);
 
     const now = new Date().toISOString();
-    const saved = { ...oldQuestion, ...updated, questionId: String(updated.questionId), partId: Number(updated.partId), createdAt: oldQuestion.createdAt || now, updatedAt: now };
+    const saved = { ...oldQuestion, ...updated, setId: targetSetId, questionId: String(updated.questionId), partId: Number(updated.partId), createdAt: oldQuestion.createdAt || now, updatedAt: now };
     if (window.toeicSupabaseReady && window.toeicSupabase) {
       const { data: sessionData, error: sessionError } = await window.toeicSupabase.auth.getSession();
       if (sessionError) throw sessionError;
       if (!sessionData.session) throw new Error('登录会话已失效，请重新登录后修改。');
-      const {error:restoreTombstoneError}=await window.toeicSupabase.from('toeic_question_deletions').delete().eq('set_id',targetSetId).eq('question_id',String(saved.questionId));
-      if(restoreTombstoneError)throw restoreTombstoneError;
       const row = { set_id: targetSetId, part_id: saved.partId, question_id: saved.questionId, title: saved.title || '', options: saved.options || {}, correct_answer: saved.correctAnswer || '', audio: saved.audio || {type:'none'}, note: saved.note || '', status: saved.status || 'unanswered', created_at: saved.createdAt, updated_at: saved.updatedAt };
-      const { error: upsertError } = await window.toeicSupabase.from('toeic_questions').upsert(row, { onConflict: 'set_id,question_id' });
-      if (upsertError) throw upsertError;
       const changedKey = Number(oldSetId) !== targetSetId || String(oldQuestionId) !== String(saved.questionId);
-      if (changedKey) {
-        const {data:deleteResult,error:deleteError}=await window.toeicSupabase.rpc('toeic_prepare_question_delete',{p_set_id:Number(oldSetId),p_question_id:String(oldQuestionId)});
-        if(deleteError)throw new Error(`新题目已保存，但旧题目清理失败：${deleteError.message}`);
-        if(deleteResult?.job_id){const cleanup=await window.audioStorageManager.runCleanupJob(deleteResult.job_id);if(!cleanup.completed)console.warn('旧题目音频待清理',cleanup);}
+      if (oldQuestion.audio?.type === 'cloud' && oldQuestion.audio.audioId && oldQuestion.audio.audioId !== saved.audio?.audioId) window.audioPlayer?.stopForAudioId(oldQuestion.audio.audioId);
+      const {data:editResult,error:editError}=await window.toeicSupabase.rpc('toeic_save_question_edit',{
+        p_old_set_id:Number(oldSetId),p_old_question_id:String(oldQuestionId),p_new_question:row
+      });
+      if(editError) throw new Error(`云端保存题目/音频关联失败：${editError.message}。请先执行 supabase_v20_1_audio_edit.sql。`);
+      if(editResult?.cleanup_job_id){
+        const cleanup=await window.audioStorageManager.runCleanupJob(editResult.cleanup_job_id);
+        if(!cleanup.completed) { saved.audioCleanupPending = true; console.warn('旧音频已解除关联，云端文件待清理',cleanup); }
       }
     }
 
@@ -334,7 +334,7 @@ class QuestionManager {
     const oldKey = `set${Number(oldSetId)}_data`;
     let oldCache = {}; try { oldCache = JSON.parse(localStorage.getItem(oldKey) || '{}'); } catch (_) {}
     delete oldCache[String(oldQuestionId)];
-    if (Number(oldSetId) !== targetSetId) localStorage.setItem(oldKey, JSON.stringify(oldCache));
+    if (Number(oldSetId) !== targetSetId || String(oldQuestionId) !== String(saved.questionId)) localStorage.setItem(oldKey, JSON.stringify(oldCache));
     const oldPartIndex = oldSet.parts.findIndex(p => p.questions.some(q => String(q.questionId) === String(oldQuestionId)));
     if (oldPartIndex >= 0) {
       oldSet.parts[oldPartIndex].questions = oldSet.parts[oldPartIndex].questions.filter(q => String(q.questionId) !== String(oldQuestionId));
