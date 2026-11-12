@@ -1,7 +1,7 @@
 {
   "app": {
     "name": "TOEIC错题学习系统",
-    "version": "22.1.0",
+    "version": "22.2.0",
     "description": "16套模拟题，每套包含Test 1和Test 2；按TOEIC材料分组展示"
   },
   "sets": {
@@ -75,5 +75,5 @@
     "includeAudio": false,
     "includeNotes": true
   },
-  "version": "22.1.0"
+  "version": "22.2.0"
 }
