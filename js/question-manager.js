@@ -331,7 +331,7 @@ class QuestionManager {
       const changedKey = Number(oldSetId) !== targetSetId || Number(oldTestId) !== targetTestId || String(oldQuestionId) !== String(saved.questionId);
       if (oldQuestion.audio?.type === 'cloud' && oldQuestion.audio.audioId && oldQuestion.audio.audioId !== saved.audio?.audioId) window.audioPlayer?.stopForAudioId(oldQuestion.audio.audioId);
       const {data:editResult,error:editError}=await window.toeicSupabase.rpc('toeic_save_question_edit',{
-        p_old_set_id:Number(oldSetId),p_old_test_id:Number(oldTestId),p_new_question:row
+        p_old_set_id:Number(oldSetId),p_old_test_id:Number(oldTestId),p_old_question_id:String(oldQuestionId),p_new_question:row
       });
       if(editError) throw new Error(`云端保存题目/音频关联失败：${editError.message}。请先执行 supabase_v21_test_structure.sql。`);
       if(editResult?.cleanup_job_id){
