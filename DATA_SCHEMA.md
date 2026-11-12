@@ -105,7 +105,7 @@ TOEIC 标准题量：
 | `explanation` | string | 否 | 答案解析；暂缺时为空字符串或省略 |
 | `materialId` | string/null | 否 | 关联 Test.materials 中的共享材料 |
 | `audio` | object | 否 | 题目专属音频；共享音频优先放在 Material |
-| `note` | string | 兼容 | 现有字段暂时保留，见第 8 节 |
+| `note` | string | 兼容 | 历史混合字段，可能含来源说明、ASR 校正信息、共享材料正文；暂不视为纯用户笔记 |
 | `status` | string | 兼容 | 旧数据兼容字段，不作为未来用户学习状态的唯一来源 |
 | `createdAt` | ISO 8601 string | 否 | 题目记录创建时间 |
 | `updatedAt` | ISO 8601 string | 否 | 题目记录更新时间 |
@@ -250,7 +250,7 @@ Material 的题目关联数量不写死。题数和文章篇数以真实试题�
 | `passageText` / `articleText` / `readingText` | 作为旧格式材料文本读取；迁移后放入 Material.passages |
 | `transcript` / `materialText` | 旧格式共享转录；迁移后放入 Material.transcript |
 | `audio` | 保留当前题目级对象；共享音频迁移到 Material.audio |
-| `note` | 暂时保留。现有内容可能包含录入来源、ASR 校正说明；未来需与用户个人笔记分开 |
+| `note` | 暂时保留。现有内容可能包含录入来源、ASR 校正说明、Part 3 / 4 转录或 Part 6 文章正文；未来需解析为 Material，并与用户个人笔记分开 |
 | `status` | 暂时兼容旧值；未来个人掌握/作答状态迁移到用户数据实体 |
 | `questionCount` / `totalQuestions` | 仅作缓存或预期数量；实际题数由 questions 数组计算 |
 
