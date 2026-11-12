@@ -246,7 +246,7 @@ document.getElementById('addQuestionForm').addEventListener('submit', (e) => {
     if (statusFilter) filters.status = statusFilter;
 
     // 执行搜索
-    const results = await searchEngine.search(this.currentSetId, keyword, filters);
+    const results = await searchEngine.search(this.currentSetId, keyword, filters, this.currentTestId);
 
     // 显示搜索结果
     this.displaySearchResults(results);
@@ -437,7 +437,7 @@ document.getElementById('addQuestionForm').addEventListener('submit', (e) => {
       const confirmed = window.confirm(`确定删除第 ${this.currentSetId} 套题目 ${question.questionId} 吗？\n\n${audioText}\n\n正在播放的音频已停止。删除后将清理本题缓存和关联，操作无法撤销。`);
       if (!confirmed) return;
       try {
-        const result = await questionManager.deleteQuestion(this.currentSetId, question.questionId);
+        const result = await questionManager.deleteQuestion(this.currentSetId, question.questionId, this.currentTestId);
         let message = `题目 ${question.questionId} 已删除`;
         if (result.pending_server) message += '；服务器删除已加入待同步队列，联网后自动处理';
         else if (result.delete_audio) message += result.cleanup?.completed ? '；云端音频及索引已删除' : '；云端音频待重试清理';
