@@ -752,7 +752,7 @@ document.getElementById('addQuestionForm').addEventListener('submit', (e) => {
       catch(e){failed.push({id,error:e.message||String(e)});}
     }
     this.selectedQuestionIds.clear();
-    await this.openSet(this.currentSetId);
+    await this.openSet(this.currentSetId, this.currentTestId);
     const detail=failed.length?`；失败 ${failed.length} 道：${failed.map(x=>`${x.id}（${x.error}）`).join('；')}`:'';
     Utils.showToast(`批量删除完成：成功 ${succeeded.length} 道${detail}`,failed.length?'warning':'success',9000);
   }
