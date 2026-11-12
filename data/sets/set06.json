@@ -7,7 +7,7 @@
     {
       "testId": 1,
       "testName": "Test 1",
-      "totalQuestions": 200,
+      "totalQuestions": 130,
       "parts": [
         {
           "partId": 1,
@@ -1575,8 +1575,609 @@
           "partId": 5,
           "partName": "Part 5 - Incomplete Sentences",
           "partType": "reading",
-          "questionCount": 0,
-          "questions": []
+          "questionCount": 30,
+          "questions": [
+            {
+              "questionId": "6-5-101",
+              "title": "In the article, Ms. Amanjit described her internship ___ a Chennai publishing company last year.",
+              "options": {
+                "A": "on",
+                "B": "at",
+                "C": "for",
+                "D": "by"
+              },
+              "correctAnswer": "B",
+              "explanation": "The preposition “at” identifies the company where the internship took place. “On,” “for,” and “by” do not express this location relationship.",
+              "audio": {
+                "type": "local",
+                "path": ""
+              },
+              "note": "原始音频：093 特典 01 T1 Pt5 Q101 問題.mp3\n原始转写/校正说明：In the article, Ms. Amanjit described her internship at a Chennai publishing company last year.",
+              "status": "unanswered",
+              "createdAt": "2026-11-12T00:00:00Z",
+              "updatedAt": "2026-11-12T00:00:00Z"
+            },
+            {
+              "questionId": "6-5-102",
+              "title": "Please submit your travel expense reports ___ Ms. Grash in the Finance Department.",
+              "options": {
+                "A": "to",
+                "B": "with",
+                "C": "from",
+                "D": "among"
+              },
+              "correctAnswer": "A",
+              "explanation": "“Submit something to someone” is the correct verb-preposition pattern when identifying the recipient.",
+              "audio": {
+                "type": "local",
+                "path": ""
+              },
+              "note": "原始音频：094 特典 02 T1 Pt5 Q102 問題.mp3\n原始转写/校正说明：ASR transcript: “It's submit your travel expense reports ...”; normalized instruction: “Please submit your travel expense reports ...”",
+              "status": "unanswered",
+              "createdAt": "2026-11-12T00:00:00Z",
+              "updatedAt": "2026-11-12T00:00:00Z"
+            },
+            {
+              "questionId": "6-5-103",
+              "title": "The company offers office space in several ___ locations throughout the city.",
+              "options": {
+                "A": "convenience",
+                "B": "conveniently",
+                "C": "convenient",
+                "D": "conveniences"
+              },
+              "correctAnswer": "C",
+              "explanation": "The noun “locations” requires an adjective. “Convenient” correctly describes the locations; the other choices are a noun or an adverb.",
+              "audio": {
+                "type": "local",
+                "path": ""
+              },
+              "note": "原始音频：095 特典 03 T1 Pt5 Q103 問題.mp3\n原始转写/校正说明：ASR transcript was unclear around the phrase about office space and convenient locations; this item uses a normalized sentence preserving that meaning.",
+              "status": "unanswered",
+              "createdAt": "2026-11-12T00:00:00Z",
+              "updatedAt": "2026-11-12T00:00:00Z"
+            },
+            {
+              "questionId": "6-5-104",
+              "title": "Ms. Lee reviews the reservations daily to prevent the banquet room from ___ double-booked.",
+              "options": {
+                "A": "be",
+                "B": "being",
+                "C": "been",
+                "D": "to be"
+              },
+              "correctAnswer": "B",
+              "explanation": "The preposition “from” is followed by a gerund. Therefore, “from being double-booked” is correct.",
+              "audio": {
+                "type": "local",
+                "path": ""
+              },
+              "note": "原始音频：096 特典 04 T1 Pt5 Q104 問題.mp3\n原始转写/校正说明：Miss Lee reviews the reservations daily to prevent the banquet room from being double booked.",
+              "status": "unanswered",
+              "createdAt": "2026-11-12T00:00:00Z",
+              "updatedAt": "2026-11-12T00:00:00Z"
+            },
+            {
+              "questionId": "6-5-105",
+              "title": "The safety training session is scheduled to run approximately ___ hour.",
+              "options": {
+                "A": "a",
+                "B": "an",
+                "C": "the",
+                "D": "some"
+              },
+              "correctAnswer": "B",
+              "explanation": "“Hour” begins with a vowel sound, so the correct indefinite article is “an.”",
+              "audio": {
+                "type": "local",
+                "path": ""
+              },
+              "note": "原始音频：097 特典 05 T1 Pt5 Q105 問題.mp3\n原始转写/校正说明：The safety training session is scheduled to run approximately one hour.",
+              "status": "unanswered",
+              "createdAt": "2026-11-12T00:00:00Z",
+              "updatedAt": "2026-11-12T00:00:00Z"
+            },
+            {
+              "questionId": "6-5-106",
+              "title": "Mr. Quan will sign a ___ for an apartment in the building at 624 Livingston Road.",
+              "options": {
+                "A": "lease",
+                "B": "leasing",
+                "C": "leased",
+                "D": "lessor"
+              },
+              "correctAnswer": "A",
+              "explanation": "The sentence requires a noun naming the rental agreement. “Lease” is the appropriate noun.",
+              "audio": {
+                "type": "local",
+                "path": ""
+              },
+              "note": "原始音频：098 特典 06 T1 Pt5 Q106 問題.mp3\n原始转写/校正说明：Mr. Quan will sign a lease for an apartment in the building at 624 Livingston Road.",
+              "status": "unanswered",
+              "createdAt": "2026-11-12T00:00:00Z",
+              "updatedAt": "2026-11-12T00:00:00Z"
+            },
+            {
+              "questionId": "6-5-107",
+              "title": "Employees participating in the company charity run must sign a form ___ that they agree to certain rules.",
+              "options": {
+                "A": "certify",
+                "B": "certified",
+                "C": "certifying",
+                "D": "certification"
+              },
+              "correctAnswer": "C",
+              "explanation": "The present participle “certifying” modifies “form” and introduces the information the form confirms.",
+              "audio": {
+                "type": "local",
+                "path": ""
+              },
+              "note": "原始音频：099 特典 07 T1 Pt5 Q107 問題.mp3\n原始转写/校正说明：ASR word order was normalized to: “The employees participating in the company charity run must sign a form certifying that they agree to certain rules.”",
+              "status": "unanswered",
+              "createdAt": "2026-11-12T00:00:00Z",
+              "updatedAt": "2026-11-12T00:00:00Z"
+            },
+            {
+              "questionId": "6-5-108",
+              "title": "Innovation is ___ to success in many industries.",
+              "options": {
+                "A": "key",
+                "B": "keyed",
+                "C": "keying",
+                "D": "keys"
+              },
+              "correctAnswer": "A",
+              "explanation": "The fixed expression is “be key to something,” meaning to be essential to it.",
+              "audio": {
+                "type": "local",
+                "path": ""
+              },
+              "note": "原始音频：100 特典 08 T1 Pt5 Q108 問題.mp3\n原始转写/校正说明：Innovation is key to success in many industries.",
+              "status": "unanswered",
+              "createdAt": "2026-11-12T00:00:00Z",
+              "updatedAt": "2026-11-12T00:00:00Z"
+            },
+            {
+              "questionId": "6-5-109",
+              "title": "___ at the Kuan Mai law firm can expect to help attorneys with paperwork and courtroom preparation.",
+              "options": {
+                "A": "Intern",
+                "B": "Interns",
+                "C": "Internship",
+                "D": "Interning"
+              },
+              "correctAnswer": "B",
+              "explanation": "The sentence refers generally to people working at the firm, so the plural count noun “Interns” is required as the subject.",
+              "audio": {
+                "type": "local",
+                "path": ""
+              },
+              "note": "原始音频：101 特典 09 T1 Pt5 Q109 問題.mp3\n原始转写/校正说明：ASR transcript “In turns” is interpreted as “Interns”; the sentence is normalized accordingly.",
+              "status": "unanswered",
+              "createdAt": "2026-11-12T00:00:00Z",
+              "updatedAt": "2026-11-12T00:00:00Z"
+            },
+            {
+              "questionId": "6-5-110",
+              "title": "Dressure Incorporated is a respected insurance company that has been serving Saskatchewan since it ___ 50 years ago.",
+              "options": {
+                "A": "opened",
+                "B": "opening",
+                "C": "opens",
+                "D": "open"
+              },
+              "correctAnswer": "A",
+              "explanation": "The clause refers to a completed event 50 years ago. The simple past “opened” is required after “since.”",
+              "audio": {
+                "type": "local",
+                "path": ""
+              },
+              "note": "原始音频：102 特典 10 T1 Pt5 Q110 問題.mp3\n原始转写/校正说明：Dressure Incorporated is a respected insurance company that has been serving Saskatchewan since it opened 50 years ago.",
+              "status": "unanswered",
+              "createdAt": "2026-11-12T00:00:00Z",
+              "updatedAt": "2026-11-12T00:00:00Z"
+            },
+            {
+              "questionId": "6-5-111",
+              "title": "The technician informed Mr. Becker that his laptop would require a repair ___ under the warranty.",
+              "options": {
+                "A": "cover",
+                "B": "covers",
+                "C": "covered",
+                "D": "covering"
+              },
+              "correctAnswer": "C",
+              "explanation": "“Covered under the warranty” is a reduced passive relative clause describing the repair.",
+              "audio": {
+                "type": "local",
+                "path": ""
+              },
+              "note": "原始音频：103 特典 11 T1 Pt5 Q111 問題.mp3\n原始转写/校正说明：The technician informed Mr. Becker that his laptop would require a repair covered under the warranty.",
+              "status": "unanswered",
+              "createdAt": "2026-11-12T00:00:00Z",
+              "updatedAt": "2026-11-12T00:00:00Z"
+            },
+            {
+              "questionId": "6-5-112",
+              "title": "Because several popular athletes ___ them, the skin care products sold remarkably well.",
+              "options": {
+                "A": "endorsed",
+                "B": "endorsement",
+                "C": "endorsing",
+                "D": "endorses"
+              },
+              "correctAnswer": "A",
+              "explanation": "The clause needs a finite past-tense verb. “Endorsed” explains why the products sold well.",
+              "audio": {
+                "type": "local",
+                "path": ""
+              },
+              "note": "原始音频：104 特典 12 T1 Pt5 Q112 問題.mp3\n原始转写/校正说明：The brand name in the ASR transcript is unclear; this normalized sentence preserves the clearly audible meaning without guessing the brand.",
+              "status": "unanswered",
+              "createdAt": "2026-11-12T00:00:00Z",
+              "updatedAt": "2026-11-12T00:00:00Z"
+            },
+            {
+              "questionId": "6-5-113",
+              "title": "The museum's newest acquisitions are usually ___ in the Gourwin Gallery, which is located on the first floor.",
+              "options": {
+                "A": "exhibit",
+                "B": "exhibiting",
+                "C": "exhibited",
+                "D": "exhibitor"
+              },
+              "correctAnswer": "C",
+              "explanation": "The acquisitions receive the action, so the passive form “are exhibited” is required.",
+              "audio": {
+                "type": "local",
+                "path": ""
+              },
+              "note": "原始音频：105 特典 13 T1 Pt5 Q113 問題.mp3\n原始转写/校正说明：The museum's newest acquisitions are usually exhibited in the Gourwin Gallery, which is located on the first floor.",
+              "status": "unanswered",
+              "createdAt": "2026-11-12T00:00:00Z",
+              "updatedAt": "2026-11-12T00:00:00Z"
+            },
+            {
+              "questionId": "6-5-114",
+              "title": "Alicia's Grill has ___ three changes in management in the last five years.",
+              "options": {
+                "A": "undergo",
+                "B": "underwent",
+                "C": "undergone",
+                "D": "undergoing"
+              },
+              "correctAnswer": "C",
+              "explanation": "The present perfect “has” must be followed by the past participle “undergone.”",
+              "audio": {
+                "type": "local",
+                "path": ""
+              },
+              "note": "原始音频：106 特典 14 T1 Pt5 Q114 問題.mp3\n原始转写/校正说明：Alicia's Grill has undergone three changes in management in the last five years.",
+              "status": "unanswered",
+              "createdAt": "2026-11-12T00:00:00Z",
+              "updatedAt": "2026-11-12T00:00:00Z"
+            },
+            {
+              "questionId": "6-5-115",
+              "title": "The marketing team from Tokyo is visiting this week and will ___ be using conference room A.",
+              "options": {
+                "A": "occasion",
+                "B": "occasional",
+                "C": "occasionally",
+                "D": "occasioned"
+              },
+              "correctAnswer": "C",
+              "explanation": "An adverb is needed to modify the verb phrase “be using.” “Occasionally” is the correct adverb.",
+              "audio": {
+                "type": "local",
+                "path": ""
+              },
+              "note": "原始音频：107 特典 15 T1 Pt5 Q115 問題.mp3\n原始转写/校正说明：The marketing team from Tokyo is visiting this week and will occasionally be using conference room A.",
+              "status": "unanswered",
+              "createdAt": "2026-11-12T00:00:00Z",
+              "updatedAt": "2026-11-12T00:00:00Z"
+            },
+            {
+              "questionId": "6-5-116",
+              "title": "Despite the fast-approaching deadline, the project manager is confident the team will have everything completed ___ time.",
+              "options": {
+                "A": "at",
+                "B": "in",
+                "C": "on",
+                "D": "by"
+              },
+              "correctAnswer": "C",
+              "explanation": "The standard expression meaning “punctually” is “on time.” “In time” has a different meaning: early enough for a purpose.",
+              "audio": {
+                "type": "local",
+                "path": ""
+              },
+              "note": "原始音频：108 特典 16 T1 Pt5 Q116 問題.mp3\n原始转写/校正说明：Despite the fast approaching deadline, the project manager is confident the team will have everything completed on time.",
+              "status": "unanswered",
+              "createdAt": "2026-11-12T00:00:00Z",
+              "updatedAt": "2026-11-12T00:00:00Z"
+            },
+            {
+              "questionId": "6-5-117",
+              "title": "Customers ___ up prepaid tickets are encouraged to use the Express Kiosk.",
+              "options": {
+                "A": "pick",
+                "B": "picking",
+                "C": "picked",
+                "D": "picker"
+              },
+              "correctAnswer": "B",
+              "explanation": "The present participle “picking up” modifies “customers” and describes which customers are being addressed.",
+              "audio": {
+                "type": "local",
+                "path": ""
+              },
+              "note": "原始音频：109 特典 17 T1 Pt5 Q117 問題.mp3\n原始转写/校正说明：Customers picking up pre-paid tickets are encouraged to use the Express Kiosk.",
+              "status": "unanswered",
+              "createdAt": "2026-11-12T00:00:00Z",
+              "updatedAt": "2026-11-12T00:00:00Z"
+            },
+            {
+              "questionId": "6-5-118",
+              "title": "Before hiring someone to update her salon's decor, Jelice Bryant ___ several interior designers.",
+              "options": {
+                "A": "interview",
+                "B": "interviewing",
+                "C": "interviewed",
+                "D": "interviews"
+              },
+              "correctAnswer": "C",
+              "explanation": "The sentence describes a completed action before another past action, so the simple past “interviewed” is appropriate.",
+              "audio": {
+                "type": "local",
+                "path": ""
+              },
+              "note": "原始音频：110 特典 18 T1 Pt5 Q118 問題.mp3\n原始转写/校正说明：Before hiring someone to update her salon's decor, Jelice Bryant interviewed several interior designers.",
+              "status": "unanswered",
+              "createdAt": "2026-11-12T00:00:00Z",
+              "updatedAt": "2026-11-12T00:00:00Z"
+            },
+            {
+              "questionId": "6-5-119",
+              "title": "Occupancy at the Pan Pacifica Suites has increased since it began ___ free breakfast.",
+              "options": {
+                "A": "offer",
+                "B": "offered",
+                "C": "offering",
+                "D": "offers"
+              },
+              "correctAnswer": "C",
+              "explanation": "The verb “begin” can be followed by a gerund. “Began offering” is the natural construction here.",
+              "audio": {
+                "type": "local",
+                "path": ""
+              },
+              "note": "原始音频：111 特典 19 T1 Pt5 Q119 問題.mp3\n原始转写/校正说明：Occupancy at the Pan Pacifica Suites has increased since it began offering free breakfast.",
+              "status": "unanswered",
+              "createdAt": "2026-11-12T00:00:00Z",
+              "updatedAt": "2026-11-12T00:00:00Z"
+            },
+            {
+              "questionId": "6-5-120",
+              "title": "Barlock's Motors claims its new all-electric truck goes farther on one charge than any other electric truck ___ the market today.",
+              "options": {
+                "A": "at",
+                "B": "on",
+                "C": "by",
+                "D": "into"
+              },
+              "correctAnswer": "B",
+              "explanation": "The correct collocation is “on the market,” meaning available for sale.",
+              "audio": {
+                "type": "local",
+                "path": ""
+              },
+              "note": "原始音频：112 特典 20 T1 Pt5 Q120 問題.mp3\n原始转写/校正说明：Barlock's Motors claims its new all electric truck goes farther on one charge than any other electric truck on the market today.",
+              "status": "unanswered",
+              "createdAt": "2026-11-12T00:00:00Z",
+              "updatedAt": "2026-11-12T00:00:00Z"
+            },
+            {
+              "questionId": "6-5-121",
+              "title": "At the company's annual banquet, Mr. Karga received an award for his ___ record of community outreach projects.",
+              "options": {
+                "A": "distinguish",
+                "B": "distinguished",
+                "C": "distinguishingly",
+                "D": "distinction"
+              },
+              "correctAnswer": "B",
+              "explanation": "An adjective is needed to describe “record.” “Distinguished” means respected or impressive.",
+              "audio": {
+                "type": "local",
+                "path": ""
+              },
+              "note": "原始音频：113 特典 21 T1 Pt5 Q121 問題.mp3\n原始转写/校正说明：At the company's annual banquet, Mr. Karga received an award for his distinguished record of community outreach projects.",
+              "status": "unanswered",
+              "createdAt": "2026-11-12T00:00:00Z",
+              "updatedAt": "2026-11-12T00:00:00Z"
+            },
+            {
+              "questionId": "6-5-122",
+              "title": "The Ambrose Music Company markets its products only through its ___ website.",
+              "options": {
+                "A": "dedicate",
+                "B": "dedication",
+                "C": "dedicated",
+                "D": "dedicating"
+              },
+              "correctAnswer": "C",
+              "explanation": "The past participle “dedicated” functions as an adjective meaning specifically intended for the company.",
+              "audio": {
+                "type": "local",
+                "path": ""
+              },
+              "note": "原始音频：114 特典 22 T1 Pt5 Q122 問題.mp3\n原始转写/校正说明：The Ambrose Music Company markets its products only through its dedicated website.",
+              "status": "unanswered",
+              "createdAt": "2026-11-12T00:00:00Z",
+              "updatedAt": "2026-11-12T00:00:00Z"
+            },
+            {
+              "questionId": "6-5-123",
+              "title": "Given Ruston Marketing's focus on creative design, Mr. Ochoa's artistic background would be a great ___ to the firm.",
+              "options": {
+                "A": "asset",
+                "B": "assets",
+                "C": "assess",
+                "D": "assisting"
+              },
+              "correctAnswer": "A",
+              "explanation": "The singular count noun “asset” follows “a great” and means a valuable advantage or resource.",
+              "audio": {
+                "type": "local",
+                "path": ""
+              },
+              "note": "原始音频：115 特典 23 T1 Pt5 Q123 問題.mp3\n原始转写/校正说明：The company name was normalized from the ASR transcript as “Ruston Marketing”; please verify the proper noun against the audio if exact spelling matters.",
+              "status": "unanswered",
+              "createdAt": "2026-11-12T00:00:00Z",
+              "updatedAt": "2026-11-12T00:00:00Z"
+            },
+            {
+              "questionId": "6-5-124",
+              "title": "The town council has granted permission for the autumn festival to be ___ in Vista Park.",
+              "options": {
+                "A": "held",
+                "B": "holding",
+                "C": "hold",
+                "D": "holder"
+              },
+              "correctAnswer": "A",
+              "explanation": "The passive infinitive “to be held” is the correct construction for an event taking place at a venue.",
+              "audio": {
+                "type": "local",
+                "path": ""
+              },
+              "note": "原始音频：116 特典 24 T1 Pt5 Q124 問題.mp3\n原始转写/校正说明：The town council has granted permission for the autumn festival to be held in Vista Park.",
+              "status": "unanswered",
+              "createdAt": "2026-11-12T00:00:00Z",
+              "updatedAt": "2026-11-12T00:00:00Z"
+            },
+            {
+              "questionId": "6-5-125",
+              "title": "Eight potential buyers inspected the property over the weekend, but only one seemed genuinely ___.",
+              "options": {
+                "A": "interest",
+                "B": "interested",
+                "C": "interesting",
+                "D": "interests"
+              },
+              "correctAnswer": "B",
+              "explanation": "“Interested” describes the buyer's feeling or attitude. “Interesting” would describe something that causes interest.",
+              "audio": {
+                "type": "local",
+                "path": ""
+              },
+              "note": "原始音频：117 特典 25 T1 Pt5 Q125 問題.mp3\n原始转写/校正说明：Eight potential buyers inspected the property over the weekend, but only one seemed genuinely interested.",
+              "status": "unanswered",
+              "createdAt": "2026-11-12T00:00:00Z",
+              "updatedAt": "2026-11-12T00:00:00Z"
+            },
+            {
+              "questionId": "6-5-126",
+              "title": "A majority of the residents have opposed the city's plan to ___ traffic.",
+              "options": {
+                "A": "reroute",
+                "B": "rerouted",
+                "C": "rerouting",
+                "D": "reroutes"
+              },
+              "correctAnswer": "A",
+              "explanation": "The infinitive marker “to” is followed by the base form of the verb. “Reroute” means to direct traffic along a different route.",
+              "audio": {
+                "type": "local",
+                "path": ""
+              },
+              "note": "原始音频：118 特典 26 T1 Pt5 Q126 問題.mp3\n原始转写/校正说明：The ASR phrase “re-root traffic” is normalized as “reroute traffic.”",
+              "status": "unanswered",
+              "createdAt": "2026-11-12T00:00:00Z",
+              "updatedAt": "2026-11-12T00:00:00Z"
+            },
+            {
+              "questionId": "6-5-127",
+              "title": "When registering multiple people for the conference, enter the name that should appear on each of the ___.",
+              "options": {
+                "A": "badge",
+                "B": "badges",
+                "C": "badging",
+                "D": "badged"
+              },
+              "correctAnswer": "B",
+              "explanation": "“Each of the” is followed by a plural noun. Therefore, “badges” is correct.",
+              "audio": {
+                "type": "local",
+                "path": ""
+              },
+              "note": "原始音频：119 特典 27 T1 Pt5 Q127 問題.mp3\n原始转写/校正说明：When registering multiple people for the conference enter the name that should appear on each of the badges.",
+              "status": "unanswered",
+              "createdAt": "2026-11-12T00:00:00Z",
+              "updatedAt": "2026-11-12T00:00:00Z"
+            },
+            {
+              "questionId": "6-5-128",
+              "title": "As part of a push to expand business ___, Anelia Innovations translated its website into multiple languages.",
+              "options": {
+                "A": "abroad",
+                "B": "abroadness",
+                "C": "abroadly",
+                "D": "abroaded"
+              },
+              "correctAnswer": "A",
+              "explanation": "“Expand business abroad” is the natural expression; “abroad” is an adverb meaning in or to foreign countries.",
+              "audio": {
+                "type": "local",
+                "path": ""
+              },
+              "note": "原始音频：120 特典 28 T1 Pt5 Q128 問題.mp3\n原始转写/校正说明：As part of a push to expand business abroad, Anelia Innovations translated its website into multiple languages.",
+              "status": "unanswered",
+              "createdAt": "2026-11-12T00:00:00Z",
+              "updatedAt": "2026-11-12T00:00:00Z"
+            },
+            {
+              "questionId": "6-5-129",
+              "title": "Although a reduction in metal thickness would make the container considerably lighter, its strength would ___ as a result.",
+              "options": {
+                "A": "suffer",
+                "B": "suffering",
+                "C": "suffered",
+                "D": "suffers"
+              },
+              "correctAnswer": "A",
+              "explanation": "The modal “would” must be followed by the base form of the verb, “suffer.” The possessive “its” is also corrected from the ASR contraction “it's.”",
+              "audio": {
+                "type": "local",
+                "path": ""
+              },
+              "note": "原始音频：121 特典 29 T1 Pt5 Q129 問題.mp3\n原始转写/校正说明：ASR “it's strength with suffer” is normalized as “its strength would suffer.”",
+              "status": "unanswered",
+              "createdAt": "2026-11-12T00:00:00Z",
+              "updatedAt": "2026-11-12T00:00:00Z"
+            },
+            {
+              "questionId": "6-5-130",
+              "title": "A research team at How Well Agricultural Institute is studying the beneficial effects of a newly ___ fertilizer.",
+              "options": {
+                "A": "develop",
+                "B": "development",
+                "C": "developed",
+                "D": "developing"
+              },
+              "correctAnswer": "C",
+              "explanation": "The past participle “developed” modifies “fertilizer” and means that the fertilizer has recently been created.",
+              "audio": {
+                "type": "local",
+                "path": ""
+              },
+              "note": "原始音频：122 特典 30 T1 Pt5 Q130 問題.mp3\n原始转写/校正说明：A research team at How Well Agricultural Institute is studying the beneficial effects of a newly developed fertilizer.",
+              "status": "unanswered",
+              "createdAt": "2026-11-12T00:00:00Z",
+              "updatedAt": "2026-11-12T00:00:00Z"
+            }
+          ]
         },
         {
           "partId": 6,
