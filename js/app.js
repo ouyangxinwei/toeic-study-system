@@ -553,8 +553,9 @@ document.getElementById('addQuestionForm').addEventListener('submit', (e) => {
       if (shouldShow) {
         const answer = String(question.correctAnswer || '').trim();
         const answerText = question.options && answer ? question.options[answer] : '';
+        const explanation = String(question.explanation || '').trim();
         quickAnswerContent.textContent = answer
-          ? `正确答案：${answer}${answerText ? ' · ' + answerText : ''}`
+          ? `正确答案：${answer}${answerText ? ' · ' + answerText : ''}${explanation ? '\\n解析：' + explanation : ''}`
           : '正确答案尚未录入';
       }
       quickAnswerContent.hidden = !shouldShow;
