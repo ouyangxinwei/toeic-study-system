@@ -15,10 +15,10 @@ class SearchEngine {
    * @param {Object} filters - 筛选条件
    * @returns {Array} 搜索结果
    */
-  async search(setId, keyword, filters = {}) {
+  async search(setId, keyword, filters = {}, testId = 1) {
     try {
       // 加载套题数据
-      const setData = await questionManager.loadSet(setId);
+      const setData = await questionManager.loadSet(setId, testId);
       if (!setData) return [];
 
       let results = [];
