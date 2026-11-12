@@ -44,7 +44,7 @@ def split_note(note: Any, prefix: str, multiline: bool = False) -> tuple[str, st
     """Return (material text, remaining note), without discarding annotations."""
     if not isinstance(note, str) or not note.startswith(prefix):
         return "", note if isinstance(note, str) else ""
-    body = note[len(prefix):].lstrip("\\r\\n")
+    body = note[len(prefix):].lstrip("\r\n")
     lines = body.splitlines()
     annotation_markers = ("【人工确认】", "材料来源：", "说明：", "原始音频：", "问题音频：")
     split_at = next(
@@ -53,8 +53,8 @@ def split_note(note: Any, prefix: str, multiline: bool = False) -> tuple[str, st
     )
     material_lines = lines[:split_at]
     note_lines = lines[split_at:]
-    material = "\\n".join(material_lines).strip() if multiline else (material_lines[0].strip() if material_lines else "")
-    remainder = "\\n".join(note_lines).strip()
+    material = "\n".join(material_lines).strip() if multiline else (material_lines[0].strip() if material_lines else "")
+    remainder = "\n".join(note_lines).strip()
     return material, remainder
 
 
