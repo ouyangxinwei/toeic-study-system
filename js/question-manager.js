@@ -333,7 +333,7 @@ class QuestionManager {
       const {data:editResult,error:editError}=await window.toeicSupabase.rpc('toeic_save_question_edit',{
         p_old_set_id:Number(oldSetId),p_old_test_id:Number(oldTestId),p_new_question:row
       });
-      if(editError) throw new Error(`云端保存题目/音频关联失败：${editError.message}。请先执行 supabase_v20_1_audio_edit.sql。`);
+      if(editError) throw new Error(`云端保存题目/音频关联失败：${editError.message}。请先执行 supabase_v21_test_structure.sql。`);
       if(editResult?.cleanup_job_id){
         const cleanup=await window.audioStorageManager.runCleanupJob(editResult.cleanup_job_id);
         if(!cleanup.completed) { saved.audioCleanupPending = true; console.warn('旧音频已解除关联，云端文件待清理',cleanup); }
@@ -387,7 +387,7 @@ class QuestionManager {
       });
       if (error) {
         const offline = navigator.onLine === false || /network|fetch|offline|failed to fetch/i.test(error.message || '');
-        if (!offline) throw new Error(`云端删除准备失败：${error.message || error.code}。请先执行 supabase_v20_delete_audio.sql。`);
+        if (!offline) throw new Error(`云端删除准备失败：${error.message || error.code}。请先执行 supabase_v21_test_structure.sql。`);
         const queue = JSON.parse(localStorage.getItem('toeic_v20_pending_deletions') || '[]');
         if (!queue.some(x => Number(x.setId) === Number(setId) && Number(x.testId || 1) === Number(testId) && String(x.questionId) === String(questionId))) queue.push({ setId:Number(setId), testId:Number(testId), questionId:String(questionId), audio:question?.audio || null, createdAt:new Date().toISOString() });
         localStorage.setItem('toeic_v20_pending_deletions', JSON.stringify(queue));
