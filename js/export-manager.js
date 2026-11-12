@@ -42,7 +42,7 @@ class ExportManager {
    */
   async exportJSON(setId, testId = window.app?.currentTestId || 1) {
     try {
-      const setData = await questionManager.loadSet(setId);
+      const setData = await questionManager.loadSet(setId, testId);
       if (!setData) {
         Utils.showToast('加载套题数据失败', 'error');
         return;
