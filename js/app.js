@@ -343,6 +343,7 @@ document.getElementById('addQuestionForm').addEventListener('submit', (e) => {
       const note = String(question.note || '');
       const shared = note.match(/【共用[^】]*】([\s\S]*?)(?=\n【人工确认】|\n原始音频：|\n问题音频：|$)/);
       if (shared && shared[1].trim()) return shared[1].trim();
+      if (Array.isArray(question.passages) && question.passages.length) return JSON.stringify(question.passages);
       for (const key of ['passageText', 'articleText', 'readingText', 'passage', 'transcript', 'materialText']) {
         const value = question[key];
         if (typeof value === 'string' && value.trim()) return value.trim();
@@ -392,10 +393,8 @@ document.getElementById('addQuestionForm').addEventListener('submit', (e) => {
     return groups.map((group, index) => ({
       ...group,
       index: index + 1,
-      material: readMaterial(group.questions[0] || {}),
-      passages: (group.questions[0] && Array.isArray(group.questions[0].passages))
-        ? group.questions[0].passages
-        : []
+      material: readMaterial(group.questions.find(question => readMaterial(question)) || group.questions[0] || {}),
+      passages: (group.questions.find(question => Array.isArray(question.passages) && question.passages.length) || {}).passages || []
     }));
   }
 
@@ -442,6 +441,9 @@ document.getElementById('addQuestionForm').addEventListener('submit', (e) => {
       const materialTitle = document.createElement('h5');
       materialTitle.textContent = partId === 3 ? 'Conversation Transcript / 对话转录' : 'Talk Transcript / 独白转录';
       materialPane.appendChild(materialTitle);
+      if (group.questions[0]?.audio && audioPlayer.checkAudioExists(group.questions[0].audio)) {
+        audioPlayer.renderAudioPlayer(group.questions[0], materialPane);
+      }
       renderMaterial(materialPane);
       wrapper.appendChild(materialPane);
       const list = document.createElement('div');
@@ -486,7 +488,14 @@ document.getElementById('addQuestionForm').addEventListener('submit', (e) => {
       <div class="question-groups-list"></div>
     `;
     const groupsList = section.querySelector('.question-groups-list');
-    this.buildQuestionGroups(part).forEach(group => groupsList.appendChild(this.createQuestionGroup(part, group)));
+    if ([1, 2].includes(Number(part.partId))) {
+      const questionsList = document.createElement('div');
+      questionsList.className = 'questions-list';
+      (part.questions || []).forEach(question => questionsList.appendChild(this.createQuestionCard(question)));
+      groupsList.appendChild(questionsList);
+    } else {
+      this.buildQuestionGroups(part).forEach(group => groupsList.appendChild(this.createQuestionGroup(part, group)));
+    }
     return section;
   }
 
