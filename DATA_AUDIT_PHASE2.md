@@ -78,7 +78,7 @@ Set 06 Test 1 的 Part 5–7 另外使用 `explanation`。Part 6 / 7 使用 `mat
 
 ## 4. 第二阶段结论
 
-<badge>建议冻结目标结构，暂不重写数据</badge>
+**建议冻结目标结构，暂不重写数据。**
 
 - Set / Test / Part / Question 四层结构可继续保留。
 - 在 Test 层新增 `materials[]` 作为未来共享材料的唯一归属位置。
