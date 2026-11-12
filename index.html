@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TOEIC错题学习系统</title>
-    <link rel="stylesheet" href="css/style.css?v=20.1">
+    <link rel="stylesheet" href="css/style.css?v=21.0">
     <link rel="stylesheet" href="css/mobile.css?v=20.1">
 </head>
 <body>
@@ -76,6 +76,9 @@
                 </select>
             </div>
             
+            <div class="form-group">
+                <label>Test *</label><select id="formTestId" required><option value="1">Test 1</option><option value="2">Test 2</option></select>
+            </div>
             <div class="form-group">
                 <label>Part *</label>
                 <select id="formPartId" required>
@@ -169,6 +172,12 @@
                 <option value="16">第 16 套模拟题（原创听力100题）</option>
             </select>
             <span class="picker-hint">只加载所选套题；选择会保存到云端账号。</span>
+        </section>
+
+        <section class="current-test-picker" aria-label="选择 Test">
+            <label for="currentTestSelect">当前试卷</label>
+            <select id="currentTestSelect"><option value="1">Test 1</option><option value="2">Test 2</option></select>
+            <span class="picker-hint">每套模拟题包含两份独立的 200 题试卷。</span>
         </section>
 
         <!-- 当前选中的套题 -->
