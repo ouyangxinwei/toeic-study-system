@@ -102,7 +102,7 @@ class QuestionManager {
       try {
         let rows;
         if (this.cloudQuestionsBySet) {
-          rows = this.cloudQuestionsBySet.get(Number(setId)) || [];
+          rows = this.cloudQuestionsBySet.get(`${Number(setId)}:${Number(testId)}`) || [];
         } else {
           const { data, error } = await window.toeicSupabase
             .from('toeic_questions').select('*').eq('set_id', Number(setId)).eq('test_id', Number(testId));
@@ -121,7 +121,7 @@ class QuestionManager {
             window.audioStorageManager.cacheDelete(previousQuestion.audio.storagePath).catch(e => console.warn('清除已删除共享音频缓存失败', e));
           }
           part.questions.push({
-            questionId: String(row.question_id), title: row.title || '', options: row.options || {},
+            questionId: String(row.question_id), setId: Number(row.set_id), testId: Number(row.test_id || 1), title: row.title || '', options: row.options || {},
             correctAnswer: row.correct_answer || '', audio: row.audio || { type: 'none' },
             note: row.note || '', status: row.status || 'unanswered', partId: Number(row.part_id),
             createdAt: row.created_at, updatedAt: row.updated_at
@@ -526,7 +526,8 @@ class QuestionManager {
     if (this.cloudCachePromise) return this.cloudCachePromise;
 
     this.cloudCachePromise = (async () => {
-      const grouped = new Map(Array.from({ length: 16 }, (_, i) => [i + 1, []]));
+      const grouped = new Map();
+      for (let s=1;s<=16;s++) for (let t=1;t<=2;t++) grouped.set(`${s}:${t}`, []);
       const pageSize = 1000;
       let from = 0;
       while (true) {
@@ -536,8 +537,8 @@ class QuestionManager {
         if (error) throw error;
         const page = data || [];
         page.forEach(row => {
-          const id = Number(row.set_id);
-          if (grouped.has(id)) grouped.get(id).push(row);
+          const key = `${Number(row.set_id)}:${Number(row.test_id || 1)}`;
+          if (grouped.has(key)) grouped.get(key).push(row);
         });
         if (page.length < pageSize) break;
         from += pageSize;
