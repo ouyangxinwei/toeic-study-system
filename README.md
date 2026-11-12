@@ -363,5 +363,5 @@ python scripts/convert_legacy_materials.py --set 6 --test 1 --apply --confirm-re
 ### 运行转换器单元测试
 
 \`\`\`bash
-python -m unittest tests.test_convert_legacy_materials -v
+python -m unittest discover -s tests -p "test_convert_legacy_materials.py" -v
 \`\`\`
