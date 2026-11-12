@@ -7,7 +7,7 @@
     {
       "testId": 1,
       "testName": "Test 1",
-      "totalQuestions": 130,
+      "totalQuestions": 146,
       "parts": [
         {
           "partId": 1,
@@ -2183,8 +2183,361 @@
           "partId": 6,
           "partName": "Part 6 - Text Completion",
           "partType": "reading",
-          "questionCount": 0,
-          "questions": []
+          "questionCount": 16,
+          "questions": [
+            {
+              "questionId": "6-6-131",
+              "passageGroupId": "set06-t1-p6-passage-01",
+              "materialId": "set06-t1-p6-passage-01",
+              "title": "Please upload itemized receipts and include the project code ___ with the trip.",
+              "options": {
+                "A": "associated",
+                "B": "associating",
+                "C": "association",
+                "D": "associate"
+              },
+              "correctAnswer": "A",
+              "explanation": "The past participle “associated” modifies “project code,” meaning the code linked to the trip.",
+              "audio": {
+                "type": "local",
+                "path": ""
+              },
+              "note": "【共用文章】\nTo: All Employees\nSubject: Updated Travel Reimbursement Procedure\n\nBeginning May 1, employees who travel on company business must submit expense reports through the new Finance portal. The portal replaces the paper forms previously used by each department. Please upload itemized receipts and include the project code associated with the trip. Reports should be submitted within ten business days of returning. [131] Employees who need assistance can attend a short demonstration in Conference Room B on April 24 at 2:00 P.M. A recording will also be posted on the company intranet for those who cannot attend. Managers are asked to review pending reports every Friday so that reimbursements can be processed without delay. Questions about the new procedure may be directed to the Finance Help Desk.",
+              "status": "unanswered",
+              "createdAt": "2026-11-12T00:00:00Z",
+              "updatedAt": "2026-11-12T00:00:00Z"
+            },
+            {
+              "questionId": "6-6-132",
+              "passageGroupId": "set06-t1-p6-passage-01",
+              "materialId": "set06-t1-p6-passage-01",
+              "title": "Reports should be submitted ___ ten business days of returning.",
+              "options": {
+                "A": "between",
+                "B": "within",
+                "C": "during",
+                "D": "among"
+              },
+              "correctAnswer": "B",
+              "explanation": "“Within ten business days” sets a deadline no later than ten business days after returning.",
+              "audio": {
+                "type": "local",
+                "path": ""
+              },
+              "note": "【共用文章】\nTo: All Employees\nSubject: Updated Travel Reimbursement Procedure\n\nBeginning May 1, employees who travel on company business must submit expense reports through the new Finance portal. The portal replaces the paper forms previously used by each department. Please upload itemized receipts and include the project code associated with the trip. Reports should be submitted within ten business days of returning. [131] Employees who need assistance can attend a short demonstration in Conference Room B on April 24 at 2:00 P.M. A recording will also be posted on the company intranet for those who cannot attend. Managers are asked to review pending reports every Friday so that reimbursements can be processed without delay. Questions about the new procedure may be directed to the Finance Help Desk.",
+              "status": "unanswered",
+              "createdAt": "2026-11-12T00:00:00Z",
+              "updatedAt": "2026-11-12T00:00:00Z"
+            },
+            {
+              "questionId": "6-6-133",
+              "passageGroupId": "set06-t1-p6-passage-01",
+              "materialId": "set06-t1-p6-passage-01",
+              "title": "Which sentence best completes the blank [131]?",
+              "options": {
+                "A": "The portal will automatically calculate employees' annual leave balances.",
+                "B": "Late submissions may require additional approval from a department director.",
+                "C": "The company cafeteria will offer a new lunch menu next month.",
+                "D": "All employees must renew their building access cards by Friday."
+              },
+              "correctAnswer": "B",
+              "explanation": "The sentence logically continues the instructions about expense-report submission and deadlines.",
+              "audio": {
+                "type": "local",
+                "path": ""
+              },
+              "note": "【共用文章】\nTo: All Employees\nSubject: Updated Travel Reimbursement Procedure\n\nBeginning May 1, employees who travel on company business must submit expense reports through the new Finance portal. The portal replaces the paper forms previously used by each department. Please upload itemized receipts and include the project code associated with the trip. Reports should be submitted within ten business days of returning. [131] Employees who need assistance can attend a short demonstration in Conference Room B on April 24 at 2:00 P.M. A recording will also be posted on the company intranet for those who cannot attend. Managers are asked to review pending reports every Friday so that reimbursements can be processed without delay. Questions about the new procedure may be directed to the Finance Help Desk.",
+              "status": "unanswered",
+              "createdAt": "2026-11-12T00:00:00Z",
+              "updatedAt": "2026-11-12T00:00:00Z"
+            },
+            {
+              "questionId": "6-6-134",
+              "passageGroupId": "set06-t1-p6-passage-01",
+              "materialId": "set06-t1-p6-passage-01",
+              "title": "What are managers asked to do every Friday?",
+              "options": {
+                "A": "Schedule employee demonstrations",
+                "B": "Approve annual leave requests",
+                "C": "Review reports that are awaiting action",
+                "D": "Update project codes in the portal"
+              },
+              "correctAnswer": "C",
+              "explanation": "The notice specifically asks managers to review pending reports every Friday.",
+              "audio": {
+                "type": "local",
+                "path": ""
+              },
+              "note": "【共用文章】\nTo: All Employees\nSubject: Updated Travel Reimbursement Procedure\n\nBeginning May 1, employees who travel on company business must submit expense reports through the new Finance portal. The portal replaces the paper forms previously used by each department. Please upload itemized receipts and include the project code associated with the trip. Reports should be submitted within ten business days of returning. [131] Employees who need assistance can attend a short demonstration in Conference Room B on April 24 at 2:00 P.M. A recording will also be posted on the company intranet for those who cannot attend. Managers are asked to review pending reports every Friday so that reimbursements can be processed without delay. Questions about the new procedure may be directed to the Finance Help Desk.",
+              "status": "unanswered",
+              "createdAt": "2026-11-12T00:00:00Z",
+              "updatedAt": "2026-11-12T00:00:00Z"
+            },
+            {
+              "questionId": "6-6-135",
+              "passageGroupId": "set06-t1-p6-passage-02",
+              "materialId": "set06-t1-p6-passage-02",
+              "title": "Clients can now check room capacity, available equipment, and catering options ___ submitting a reservation request.",
+              "options": {
+                "A": "before",
+                "B": "unless",
+                "C": "despite",
+                "D": "whereas"
+              },
+              "correctAnswer": "A",
+              "explanation": "“Before submitting” correctly expresses that clients can review the information first.",
+              "audio": {
+                "type": "local",
+                "path": ""
+              },
+              "note": "【共用文章】\nRIVERSIDE CONFERENCE CENTER\n\nA successful event depends on careful planning. To help organizers prepare, the Riverside Conference Center has introduced a revised room-booking service. Clients can now check room capacity, available equipment, and catering options before submitting a reservation request. Once a request is received, an event coordinator will contact the client within one business day to confirm the details. [135] The center recommends booking large meeting rooms at least six weeks in advance, particularly during the spring and autumn conference seasons. Smaller rooms are often available on shorter notice. Clients who require presentation equipment should indicate this on the request form. A technician can be assigned to assist with setup, although this service must be arranged separately and may involve an additional fee.",
+              "status": "unanswered",
+              "createdAt": "2026-11-12T00:00:00Z",
+              "updatedAt": "2026-11-12T00:00:00Z"
+            },
+            {
+              "questionId": "6-6-136",
+              "passageGroupId": "set06-t1-p6-passage-02",
+              "materialId": "set06-t1-p6-passage-02",
+              "title": "An event coordinator will contact the client within one business day to ___ the details.",
+              "options": {
+                "A": "confirm",
+                "B": "confirmation",
+                "C": "confirmed",
+                "D": "confirming"
+              },
+              "correctAnswer": "A",
+              "explanation": "The infinitive “to” is followed by the base form “confirm.”",
+              "audio": {
+                "type": "local",
+                "path": ""
+              },
+              "note": "【共用文章】\nRIVERSIDE CONFERENCE CENTER\n\nA successful event depends on careful planning. To help organizers prepare, the Riverside Conference Center has introduced a revised room-booking service. Clients can now check room capacity, available equipment, and catering options before submitting a reservation request. Once a request is received, an event coordinator will contact the client within one business day to confirm the details. [135] The center recommends booking large meeting rooms at least six weeks in advance, particularly during the spring and autumn conference seasons. Smaller rooms are often available on shorter notice. Clients who require presentation equipment should indicate this on the request form. A technician can be assigned to assist with setup, although this service must be arranged separately and may involve an additional fee.",
+              "status": "unanswered",
+              "createdAt": "2026-11-12T00:00:00Z",
+              "updatedAt": "2026-11-12T00:00:00Z"
+            },
+            {
+              "questionId": "6-6-137",
+              "passageGroupId": "set06-t1-p6-passage-02",
+              "materialId": "set06-t1-p6-passage-02",
+              "title": "Which sentence best completes the blank [135]?",
+              "options": {
+                "A": "The center's gift shop closes earlier on public holidays.",
+                "B": "Clients will receive a written estimate after the arrangements have been reviewed.",
+                "C": "The building's exterior was renovated several years ago.",
+                "D": "Conference attendees may purchase train tickets at the front desk."
+              },
+              "correctAnswer": "B",
+              "explanation": "A written estimate naturally follows the coordinator's confirmation of booking details.",
+              "audio": {
+                "type": "local",
+                "path": ""
+              },
+              "note": "【共用文章】\nRIVERSIDE CONFERENCE CENTER\n\nA successful event depends on careful planning. To help organizers prepare, the Riverside Conference Center has introduced a revised room-booking service. Clients can now check room capacity, available equipment, and catering options before submitting a reservation request. Once a request is received, an event coordinator will contact the client within one business day to confirm the details. [135] The center recommends booking large meeting rooms at least six weeks in advance, particularly during the spring and autumn conference seasons. Smaller rooms are often available on shorter notice. Clients who require presentation equipment should indicate this on the request form. A technician can be assigned to assist with setup, although this service must be arranged separately and may involve an additional fee.",
+              "status": "unanswered",
+              "createdAt": "2026-11-12T00:00:00Z",
+              "updatedAt": "2026-11-12T00:00:00Z"
+            },
+            {
+              "questionId": "6-6-138",
+              "passageGroupId": "set06-t1-p6-passage-02",
+              "materialId": "set06-t1-p6-passage-02",
+              "title": "What should clients do if they need help setting up presentation equipment?",
+              "options": {
+                "A": "Reserve only a small meeting room",
+                "B": "Contact the catering department",
+                "C": "Request a technician separately",
+                "D": "Arrive six weeks before the event"
+              },
+              "correctAnswer": "C",
+              "explanation": "The final sentence says technician assistance must be arranged separately.",
+              "audio": {
+                "type": "local",
+                "path": ""
+              },
+              "note": "【共用文章】\nRIVERSIDE CONFERENCE CENTER\n\nA successful event depends on careful planning. To help organizers prepare, the Riverside Conference Center has introduced a revised room-booking service. Clients can now check room capacity, available equipment, and catering options before submitting a reservation request. Once a request is received, an event coordinator will contact the client within one business day to confirm the details. [135] The center recommends booking large meeting rooms at least six weeks in advance, particularly during the spring and autumn conference seasons. Smaller rooms are often available on shorter notice. Clients who require presentation equipment should indicate this on the request form. A technician can be assigned to assist with setup, although this service must be arranged separately and may involve an additional fee.",
+              "status": "unanswered",
+              "createdAt": "2026-11-12T00:00:00Z",
+              "updatedAt": "2026-11-12T00:00:00Z"
+            },
+            {
+              "questionId": "6-6-139",
+              "passageGroupId": "set06-t1-p6-passage-03",
+              "materialId": "set06-t1-p6-passage-03",
+              "title": "The Westbridge branch will temporarily close its lobby ___ new security equipment is installed.",
+              "options": {
+                "A": "while",
+                "B": "because of",
+                "C": "in spite of",
+                "D": "unless"
+              },
+              "correctAnswer": "A",
+              "explanation": "“While” introduces the time period during which the installation takes place.",
+              "audio": {
+                "type": "local",
+                "path": ""
+              },
+              "note": "【共用文章】\nNOTICE TO CUSTOMERS\n\nThe Westbridge branch of Harbor Bank will temporarily close its lobby from June 12 through June 14 while new security equipment is installed. During this period, customers may continue to use the outdoor ATMs, which will remain available around the clock. Routine transactions can also be completed through the bank's mobile application or telephone service. [139] Customers who need to meet with a financial adviser are encouraged to make an appointment at the East Market branch, located approximately two kilometers away. The Westbridge lobby is expected to reopen at 9:00 A.M. on June 15. We apologize for any inconvenience and appreciate your understanding as we make these improvements. For further information, please visit harborbank.example or call the customer service number printed on your bank card.",
+              "status": "unanswered",
+              "createdAt": "2026-11-12T00:00:00Z",
+              "updatedAt": "2026-11-12T00:00:00Z"
+            },
+            {
+              "questionId": "6-6-140",
+              "passageGroupId": "set06-t1-p6-passage-03",
+              "materialId": "set06-t1-p6-passage-03",
+              "title": "Which service will remain available at the Westbridge branch during the closure?",
+              "options": {
+                "A": "In-person financial advice",
+                "B": "The outdoor ATMs",
+                "C": "Cashier-assisted deposits",
+                "D": "New account consultations"
+              },
+              "correctAnswer": "B",
+              "explanation": "The notice states that the outdoor ATMs will remain available around the clock.",
+              "audio": {
+                "type": "local",
+                "path": ""
+              },
+              "note": "【共用文章】\nNOTICE TO CUSTOMERS\n\nThe Westbridge branch of Harbor Bank will temporarily close its lobby from June 12 through June 14 while new security equipment is installed. During this period, customers may continue to use the outdoor ATMs, which will remain available around the clock. Routine transactions can also be completed through the bank's mobile application or telephone service. [139] Customers who need to meet with a financial adviser are encouraged to make an appointment at the East Market branch, located approximately two kilometers away. The Westbridge lobby is expected to reopen at 9:00 A.M. on June 15. We apologize for any inconvenience and appreciate your understanding as we make these improvements. For further information, please visit harborbank.example or call the customer service number printed on your bank card.",
+              "status": "unanswered",
+              "createdAt": "2026-11-12T00:00:00Z",
+              "updatedAt": "2026-11-12T00:00:00Z"
+            },
+            {
+              "questionId": "6-6-141",
+              "passageGroupId": "set06-t1-p6-passage-03",
+              "materialId": "set06-t1-p6-passage-03",
+              "title": "Which sentence best completes the blank [139]?",
+              "options": {
+                "A": "The bank's annual report will be mailed to shareholders in July.",
+                "B": "Please note that staff will not be able to provide in-person service at this location.",
+                "C": "Customers can apply for a mortgage at any grocery store.",
+                "D": "The East Market branch will begin offering weekend classes."
+              },
+              "correctAnswer": "B",
+              "explanation": "This sentence clarifies the consequence of the lobby closure and connects the alternative remote services.",
+              "audio": {
+                "type": "local",
+                "path": ""
+              },
+              "note": "【共用文章】\nNOTICE TO CUSTOMERS\n\nThe Westbridge branch of Harbor Bank will temporarily close its lobby from June 12 through June 14 while new security equipment is installed. During this period, customers may continue to use the outdoor ATMs, which will remain available around the clock. Routine transactions can also be completed through the bank's mobile application or telephone service. [139] Customers who need to meet with a financial adviser are encouraged to make an appointment at the East Market branch, located approximately two kilometers away. The Westbridge lobby is expected to reopen at 9:00 A.M. on June 15. We apologize for any inconvenience and appreciate your understanding as we make these improvements. For further information, please visit harborbank.example or call the customer service number printed on your bank card.",
+              "status": "unanswered",
+              "createdAt": "2026-11-12T00:00:00Z",
+              "updatedAt": "2026-11-12T00:00:00Z"
+            },
+            {
+              "questionId": "6-6-142",
+              "passageGroupId": "set06-t1-p6-passage-03",
+              "materialId": "set06-t1-p6-passage-03",
+              "title": "When is the Westbridge lobby scheduled to reopen?",
+              "options": {
+                "A": "June 12",
+                "B": "June 14",
+                "C": "June 15",
+                "D": "July 15"
+              },
+              "correctAnswer": "C",
+              "explanation": "The notice explicitly gives 9:00 A.M. on June 15 as the reopening time.",
+              "audio": {
+                "type": "local",
+                "path": ""
+              },
+              "note": "【共用文章】\nNOTICE TO CUSTOMERS\n\nThe Westbridge branch of Harbor Bank will temporarily close its lobby from June 12 through June 14 while new security equipment is installed. During this period, customers may continue to use the outdoor ATMs, which will remain available around the clock. Routine transactions can also be completed through the bank's mobile application or telephone service. [139] Customers who need to meet with a financial adviser are encouraged to make an appointment at the East Market branch, located approximately two kilometers away. The Westbridge lobby is expected to reopen at 9:00 A.M. on June 15. We apologize for any inconvenience and appreciate your understanding as we make these improvements. For further information, please visit harborbank.example or call the customer service number printed on your bank card.",
+              "status": "unanswered",
+              "createdAt": "2026-11-12T00:00:00Z",
+              "updatedAt": "2026-11-12T00:00:00Z"
+            },
+            {
+              "questionId": "6-6-143",
+              "passageGroupId": "set06-t1-p6-passage-04",
+              "materialId": "set06-t1-p6-passage-04",
+              "title": "All warehouse sections must be counted, ___ items currently stored in the returns area.",
+              "options": {
+                "A": "include",
+                "B": "included",
+                "C": "including",
+                "D": "inclusion"
+              },
+              "correctAnswer": "C",
+              "explanation": "The preposition/participle “including” introduces an additional category that must be counted.",
+              "audio": {
+                "type": "local",
+                "path": ""
+              },
+              "note": "【共用文章】\nFrom: Daniel Cho, Operations Manager\nTo: Warehouse Team\nSubject: Inventory Audit Schedule\n\nThe annual inventory audit will take place at the North Distribution Center on September 8 and 9. All warehouse sections must be counted, including items currently stored in the returns area. Team leaders should review the attached checklist and make sure that each aisle is clearly labeled before the audit begins. [143] Employees assigned to counting duties will receive their schedules by September 1. Please report any damaged or missing stock to your supervisor immediately rather than adjusting the figures yourself. The audit team will compare the physical count with the figures in the inventory system, and any discrepancies will be investigated. Thank you for your cooperation in completing this important task accurately and on schedule.",
+              "status": "unanswered",
+              "createdAt": "2026-11-12T00:00:00Z",
+              "updatedAt": "2026-11-12T00:00:00Z"
+            },
+            {
+              "questionId": "6-6-144",
+              "passageGroupId": "set06-t1-p6-passage-04",
+              "materialId": "set06-t1-p6-passage-04",
+              "title": "Team leaders should make sure that each aisle is clearly ___ before the audit begins.",
+              "options": {
+                "A": "label",
+                "B": "labeled",
+                "C": "labeling",
+                "D": "labels"
+              },
+              "correctAnswer": "B",
+              "explanation": "The passive construction “is clearly labeled” describes the required condition of each aisle.",
+              "audio": {
+                "type": "local",
+                "path": ""
+              },
+              "note": "【共用文章】\nFrom: Daniel Cho, Operations Manager\nTo: Warehouse Team\nSubject: Inventory Audit Schedule\n\nThe annual inventory audit will take place at the North Distribution Center on September 8 and 9. All warehouse sections must be counted, including items currently stored in the returns area. Team leaders should review the attached checklist and make sure that each aisle is clearly labeled before the audit begins. [143] Employees assigned to counting duties will receive their schedules by September 1. Please report any damaged or missing stock to your supervisor immediately rather than adjusting the figures yourself. The audit team will compare the physical count with the figures in the inventory system, and any discrepancies will be investigated. Thank you for your cooperation in completing this important task accurately and on schedule.",
+              "status": "unanswered",
+              "createdAt": "2026-11-12T00:00:00Z",
+              "updatedAt": "2026-11-12T00:00:00Z"
+            },
+            {
+              "questionId": "6-6-145",
+              "passageGroupId": "set06-t1-p6-passage-04",
+              "materialId": "set06-t1-p6-passage-04",
+              "title": "Which sentence best completes the blank [143]?",
+              "options": {
+                "A": "The cafeteria will introduce a new menu during the same week.",
+                "B": "Please keep the walkways clear so that auditors can move safely between storage areas.",
+                "C": "The company plans to relocate its head office next year.",
+                "D": "All visitors should submit travel receipts to the Finance Department."
+              },
+              "correctAnswer": "B",
+              "explanation": "Keeping walkways clear is directly relevant to preparing the warehouse for an on-site inventory audit.",
+              "audio": {
+                "type": "local",
+                "path": ""
+              },
+              "note": "【共用文章】\nFrom: Daniel Cho, Operations Manager\nTo: Warehouse Team\nSubject: Inventory Audit Schedule\n\nThe annual inventory audit will take place at the North Distribution Center on September 8 and 9. All warehouse sections must be counted, including items currently stored in the returns area. Team leaders should review the attached checklist and make sure that each aisle is clearly labeled before the audit begins. [143] Employees assigned to counting duties will receive their schedules by September 1. Please report any damaged or missing stock to your supervisor immediately rather than adjusting the figures yourself. The audit team will compare the physical count with the figures in the inventory system, and any discrepancies will be investigated. Thank you for your cooperation in completing this important task accurately and on schedule.",
+              "status": "unanswered",
+              "createdAt": "2026-11-12T00:00:00Z",
+              "updatedAt": "2026-11-12T00:00:00Z"
+            },
+            {
+              "questionId": "6-6-146",
+              "passageGroupId": "set06-t1-p6-passage-04",
+              "materialId": "set06-t1-p6-passage-04",
+              "title": "What should employees do if they find damaged or missing stock?",
+              "options": {
+                "A": "Change the inventory figures themselves",
+                "B": "Move the items to another aisle",
+                "C": "Report the issue to a supervisor",
+                "D": "Wait until the next annual audit"
+              },
+              "correctAnswer": "C",
+              "explanation": "The notice instructs employees to report damaged or missing stock to their supervisor immediately.",
+              "audio": {
+                "type": "local",
+                "path": ""
+              },
+              "note": "【共用文章】\nFrom: Daniel Cho, Operations Manager\nTo: Warehouse Team\nSubject: Inventory Audit Schedule\n\nThe annual inventory audit will take place at the North Distribution Center on September 8 and 9. All warehouse sections must be counted, including items currently stored in the returns area. Team leaders should review the attached checklist and make sure that each aisle is clearly labeled before the audit begins. [143] Employees assigned to counting duties will receive their schedules by September 1. Please report any damaged or missing stock to your supervisor immediately rather than adjusting the figures yourself. The audit team will compare the physical count with the figures in the inventory system, and any discrepancies will be investigated. Thank you for your cooperation in completing this important task accurately and on schedule.",
+              "status": "unanswered",
+              "createdAt": "2026-11-12T00:00:00Z",
+              "updatedAt": "2026-11-12T00:00:00Z"
+            }
+          ]
         },
         {
           "partId": 7,
