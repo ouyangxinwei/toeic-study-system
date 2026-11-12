@@ -26,6 +26,7 @@ alter table public.toeic_question_deletions add constraint toeic_question_deleti
 alter table public.toeic_audio_files add column if not exists test_id smallint not null default 1;
 alter table public.toeic_audio_files drop constraint if exists toeic_audio_files_test_id_check;
 alter table public.toeic_audio_files add constraint toeic_audio_files_test_id_check check(test_id in (1,2));
+create index if not exists idx_toeic_audio_set_test_question on public.toeic_audio_files(set_id,test_id,question_id);
 
 alter table public.toeic_question_audio add column if not exists test_id smallint not null default 1;
 alter table public.toeic_question_audio drop constraint if exists toeic_question_audio_pkey;
