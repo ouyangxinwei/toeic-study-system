@@ -1,5 +1,16 @@
 # 更新日志
 
+## V22.2.0 - 题库 JSON 结构检查工具
+- 新增 `scripts/validate_question_bank.py`，可检查全部 16 套题或指定 Set / Test。
+- 检查 JSON 解析、Set/Test/Part 层级、缺失 Part、题号格式与重复、实际题量、选项、正确答案、音频字段和共享材料引用。
+- 对未录入的题目、选项、答案、音频和未完成试卷使用警告；对重复题号、无效答案、错误字段类型和材料悬空引用使用错误。
+- 支持普通终端报告、JSON 报告、`--fail-on-warning` 和自定义项目根目录。
+- 新增 `tests/test_validate_question_bank.py`，覆盖基本结构、重复题号、材料悬空引用和空答案警告。
+- README 增加运行命令和安全边界说明。
+- 工具只读 JSON，不自动修改题目，不连接 Supabase，不涉及认证或部署。
+
+# 更新日志
+
 ## V22.1.0 - 第二阶段数据结构规范初版
 - 新增 `DATA_SCHEMA.md`，明确 Set / Test / Part / Question / Material / Audio / Asset 的目标数据结构。
 - 确认 16 套题、每套 Test 1 / Test 2、每份试卷 200 题及 Part 1–7 的标准题量。
