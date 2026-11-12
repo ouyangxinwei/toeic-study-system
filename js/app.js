@@ -65,7 +65,7 @@ class App {
       await questionManager.renderSetsList(savedSetId, savedTestId);
       // 登录后自动恢复离线删除和云端音频清理任务。
       try { const pending = await questionManager.processPendingDeletes(); const cleanup = await audioStorageManager.retryPendingCleanup(); if (pending.done || cleanup.length) console.info('V20 删除恢复任务', pending, cleanup); } catch (e) { console.warn('V20 删除恢复任务暂不可执行', e); }
-      window.addEventListener('online', async () => { try { const pending = await questionManager.processPendingDeletes(); await audioStorageManager.retryPendingCleanup(); if (pending.done && this.currentSetId) await this.openSet(this.currentSetId); } catch (e) { console.warn('网络恢复后的删除任务重试失败', e); } });
+      window.addEventListener('online', async () => { try { const pending = await questionManager.processPendingDeletes(); await audioStorageManager.retryPendingCleanup(); if (pending.done && this.currentSetId) await this.openSet(this.currentSetId, this.currentTestId); } catch (e) { console.warn('网络恢复后的删除任务重试失败', e); } });
 
       Utils.showToast('应用加载成功', 'success', 2000);
     } catch (error) {
@@ -304,7 +304,7 @@ document.getElementById('addQuestionForm').addEventListener('submit', (e) => {
     backBtn.className = 'back-btn';
     backBtn.textContent = '← 返回套题列表';
     backBtn.addEventListener('click', () => {
-      questionManager.renderSetsList();
+      questionManager.renderSetsList(Number(localStorage.getItem('toeic_current_set_id') || 1), this.currentTestId);
       this.currentSetId = null;
       this.isSearchMode = false;
     });
@@ -569,7 +569,7 @@ document.getElementById('addQuestionForm').addEventListener('submit', (e) => {
           const picker = document.getElementById('currentSetSelect'); if (picker) picker.value = String(setId);
           localStorage.setItem('toeic_current_set_id', String(setId));
           await this.savePreferredSetId(setId);
-          await questionManager.renderSetsList(setId);
+          await questionManager.renderSetsList(setId, this.currentTestId);
           Utils.showToast(savedQuestion?.audioCleanupPending ? '题目和新音频关联已保存；旧云端音频清理失败，系统会自动重试。' : '题目修改成功，音频关联已保存。', savedQuestion?.audioCleanupPending ? 'warning' : 'success', 6000);
         } catch (error) {
           if(newlyUploadedAudio?.audioId) { try { const queued=await audioStorageManager.queueUnreferencedAudio(newlyUploadedAudio.audioId); if(queued?.job_id) await audioStorageManager.runCleanupJob(queued.job_id); } catch(cleanupError) { console.warn('保存失败的新音频已保留待清理',cleanupError); } }
@@ -775,7 +775,7 @@ document.getElementById('addQuestionForm').addEventListener('submit', (e) => {
         const refsBtn = document.createElement('button'); refsBtn.type='button'; refsBtn.textContent='查看引用';
         refsBtn.addEventListener('click', async () => { try { const p=await audioStorageManager.getDeletePreview(audio.id); const refs=p.references.length?p.references.map(r=>`第${r.set_id}套 / ${r.question_id}`).join('、'):'无题目引用'; alert(`引用数量：${p.references.length}\n${refs}`); } catch(e) { Utils.showToast(`读取引用失败：${e.message||e}`,'error'); } });
         const del = document.createElement('button'); del.type='button'; del.className='delete-question-btn'; del.textContent='删除共享音频';
-        del.addEventListener('click', async () => { try { this.stopCloudAudioPreview(audio.id); audioPlayer.stopForAudioId(audio.id); const preview=await audioStorageManager.getDeletePreview(audio.id); const refText=preview.references.length?preview.references.map(r=>`第${r.set_id}套 / ${r.question_id}`).join('、'):'无题目引用'; if(!confirm(`确定删除共享音频「${audio.file_name}」吗？\n\n引用数量：${preview.references.length}\n引用题目：${refText}\n\n所有引用题目将被标记为音频缺失，所有登录账号都会受到影响。`))return; const result=await audioStorageManager.deleteSharedAudio(audio.id); Utils.showToast(result.cleanup?.completed?'共享音频已从云端删除':'共享音频删除失败，已加入待重试队列',result.cleanup?.completed?'success':'warning',7000); modal.remove(); await this.showCloudAudioManager(); if(this.currentSetId)await this.openSet(this.currentSetId); } catch(e) { Utils.showToast(`删除共享音频失败：${e.message||e}`,'error',8000); } });
+        del.addEventListener('click', async () => { try { this.stopCloudAudioPreview(audio.id); audioPlayer.stopForAudioId(audio.id); const preview=await audioStorageManager.getDeletePreview(audio.id); const refText=preview.references.length?preview.references.map(r=>`第${r.set_id}套 Test ${r.test_id || 1} / ${r.question_id}`).join('、'):'无题目引用'; if(!confirm(`确定删除共享音频「${audio.file_name}」吗？\n\n引用数量：${preview.references.length}\n引用题目：${refText}\n\n所有引用题目将被标记为音频缺失，所有登录账号都会受到影响。`))return; const result=await audioStorageManager.deleteSharedAudio(audio.id); Utils.showToast(result.cleanup?.completed?'共享音频已从云端删除':'共享音频删除失败，已加入待重试队列',result.cleanup?.completed?'success':'warning',7000); modal.remove(); await this.showCloudAudioManager(); if(this.currentSetId)await this.openSet(this.currentSetId); } catch(e) { Utils.showToast(`删除共享音频失败：${e.message||e}`,'error',8000); } });
         actions.append(play,download,refsBtn,del); row.append(info,actions); list.appendChild(row);
       }
       const applyFilters=()=>{const term=modal.querySelector('#audioManagerSearch').value.trim().toLowerCase();const set=modal.querySelector('#audioManagerSet').value;const part=modal.querySelector('#audioManagerPart').value;list.querySelectorAll('.audio-manager-row').forEach(row=>{row.hidden=!(row.dataset.name.includes(term)&&(!set||row.dataset.set===set)&&(!part||row.dataset.part===part));});};
@@ -811,12 +811,12 @@ document.getElementById('addQuestionForm').addEventListener('submit', (e) => {
       if (this.isSearchMode) {
         this.handleSearch();
       } else {
-        questionManager.loadSet(this.currentSetId).then(setData => {
+        questionManager.loadSet(this.currentSetId, this.currentTestId).then(setData => {
           this.displaySetDetail(setData);
         });
       }
     } else {
-      questionManager.renderSetsList();
+      questionManager.renderSetsList(Number(localStorage.getItem('toeic_current_set_id') || 1), this.currentTestId);
     }
   }
   
