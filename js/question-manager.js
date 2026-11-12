@@ -76,7 +76,12 @@ class QuestionManager {
 
     // 单独读取本地数据。若旧版本留下了损坏的缓存，仍可正常加载静态题库。
     const storageKey = `set${setId}_test${testId}_data`;
-    const rawUserData = localStorage.getItem(storageKey) || (Number(testId) === 1 ? localStorage.getItem(`set${setId}_data`) : null);
+    let rawUserData = localStorage.getItem(storageKey);
+    if (!rawUserData && Number(testId) === 1) {
+      const legacyKey = `set${setId}_data`;
+      rawUserData = localStorage.getItem(legacyKey);
+      if (rawUserData) { localStorage.setItem(storageKey, rawUserData); localStorage.removeItem(legacyKey); }
+    }
     if (rawUserData) {
       try {
         const parsed = JSON.parse(rawUserData);
