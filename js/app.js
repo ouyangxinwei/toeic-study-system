@@ -443,7 +443,7 @@ document.getElementById('addQuestionForm').addEventListener('submit', (e) => {
         else if (result.delete_audio) message += result.cleanup?.completed ? '；云端音频及索引已删除' : '；云端音频待重试清理';
         else if (result.audio_id) message += `；共享音频保留（仍有 ${result.references_remaining || 0} 道题目引用）`;
         Utils.showToast(message, result.cleanup && !result.cleanup.completed ? 'warning' : 'success', 6000);
-        await this.openSet(this.currentSetId);
+        await this.openSet(this.currentSetId, this.currentTestId);
       } catch (error) {
         console.error('删除题目失败:', error);
         Utils.showToast(`删除失败：${error.message || '未知错误'}`, 'error', 8000);
@@ -766,7 +766,7 @@ document.getElementById('addQuestionForm').addEventListener('submit', (e) => {
     try {
       if (!window.toeicSupabaseReady || !window.toeicSupabase) throw new Error('请先登录并连接 Supabase');
       const sb = window.toeicSupabase;
-      const { data, error } = await sb.from('toeic_audio_files').select('id,file_name,file_size,mime_type,storage_path,status,set_id,part_id,created_at').order('created_at', { ascending: false });
+      const { data, error } = await sb.from('toeic_audio_files').select('id,file_name,file_size,mime_type,storage_path,status,set_id,test_id,part_id,created_at').order('created_at', { ascending: false });
       if (error) throw error;
       let modal = document.getElementById('cloudAudioManagerModal');
       if (!modal) { modal = document.createElement('div'); modal.id = 'cloudAudioManagerModal'; modal.className = 'modal'; document.body.appendChild(modal); }
@@ -775,7 +775,7 @@ document.getElementById('addQuestionForm').addEventListener('submit', (e) => {
       if (!data?.length) list.textContent = '目前没有云端音频记录。';
       for (const audio of (data || [])) {
         const row = document.createElement('div'); row.className = 'audio-manager-row'; row.dataset.name = (audio.file_name || '').toLowerCase(); row.dataset.set = String(audio.set_id || ''); row.dataset.part = String(audio.part_id || '');
-        const info = document.createElement('div'); info.textContent = `${audio.file_name} · ${(Number(audio.file_size || 0) / 1024 / 1024).toFixed(2)} MB · 第${audio.set_id}套 Part ${audio.part_id} · ${audio.status || 'active'} · ${audio.storage_path}`;
+        const info = document.createElement('div'); info.textContent = `${audio.file_name} · ${(Number(audio.file_size || 0) / 1024 / 1024).toFixed(2)} MB · 第${audio.set_id}套 Test ${audio.test_id || 1} Part ${audio.part_id} · ${audio.status || 'active'} · ${audio.storage_path}`;
         const actions = document.createElement('div'); actions.className = 'audio-manager-actions';
         const play = document.createElement('button'); play.type='button'; play.textContent='播放';
         play.addEventListener('click', async () => { try { const src=await audioStorageManager.getPlaybackUrl({type:'cloud',audioId:audio.id,storagePath:audio.storage_path}); const player=new Audio(src); player.dataset.audioId=audio.id; this.cloudAudioPreviewPlayer=player; player.addEventListener('ended',()=>audioStorageManager.revokeUrl(src),{once:true}); await player.play(); } catch(e) { Utils.showToast(`播放失败：${e.message||e}`,'error',6000); } });
@@ -802,7 +802,7 @@ document.getElementById('addQuestionForm').addEventListener('submit', (e) => {
 
     if (this.currentSetId) {
       // 同步当前套题
-      await syncManager.syncToRemote(this.currentSetId);
+      await syncManager.syncToRemote(this.currentSetId, this.currentTestId);
     } else {
       // 同步所有套题
       const confirmSync = confirm('确定要将本机当前题库同步到 Supabase 云端吗？将同步 1–16 套题，不会删除云端多出的题目。');
