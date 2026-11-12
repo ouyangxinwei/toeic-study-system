@@ -542,7 +542,7 @@ document.getElementById('addQuestionForm').addEventListener('submit', (e) => {
             if(file.size > 20*1024*1024) throw new Error('音频文件不能超过20 MB');
             if(!file.type.startsWith('audio/')) throw new Error('请选择有效的音频文件');
             modal.querySelector('#editAudioUploadStatus').textContent='正在上传新音频…';
-            newlyUploadedAudio=await audioStorageManager.upload(file,{setId,partId,questionId,onProgress:p=>{modal.querySelector('#editAudioUploadStatus').textContent=`正在上传新音频… ${p}%`;}});
+            newlyUploadedAudio=await audioStorageManager.upload(file,{setId,testId,partId,questionId,onProgress:p=>{modal.querySelector('#editAudioUploadStatus').textContent=`正在上传新音频… ${p}%`;}});
             nextAudio=newlyUploadedAudio;
           } else if(selectedSharedId) {
             const sb=await audioStorageManager.client();
