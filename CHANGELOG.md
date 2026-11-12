@@ -8,6 +8,7 @@
 - 记录旧版 `passageGroupId`、`groupId`、`passages[]`、`passageText`、`articleText`、`transcript` 等字段的兼容策略。
 - 增加未来 Supabase 字段映射建议；本版本不执行数据库迁移、不批量改写 JSON、不修改认证和 RLS。
 - 本次为文档与版本声明更新，不改变现有运行时题库结构。
+- 新增 `DATA_AUDIT_PHASE2.md`，只读盘点 16 套 JSON 的实际题数、字段差异及共享材料的旧格式；确认当前仅 Set 06 Test 1 为完整 200 题，Set 16 Test 1 为 100 题，Set 01 Test 1 为 3 题。
 
 # 更新日志
 
