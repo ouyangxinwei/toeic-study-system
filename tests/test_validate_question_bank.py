@@ -65,6 +65,13 @@ class BankValidatorTests(unittest.TestCase):
         report = BankValidator(self.root).validate([1], [1])
         self.assertIn("MATERIAL_REFERENCE_MISSING", {item["code"] for item in report["issues"]})
 
+
+    def test_unknown_test_id_is_error(self):
+        self.data["tests"].append({"testId": 3, "parts": []})
+        self._write()
+        report = BankValidator(self.root).validate([1])
+        self.assertIn("TEST_ID_INVALID", {item["code"] for item in report["issues"]})
+
     def test_empty_answer_is_warning_not_error(self):
         q = self.data["tests"][0]["parts"][0]["questions"][0]
         q["correctAnswer"] = ""
