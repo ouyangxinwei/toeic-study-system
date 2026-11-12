@@ -98,7 +98,7 @@ class ExportManager {
           const row = [
             question.questionId,
             setData.setName,
-            setData.testName || `Test ${testId}`,
+            setData.testName || `Test ${setData.testId || 1}`,
             part.partName,
             this.escapeCSVField(question.title),
             this.escapeCSVField(question.options.A || ''),
@@ -136,7 +136,7 @@ class ExportManager {
       setId: setData.setId,
       setName: setData.setName,
       testId: setData.testId || testId,
-      testName: setData.testName || `Test ${testId}`, 
+      testName: setData.testName || `Test ${setData.testId || 1}`, 
       exportTime: new Date().toISOString(),
       totalQuestions: 0,
       questions: []
