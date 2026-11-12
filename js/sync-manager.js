@@ -42,175 +42,76 @@ class SyncManager {
    * 不会删除云端已有题目。
    */
   async uploadLocalToCloud() {
-    if (!window.toeicSupabaseReady || !window.toeicSupabase) {
-      Utils.showToast('Supabase 尚未连接，请先检查登录和网络配置。', 'error', 7000);
-      return;
-    }
-    if (this.isSyncing) {
-      Utils.showToast('正在执行数据传输，请稍候。', 'info');
-      return;
-    }
-    const confirmed = confirm('将把本机 16 套题库（静态题库及浏览器本地新增/修改数据）上传到云端。云端同题号会被本机数据覆盖，但不会删除云端多出的题目。确定继续吗？');
-    if (!confirmed) return;
-
-    this.isSyncing = true;
-    let total = 0;
+    if (!window.toeicSupabaseReady || !window.toeicSupabase) { Utils.showToast('Supabase 尚未连接，请先检查登录和网络配置。', 'error', 7000); return; }
+    if (this.isSyncing) { Utils.showToast('正在执行数据传输，请稍候。', 'info'); return; }
+    if (!confirm('将把本机 16 套题库的 Test 1 和 Test 2（静态题库及浏览器本地修改）上传到云端。云端同套题、同 Test、同题号会被更新，不会删除云端多出的题目。确定继续吗？')) return;
+    this.isSyncing = true; let total = 0;
     try {
-      for (let setId = 1; setId <= 16; setId++) {
-        const response = await fetch(`data/sets/set${String(setId).padStart(2, '0')}.json`);
-        if (!response.ok) throw new Error(`读取本机第 ${setId} 套失败（HTTP ${response.status}）`);
-        const localSet = await response.json();
-        const localStore = JSON.parse(localStorage.getItem(`set${setId}_data`) || '{}');
-        const byId = new Map();
-        (localSet.parts || []).forEach(part => (part.questions || []).forEach(q => {
-          byId.set(String(q.questionId), { ...q, partId: Number(part.partId) });
-        }));
-        Object.values(localStore || {}).forEach(q => {
-          if (q && q.questionId) byId.set(String(q.questionId), { ...byId.get(String(q.questionId)), ...q });
-        });
-        let tombstones={}; try { tombstones=JSON.parse(localStorage.getItem('toeic_v20_deleted_questions')||'{}'); } catch (_) {}
-        const rows = Array.from(byId.values()).filter(q => !tombstones[`${setId}:${String(q.questionId)}`]).map(q => ({
-          set_id: setId,
-          part_id: Number(q.partId || Number(String(q.questionId).split('-')[1]) || 1),
-          question_id: String(q.questionId),
-          title: q.title || '',
-          options: q.options || {},
-          correct_answer: q.correctAnswer || q.correct_answer || '',
-          audio: (q.audio && q.audio.type === 'local' && String(q.audio.path || '').startsWith('data:audio/'))
-            ? { type: 'local', fileName: q.audio.fileName || '', pendingUpload: true }
-            : (q.audio || { type: 'none' }),
-          note: q.note || '',
-          status: q.status || 'unanswered',
-          created_at: q.createdAt || q.created_at || new Date().toISOString(),
-          updated_at: q.updatedAt || q.updated_at || new Date().toISOString()
-        }));
-        // 空套题不发请求，避免无意义操作。
+      for (let setId = 1; setId <= 16; setId++) for (let testId = 1; testId <= 2; testId++) {
+        const rows = await this.buildLocalRowsForSet(setId, testId);
         if (rows.length) {
-          const { error } = await window.toeicSupabase.from('toeic_questions').upsert(rows, { onConflict: 'set_id,question_id' });
-          if (error) throw new Error(`第 ${setId} 套上传失败：${error.message || error.code}`);
+          const { error } = await window.toeicSupabase.from('toeic_questions').upsert(rows, { onConflict: 'set_id,test_id,question_id' });
+          if (error) throw new Error(`第 ${setId} 套 Test ${testId} 上传失败：${error.message || error.code}`);
           total += rows.length;
         }
       }
-      Utils.showToast(`上传完成：已将本机 ${total} 道题上传/更新到 Supabase。`, 'success', 7000);
-    } catch (error) {
-      console.error('上传本机数据到云端失败:', error);
-      Utils.showToast(`上传失败：${error.message || error.code || '请检查网络、表权限和 RLS 策略'}`, 'error', 9000);
-    } finally {
-      this.isSyncing = false;
-    }
+      Utils.showToast(`上传完成：已将本机 Test 1 / Test 2 共 ${total} 道题上传/更新到 Supabase。`, 'success', 7000);
+    } catch (error) { console.error('上传本机数据到云端失败:', error); Utils.showToast(`上传失败：${error.message || error.code || '请检查网络、表权限和 RLS 策略'}`, 'error', 9000); }
+    finally { this.isSyncing = false; }
   }
 
-  /**
+    /**
    * 下载 Supabase 全部题目到浏览器 localStorage，作为本机缓存/离线副本。
    * 同时提供 JSON 备份下载；不会删除云端数据。
    */
   async downloadCloudToLocal() {
-    if (!window.toeicSupabaseReady || !window.toeicSupabase) {
-      Utils.showToast('Supabase 尚未连接，请先检查登录和网络配置。', 'error', 7000);
-      return;
-    }
-    if (this.isSyncing) {
-      Utils.showToast('正在执行数据传输，请稍候。', 'info');
-      return;
-    }
-    const confirmed = confirm('将从云端下载全部题目，并覆盖浏览器本机缓存中的对应套题数据；不会修改云端。建议确认后继续。');
-    if (!confirmed) return;
-
+    if (!window.toeicSupabaseReady || !window.toeicSupabase) { Utils.showToast('Supabase 尚未连接，请先检查登录和网络配置。', 'error', 7000); return; }
+    if (this.isSyncing) { Utils.showToast('正在执行数据传输，请稍候。', 'info'); return; }
+    if (!confirm('将从云端下载全部 Test 1 / Test 2 题目，并覆盖浏览器本机对应缓存；不会修改云端。建议确认后继续。')) return;
     this.isSyncing = true;
     try {
-      let allRows = [];
-      // Supabase 默认分页上限通常为 1000，使用范围分页确保题目较多时也能全部下载。
-      const pageSize = 1000;
+      let allRows = []; const pageSize = 1000;
       for (let from = 0; ; from += pageSize) {
-        const { data, error } = await window.toeicSupabase
-          .from('toeic_questions').select('*').order('set_id').order('question_id')
-          .range(from, from + pageSize - 1);
-        if (error) throw error;
-        allRows = allRows.concat(data || []);
-        if (!data || data.length < pageSize) break;
+        const { data, error } = await window.toeicSupabase.from('toeic_questions').select('*').order('set_id').order('test_id').order('question_id').range(from, from + pageSize - 1);
+        if (error) throw error; allRows = allRows.concat(data || []); if (!data || data.length < pageSize) break;
       }
-
-      const bySet = new Map();
-      for (let setId = 1; setId <= 16; setId++) bySet.set(setId, {});
+      const grouped = new Map();
+      for (let s=1;s<=16;s++) for(let t=1;t<=2;t++) grouped.set(`${s}:${t}`,{});
       allRows.forEach(row => {
-        const setId = Number(row.set_id);
-        if (!bySet.has(setId)) return;
-        bySet.get(setId)[String(row.question_id)] = {
-          questionId: String(row.question_id),
-          partId: Number(row.part_id),
-          title: row.title || '', options: row.options || {},
-          correctAnswer: row.correct_answer || '', audio: row.audio || { type: 'none' },
-          note: row.note || '', status: row.status || 'unanswered',
-          createdAt: row.created_at, updatedAt: row.updated_at
-        };
+        const key = `${Number(row.set_id)}:${Number(row.test_id || 1)}`; if (!grouped.has(key)) return;
+        grouped.get(key)[String(row.question_id)] = { questionId:String(row.question_id), setId:Number(row.set_id), testId:Number(row.test_id || 1), partId:Number(row.part_id), title:row.title||'', options:row.options||{}, correctAnswer:row.correct_answer||'', audio:row.audio||{type:'none'}, note:row.note||'', status:row.status||'unanswered', createdAt:row.created_at, updatedAt:row.updated_at };
       });
-      bySet.forEach((questions, setId) => localStorage.setItem(`set${setId}_data`, JSON.stringify(questions)));
-
-      const backup = {
-        exportedAt: new Date().toISOString(),
-        source: 'Supabase toeic_questions',
-        totalQuestions: allRows.length,
-        sets: Object.fromEntries(Array.from(bySet.entries()).map(([setId, questions]) => [String(setId), Object.values(questions)]))
-      };
-      const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json;charset=utf-8' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `toeic-cloud-backup-${new Date().toISOString().slice(0, 10)}.json`;
-      document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
-
-      Utils.showToast(`下载完成：云端 ${allRows.length} 道题已保存到本机缓存，并下载 JSON 备份文件。`, 'success', 8000);
-      if (window.app && typeof window.app.refreshCurrentView === 'function') window.app.refreshCurrentView();
-    } catch (error) {
-      console.error('下载云端数据失败:', error);
-      Utils.showToast(`下载失败：${error.message || error.code || '请检查网络、表权限和 RLS 策略'}`, 'error', 9000);
-    } finally {
-      this.isSyncing = false;
-    }
+      grouped.forEach((questions,key)=>{const [s,t]=key.split(':');localStorage.setItem(`set${s}_test${t}_data`,JSON.stringify(questions));});
+      const backup = { exportedAt:new Date().toISOString(), source:'Supabase toeic_questions', totalQuestions:allRows.length, tests:Object.fromEntries(Array.from(grouped.entries()).map(([key,questions])=>[key,Object.values(questions)])) };
+      const blob = new Blob([JSON.stringify(backup,null,2)],{type:'application/json;charset=utf-8'}); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download=`toeic-cloud-backup-${new Date().toISOString().slice(0,10)}.json`; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+      Utils.showToast(`下载完成：云端 ${allRows.length} 道题已按 Test 1 / Test 2 保存到本机，并下载 JSON 备份。`,'success',8000);
+      if(window.app?.refreshCurrentView) window.app.refreshCurrentView();
+    } catch(error) { console.error('下载云端数据失败:',error); Utils.showToast(`下载失败：${error.message||error.code||'请检查网络、表权限和 RLS 策略'}`,'error',9000); }
+    finally { this.isSyncing=false; }
   }
 
-  async buildLocalRowsForSet(setId) {
-    const response = await fetch(`data/sets/set${String(setId).padStart(2, '0')}.json`);
+    async buildLocalRowsForSet(setId, testId = 1) {
+    const response = await fetch(`data/sets/set${String(setId).padStart(2,'0')}.json`);
     if (!response.ok) throw new Error(`读取本机第 ${setId} 套失败（HTTP ${response.status}）`);
     const localSet = await response.json();
-    const localStore = JSON.parse(localStorage.getItem(`set${setId}_data`) || '{}');
+    const test = (localSet.tests || []).find(x => Number(x.testId) === Number(testId));
+    if (!test) throw new Error(`第 ${setId} 套缺少 Test ${testId}`);
+    const localStore = JSON.parse(localStorage.getItem(`set${setId}_test${testId}_data`) || (Number(testId)===1?localStorage.getItem(`set${setId}_data`):'{}') || '{}');
     const byId = new Map();
-    (localSet.parts || []).forEach(part => (part.questions || []).forEach(q => {
-      byId.set(String(q.questionId), { ...q, partId: Number(part.partId) });
-    }));
-    Object.values(localStore || {}).forEach(q => {
-      if (q && q.questionId) {
-        const previous = byId.get(String(q.questionId)) || {};
-        byId.set(String(q.questionId), { ...previous, ...q, partId: Number(q.partId || previous.partId || 1) });
-      }
-    });
-    let tombstones={}; try { tombstones=JSON.parse(localStorage.getItem('toeic_v20_deleted_questions')||'{}'); } catch (_) {}
-    return Array.from(byId.values()).filter(q => !tombstones[`${Number(setId)}:${String(q.questionId)}`]).map(q => {
-      const audio = q.audio || { type: 'none' };
-      const safeAudio = audio.type === 'local' && String(audio.path || '').startsWith('data:audio/')
-        ? { type: 'local', fileName: audio.fileName || '', pendingUpload: true }
-        : audio;
-      return {
-        set_id: Number(setId),
-        part_id: Number(q.partId || Number(String(q.questionId).split('-')[1]) || 1),
-        question_id: String(q.questionId),
-        title: q.title || '',
-        options: q.options || {},
-        correct_answer: q.correctAnswer || q.correct_answer || '',
-        audio: safeAudio,
-        note: q.note || '',
-        status: q.status || 'unanswered',
-        created_at: q.createdAt || q.created_at || new Date().toISOString(),
-        updated_at: q.updatedAt || q.updated_at || new Date().toISOString()
-      };
+    (test.parts || []).forEach(part => (part.questions || []).forEach(q => byId.set(String(q.questionId),{...q,partId:Number(part.partId)})));
+    Object.values(localStore || {}).forEach(q => { if(q?.questionId){const prev=byId.get(String(q.questionId))||{};byId.set(String(q.questionId),{...prev,...q,partId:Number(q.partId||prev.partId||1)});} });
+    let tombstones={}; try{tombstones=JSON.parse(localStorage.getItem('toeic_v20_deleted_questions')||'{}');}catch(_){}
+    return Array.from(byId.values()).filter(q=>!tombstones[`${Number(setId)}:${Number(testId)}:${String(q.questionId)}`] && !(Number(testId)===1 && tombstones[`${Number(setId)}:${String(q.questionId)}`])).map(q=>{
+      const audio=q.audio||{type:'none'}; const safeAudio=audio.type==='local'&&String(audio.path||'').startsWith('data:audio/')?{type:'local',fileName:audio.fileName||'',pendingUpload:true}:audio;
+      return {set_id:Number(setId),test_id:Number(testId),part_id:Number(q.partId||Number(String(q.questionId).split('-')[1])||1),question_id:String(q.questionId),title:q.title||'',options:q.options||{},correct_answer:q.correctAnswer||q.correct_answer||'',audio:safeAudio,note:q.note||'',status:q.status||'unanswered',created_at:q.createdAt||q.created_at||new Date().toISOString(),updated_at:q.updatedAt||q.updated_at||new Date().toISOString()};
     });
   }
 
-  /**
+    /**
    * 同步到远程数据库
    * @param {number} setId - 套题ID（可选，不传则同步所有）
    */
-  async syncToRemote(setId = null) {
+  async syncToRemote(setId = null, testId = null) {
     // V19.1：统一使用 Supabase，不再回退到旧版自定义 REST API。
     if (!window.toeicSupabaseReady || !window.toeicSupabase) {
       Utils.showToast(`Supabase 未连接：${window.toeicSupabaseError || '请检查 js/supabase-client.js 配置及网络'}`, 'error', 8000);
@@ -232,14 +133,14 @@ class SyncManager {
       for (const currentSetId of setIds) {
         if (!Number.isInteger(currentSetId) || currentSetId < 1 || currentSetId > 16) continue;
         // 从静态题库 + 当前浏览器本地增改记录构建上传内容，确保本地编辑不会被云端读取结果覆盖。
-        const rows = await this.buildLocalRowsForSet(currentSetId);
-
-        if (rows.length) {
-          const { error } = await window.toeicSupabase.from('toeic_questions')
-            .upsert(rows, { onConflict: 'set_id,question_id' });
-          if (error) throw new Error(`第 ${currentSetId} 套同步失败：${error.message || error.code}`);
-          syncedCount += rows.length;
-          this.updateSyncTime(currentSetId, new Date().toISOString());
+        const testIds = testId ? [Number(testId)] : [1,2];
+        for (const currentTestId of testIds) {
+          const rows = await this.buildLocalRowsForSet(currentSetId, currentTestId);
+          if (rows.length) {
+            const { error } = await window.toeicSupabase.from('toeic_questions').upsert(rows, { onConflict: 'set_id,test_id,question_id' });
+            if (error) throw new Error(`第 ${currentSetId} 套 Test ${currentTestId} 同步失败：${error.message || error.code}`);
+            syncedCount += rows.length; this.updateSyncTime(currentSetId, currentTestId, new Date().toISOString());
+          }
         }
       }
       Utils.showToast(`Supabase 同步成功：已同步 ${syncedCount} 道题。云端音频文件及 IndexedDB 缓存保持独立。`, 'success', 7000);
@@ -257,8 +158,8 @@ class SyncManager {
    * 同步单个套题
    * @param {number} setId - 套题ID
    */
-  async syncSet(setId) {
-    const ok = await this.syncToRemote(Number(setId));
+  async syncSet(setId, testId = 1) {
+    const ok = await this.syncToRemote(Number(setId), Number(testId));
     if (!ok) throw new Error(`第 ${setId} 套同步失败`);
   }
 
@@ -267,9 +168,9 @@ class SyncManager {
    * @param {number} setId - 套题ID
    * @param {string} serverTime - 服务器时间
    */
-  updateSyncTime(setId, serverTime) {
+  updateSyncTime(setId, testId, serverTime) {
     const syncInfo = JSON.parse(localStorage.getItem('sync_info') || '{}');
-    syncInfo[`set${setId}`] = {
+    syncInfo[`set${setId}_test${testId}`] = {
       lastSyncTime: serverTime || new Date().toISOString(),
       syncStatus: 'success'
     };
