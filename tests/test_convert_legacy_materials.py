@@ -117,14 +117,16 @@ class LegacyMaterialConverterTests(unittest.TestCase):
             source.write_bytes(source_bytes)
             write_json(output, converted)
             report.update({
+                "source": str(source.resolve()),
+                "output": str(output.resolve()),
                 "sourceSha256": sha256_bytes(source_bytes),
                 "outputSha256": sha256_bytes(output.read_bytes()),
             })
             write_json(preview, report)
             with self.assertRaises(MigrationError):
-                apply_replacement(source, output, preview, root / "backups", "")
+                apply_replacement(source, output, preview, root / "backups", "", 6, 1)
             self.assertEqual(source.read_bytes(), source_bytes)
-            apply_replacement(source, output, preview, root / "backups", "REPLACE")
+            apply_replacement(source, output, preview, root / "backups", "REPLACE", 6, 1)
             self.assertEqual(json.loads(source.read_text())["tests"][0]["materials"], converted["tests"][0]["materials"])
             self.assertEqual(len(list((root / "backups").glob("*.backup.json"))), 1)
 
@@ -136,7 +138,7 @@ class LegacyMaterialConverterTests(unittest.TestCase):
             preview = root / "preview.json"
             source.write_text('{"setId":6}', encoding="utf-8")
             output.write_text('{"setId":6}', encoding="utf-8")
-            write_json(preview, {"sourceSha256": "not-current", "outputSha256": sha256_bytes(output.read_bytes())})
+            write_json(preview, {"setId": 6, "testId": 1, "source": str(source.resolve()), "output": str(output.resolve()), "sourceSha256": "not-current", "outputSha256": sha256_bytes(output.read_bytes())})
             with self.assertRaises(MigrationError):
                 apply_replacement(source, output, preview, root / "backups", "REPLACE")
 
