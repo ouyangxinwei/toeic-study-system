@@ -182,9 +182,9 @@ class SyncManager {
    * @param {number} setId - 套题ID
    * @returns {Object} 同步状态
    */
-  getSyncStatus(setId) {
+  getSyncStatus(setId, testId = 1) {
     const syncInfo = JSON.parse(localStorage.getItem('sync_info') || '{}');
-    return syncInfo[`set${setId}`] || {
+    return syncInfo[`set${setId}_test${testId}`] || syncInfo[`set${setId}`] || {
       lastSyncTime: null,
       syncStatus: 'never'
     };
