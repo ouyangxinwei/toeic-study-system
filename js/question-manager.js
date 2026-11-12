@@ -188,7 +188,7 @@ class QuestionManager {
 
       const partId = Number(userQuestion.partId);
       const targetPart = targetSet.parts.find(part => part.partId === partId);
-      if (targetPart) targetPart.questions.push({ ...userQuestion });
+      if (targetPart) targetPart.questions.push({ ...userQuestion, setId: Number(targetSet.setId), testId: Number(targetSet.testId || 1), partId });
     });
 
     targetSet.parts.forEach(part => {
