@@ -36,19 +36,19 @@ def fixture():
             for n in range(1, 4):
                 questions.append(question(
                     f"6-3-{n:03d}",
-                    "【共用对话转录】Shared conversation\\n【人工确认】Keep this annotation\\n原始音频：source.mp3",
+                    "【共用对话转录】Shared conversation\n【人工确认】Keep this annotation\n原始音频：source.mp3",
                 ))
         elif part_id == 4:
             for n in range(1, 4):
                 questions.append(question(
                     f"6-4-{n:03d}",
-                    "【共用演讲/公告转录】Shared talk\\n问题音频：questions.mp3",
+                    "【共用演讲/公告转录】Shared talk\n问题音频：questions.mp3",
                 ))
         elif part_id == 6:
             for n in range(1, 5):
                 questions.append(question(
                     f"6-6-{n:03d}",
-                    "【共用文章】\\nShared article body",
+                    "【共用文章】\nShared article body",
                     materialId="set06-t1-p6-passage-01",
                     passageGroupId="set06-t1-p6-passage-01",
                 ))
@@ -79,7 +79,7 @@ class LegacyMaterialConverterTests(unittest.TestCase):
 
         p3 = test["parts"][2]["questions"]
         self.assertEqual(p3[0]["materialId"], p3[2]["materialId"])
-        self.assertEqual(p3[0]["note"], "【人工确认】Keep this annotation\\n原始音频：source.mp3")
+        self.assertEqual(p3[0]["note"], "【人工确认】Keep this annotation\n原始音频：source.mp3")
         self.assertEqual(p3[0]["correctAnswer"], original["tests"][0]["parts"][2]["questions"][0]["correctAnswer"])
         self.assertEqual(p3[0]["explanation"], "Keep this explanation")
 
@@ -101,7 +101,7 @@ class LegacyMaterialConverterTests(unittest.TestCase):
 
     def test_rejects_inconsistent_repeated_part6_material(self):
         original = fixture()
-        original["tests"][0]["parts"][5]["questions"][1]["note"] = "【共用文章】\\nDifferent body"
+        original["tests"][0]["parts"][5]["questions"][1]["note"] = "【共用文章】\nDifferent body"
         with self.assertRaises(MigrationError):
             convert_document(original, 6, 1)
 
@@ -113,7 +113,7 @@ class LegacyMaterialConverterTests(unittest.TestCase):
             preview = root / "preview.json"
             original = fixture()
             converted, report = convert_document(original, 6, 1)
-            source_bytes = (json.dumps(original, ensure_ascii=False, indent=2) + "\\n").encode()
+            source_bytes = (json.dumps(original, ensure_ascii=False, indent=2) + "\n").encode()
             source.write_bytes(source_bytes)
             write_json(output, converted)
             report.update({
