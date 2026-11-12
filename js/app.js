@@ -341,7 +341,7 @@ document.getElementById('addQuestionForm').addEventListener('submit', (e) => {
     const partId = Number(part.partId);
     const readMaterial = question => {
       const note = String(question.note || '');
-      const shared = note.match(/【共用[^】]*】([\\s\\S]*?)(?=\\n【人工确认】|\\n原始音频：|\\n问题音频：|$)/);
+      const shared = note.match(/【共用[^】]*】([\s\S]*?)(?=\n【人工确认】|\n原始音频：|\n问题音频：|$)/);
       if (shared && shared[1].trim()) return shared[1].trim();
       for (const key of ['passageText', 'articleText', 'readingText', 'passage', 'transcript', 'materialText']) {
         const value = question[key];
@@ -412,36 +412,51 @@ document.getElementById('addQuestionForm').addEventListener('submit', (e) => {
 
     const materialText = group.material || '';
     const passages = group.passages || [];
-    const hasMaterial = Boolean(materialText || passages.length);
-    const shouldSplit = partId === 6 || partId === 7;
-
-    if (partId === 3 || partId === 4 || shouldSplit) {
-      const layout = document.createElement('div');
-      layout.className = shouldSplit ? 'reading-group-layout' : 'listening-group-layout';
-      const materialPane = document.createElement('div');
-      materialPane.className = shouldSplit ? 'group-material-pane' : 'group-transcript-pane';
-      const materialTitle = document.createElement('h5');
-      materialTitle.textContent = partId === 3 ? 'Conversation / 对话材料' : partId === 4 ? 'Talk / 独白材料' : 'Reading Passage / 阅读文章';
-      materialPane.appendChild(materialTitle);
-
+    const isReading = partId === 6 || partId === 7;
+    const renderMaterial = pane => {
       if (passages.length) {
         passages.forEach((passage, index) => {
           const article = document.createElement('article');
           article.className = 'group-passage';
           const title = document.createElement('h6');
-          title.textContent = passage.title || `Passage ${index + 1}`;
+          title.textContent = typeof passage === 'string' ? `Passage ${index + 1}` : (passage.title || `Passage ${index + 1}`);
           const body = document.createElement('div');
           body.className = 'group-passage-text';
           body.textContent = typeof passage === 'string' ? passage : (passage.text || passage.content || '');
           article.append(title, body);
-          materialPane.appendChild(article);
+          pane.appendChild(article);
         });
       } else {
         const body = document.createElement('div');
-        body.className = shouldSplit ? 'group-passage-text' : 'group-transcript-text';
-        body.textContent = materialText || (shouldSplit ? '该组尚未录入文章材料。后续可通过 passageText / articleText / passages 与题目关联。' : '该组尚未录入共享转录。');
-        materialPane.appendChild(body);
+        body.className = isReading ? 'group-passage-text' : 'group-transcript-text';
+        body.textContent = materialText || (isReading
+          ? '该组尚未录入文章材料。录入后可通过 passageText、articleText 或 passages 与题目关联。'
+          : '该组尚未录入共享转录。');
+        pane.appendChild(body);
       }
+    };
+
+    if (partId === 3 || partId === 4) {
+      const materialPane = document.createElement('div');
+      materialPane.className = 'group-transcript-pane';
+      const materialTitle = document.createElement('h5');
+      materialTitle.textContent = partId === 3 ? 'Conversation Transcript / 对话转录' : 'Talk Transcript / 独白转录';
+      materialPane.appendChild(materialTitle);
+      renderMaterial(materialPane);
+      wrapper.appendChild(materialPane);
+      const list = document.createElement('div');
+      list.className = 'group-question-list';
+      group.questions.forEach(question => list.appendChild(this.createQuestionCard(question)));
+      wrapper.appendChild(list);
+    } else if (isReading) {
+      const layout = document.createElement('div');
+      layout.className = 'reading-group-layout';
+      const materialPane = document.createElement('div');
+      materialPane.className = 'group-material-pane';
+      const materialTitle = document.createElement('h5');
+      materialTitle.textContent = 'Reading Passage / 阅读文章';
+      materialPane.appendChild(materialTitle);
+      renderMaterial(materialPane);
 
       const questionPane = document.createElement('div');
       questionPane.className = 'group-questions-pane';
@@ -455,19 +470,6 @@ document.getElementById('addQuestionForm').addEventListener('submit', (e) => {
       layout.append(materialPane, questionPane);
       wrapper.appendChild(layout);
     } else {
-      if (partId === 3 || partId === 4) {
-        const materialPane = wrapper.querySelector('.group-transcript-pane');
-        // listening layout is added below so the transcript remains shared once per group.
-        const transcript = document.createElement('div');
-        transcript.className = 'group-transcript-pane';
-        const label = document.createElement('h5');
-        label.textContent = partId === 3 ? 'Conversation Transcript / 对话转录' : 'Talk Transcript / 独白转录';
-        const body = document.createElement('div');
-        body.className = 'group-transcript-text';
-        body.textContent = materialText || '该组尚未录入共享转录。';
-        transcript.append(label, body);
-        wrapper.appendChild(transcript);
-      }
       const list = document.createElement('div');
       list.className = 'group-question-list';
       group.questions.forEach(question => list.appendChild(this.createQuestionCard(question)));
