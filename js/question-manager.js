@@ -151,7 +151,7 @@ class QuestionManager {
       const tombstones = JSON.parse(localStorage.getItem('toeic_v20_deleted_questions') || '{}');
       const prefix = `${Number(setId)}:${Number(testId)}:`;
       loadedSet.parts.forEach(part => {
-        part.questions = part.questions.filter(q => !tombstones[`${prefix}${String(q.questionId)}`] && !cloudDeletedQuestionIds.has(String(q.questionId)));
+        part.questions = part.questions.filter(q => !tombstones[`${prefix}${String(q.questionId)}`] && !(Number(testId) === 1 && tombstones[`${Number(setId)}:${String(q.questionId)}`]) && !cloudDeletedQuestionIds.has(String(q.questionId)));
         part.questionCount = part.questions.length;
       });
     } catch (e) { console.warn('读取题目删除记录失败', e); }
@@ -256,7 +256,7 @@ class QuestionManager {
     if (duplicate) throw new Error(`题号 ${question.questionId} 已存在，请更换题号`);
 
     const stored = { ...question, partId, testId: Number(testId), setId: Number(setId) };
-    try { const tombstones=JSON.parse(localStorage.getItem('toeic_v20_deleted_questions')||'{}'); delete tombstones[`${Number(setId)}:${Number(testId)}:${String(stored.questionId)}`]; localStorage.setItem('toeic_v20_deleted_questions',JSON.stringify(tombstones)); } catch (_) {}
+    try { const tombstones=JSON.parse(localStorage.getItem('toeic_v20_deleted_questions')||'{}'); delete tombstones[`${Number(setId)}:${Number(testId)}:${String(stored.questionId)}`]; if(Number(testId)===1) delete tombstones[`${Number(setId)}:${String(stored.questionId)}`]; localStorage.setItem('toeic_v20_deleted_questions',JSON.stringify(tombstones)); } catch (_) {}
     part.questions.push(stored);
     part.questions.sort((a, b) => a.questionId.localeCompare(b.questionId, undefined, { numeric: true }));
     part.questionCount = part.questions.length;
@@ -341,7 +341,7 @@ class QuestionManager {
     }
 
     // 云端修改成功后再写本地删除墓碑，避免失败时把原题从本机隐藏。
-    try { const tombstones=JSON.parse(localStorage.getItem('toeic_v20_deleted_questions')||'{}'); if(Number(oldSetId)!==targetSetId || Number(oldTestId)!==targetTestId || String(oldQuestionId)!==String(saved.questionId)) tombstones[`${Number(oldSetId)}:${Number(oldTestId)}:${String(oldQuestionId)}`]=now; delete tombstones[`${targetSetId}:${targetTestId}:${String(saved.questionId)}`]; localStorage.setItem('toeic_v20_deleted_questions',JSON.stringify(tombstones)); } catch (_) {}
+    try { const tombstones=JSON.parse(localStorage.getItem('toeic_v20_deleted_questions')||'{}'); if(Number(oldSetId)!==targetSetId || Number(oldTestId)!==targetTestId || String(oldQuestionId)!==String(saved.questionId)) tombstones[`${Number(oldSetId)}:${Number(oldTestId)}:${String(oldQuestionId)}`]=now; delete tombstones[`${targetSetId}:${targetTestId}:${String(saved.questionId)}`]; if(targetTestId===1) delete tombstones[`${targetSetId}:${String(saved.questionId)}`]; localStorage.setItem('toeic_v20_deleted_questions',JSON.stringify(tombstones)); } catch (_) {}
     // 更新浏览器缓存；若跨套题移动，也清理原套题缓存。
     const oldKey = `set${Number(oldSetId)}_test${Number(oldTestId)}_data`;
     let oldCache = {}; try { oldCache = JSON.parse(localStorage.getItem(oldKey) || '{}'); } catch (_) {}
