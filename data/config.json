@@ -1,12 +1,14 @@
 {
   "app": {
     "name": "TOEIC错题学习系统",
-    "version": "19.1.0",
-    "description": "16套模拟题错题整理与复习系统"
+    "version": "21.0.0",
+    "description": "16套模拟题，每套包含Test 1和Test 2，每份200题"
   },
   "sets": {
     "total": 16,
-    "questionsPerSet": 200
+    "questionsPerSet": 400,
+    "testsPerSet": 2,
+    "questionsPerTest": 200
   },
   "parts": [
     {
@@ -73,5 +75,5 @@
     "includeAudio": false,
     "includeNotes": true
   },
-  "version": "19.1.0"
+  "version": "21.0.0"
 }

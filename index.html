@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TOEIC错题学习系统</title>
-    <link rel="stylesheet" href="css/style.css?v=20.1">
-    <link rel="stylesheet" href="css/mobile.css?v=20.1">
+    <title>TOEIC错题学习系统 V21</title>
+    <link rel="stylesheet" href="css/style.css?v=21.0">
+    <link rel="stylesheet" href="css/mobile.css?v=21.0">
 </head>
 <body>
     <div class="container">
         <!-- 头部 -->
         <header class="header">
             <h1>📚 TOEIC错题学习系统</h1>
-            <p>16套模拟题 · 第16套含原创听力100题 · 错题整理与复习</p>
+            <p>16套模拟题 · 每套含 Test 1 / Test 2 · 每份200题</p>
             <button id="logoutBtn" class="auth-logout-btn" type="button" hidden>退出登录</button>
         </header>
 
@@ -76,6 +76,9 @@
                 </select>
             </div>
             
+            <div class="form-group">
+                <label>Test *</label><select id="formTestId" required><option value="1">Test 1</option><option value="2">Test 2</option></select>
+            </div>
             <div class="form-group">
                 <label>Part *</label>
                 <select id="formPartId" required>
@@ -171,6 +174,12 @@
             <span class="picker-hint">只加载所选套题；选择会保存到云端账号。</span>
         </section>
 
+        <section class="current-test-picker" aria-label="选择 Test">
+            <label for="currentTestSelect">当前试卷</label>
+            <select id="currentTestSelect"><option value="1">Test 1</option><option value="2">Test 2</option></select>
+            <span class="picker-hint">每套模拟题包含两份独立的 200 题试卷。</span>
+        </section>
+
         <!-- 当前选中的套题 -->
         <main class="sets-list" id="setsList">
             <!-- 动态生成 -->
@@ -197,17 +206,17 @@
 
     <!-- Supabase JS v2：浏览器直接连接 Supabase REST API -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="js/supabase-client.js?v=20.1"></script>
-    <script src="js/auth-gate.js?v=20.1"></script>
+    <script src="js/supabase-client.js?v=21.0"></script>
+    <script src="js/auth-gate.js?v=21.0"></script>
     <!-- 引入JavaScript -->
-    <script src="js/utils.js?v=20.1"></script>
-    <script src="js/question-manager.js?v=20.1"></script>
-    <script src="js/audio-storage-manager.js?v=20.1"></script>
-    <script src="js/audio-player.js?v=20.1"></script>
-    <script src="js/note-manager.js?v=20.1"></script>
-    <script src="js/search-engine.js?v=20.1"></script>
-    <script src="js/export-manager.js?v=20.1"></script>
-    <script src="js/sync-manager.js?v=20.1"></script>
-    <script src="js/app.js?v=20.1"></script>
+    <script src="js/utils.js?v=21.0"></script>
+    <script src="js/question-manager.js?v=21.0"></script>
+    <script src="js/audio-storage-manager.js?v=21.0"></script>
+    <script src="js/audio-player.js?v=21.0"></script>
+    <script src="js/note-manager.js?v=21.0"></script>
+    <script src="js/search-engine.js?v=21.0"></script>
+    <script src="js/export-manager.js?v=21.0"></script>
+    <script src="js/sync-manager.js?v=21.0"></script>
+    <script src="js/app.js?v=21.0"></script>
 </body>
 </html>

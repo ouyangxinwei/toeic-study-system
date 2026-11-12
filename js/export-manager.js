@@ -12,9 +12,9 @@ class ExportManager {
    * 导出为CSV格式
    * @param {number} setId - 套题ID
    */
-  async exportCSV(setId) {
+  async exportCSV(setId, testId = window.app?.currentTestId || 1) {
     try {
-      const setData = await questionManager.loadSet(setId);
+      const setData = await questionManager.loadSet(setId, testId);
       if (!setData) {
         Utils.showToast('加载套题数据失败', 'error');
         return;
@@ -24,7 +24,7 @@ class ExportManager {
       const csvContent = this.buildCSVContent(setData);
       
       // 生成文件名
-      const filename = `set${String(setId).padStart(2, '0')}_wrong_questions_${this.getDateString()}.csv`;
+      const filename = `set${String(setId).padStart(2, '0')}_test${testId}_wrong_questions_${this.getDateString()}.csv`;
       
       // 下载文件
       Utils.downloadFile(csvContent, filename, 'text/csv;charset=utf-8;');
@@ -40,9 +40,9 @@ class ExportManager {
    * 导出为JSON格式
    * @param {number} setId - 套题ID
    */
-  async exportJSON(setId) {
+  async exportJSON(setId, testId = window.app?.currentTestId || 1) {
     try {
-      const setData = await questionManager.loadSet(setId);
+      const setData = await questionManager.loadSet(setId, testId);
       if (!setData) {
         Utils.showToast('加载套题数据失败', 'error');
         return;
@@ -52,7 +52,7 @@ class ExportManager {
       const jsonContent = this.buildJSONContent(setData);
       
       // 生成文件名
-      const filename = `set${String(setId).padStart(2, '0')}_wrong_questions_${this.getDateString()}.json`;
+      const filename = `set${String(setId).padStart(2, '0')}_test${testId}_wrong_questions_${this.getDateString()}.json`;
       
       // 下载文件
       Utils.downloadFile(jsonContent, filename, 'application/json');
@@ -74,6 +74,7 @@ class ExportManager {
     const headers = [
       '题号',
       '所属套数',
+      'Test',
       '所属部分',
       '题目标题',
       '选项A',
@@ -97,6 +98,7 @@ class ExportManager {
           const row = [
             question.questionId,
             setData.setName,
+            setData.testName || `Test ${setData.testId || 1}`,
             part.partName,
             this.escapeCSVField(question.title),
             this.escapeCSVField(question.options.A || ''),
@@ -133,6 +135,8 @@ class ExportManager {
     const exportData = {
       setId: setData.setId,
       setName: setData.setName,
+      testId: setData.testId || 1,
+      testName: setData.testName || `Test ${setData.testId || 1}`, 
       exportTime: new Date().toISOString(),
       totalQuestions: 0,
       questions: []
@@ -235,11 +239,11 @@ class ExportManager {
    */
   async exportAllSets(format) {
     try {
-      for (let i = 1; i <= 16; i++) {
+      for (let i = 1; i <= 16; i++) for (let t = 1; t <= 2; t++) {
         if (format === 'csv') {
-          await this.exportCSV(i);
+          await this.exportCSV(i, t);
         } else if (format === 'json') {
-          await this.exportJSON(i);
+          await this.exportJSON(i, t);
         }
         
         // 延迟一下，避免浏览器阻止多次下载

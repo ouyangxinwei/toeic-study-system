@@ -140,14 +140,14 @@ class AudioPlayer {
   async uploadLocalAudio(questionId) {
     const input = document.createElement('input'); input.type='file'; input.accept='audio/mpeg,audio/wav,audio/mp4,audio/x-m4a,audio/*';
     input.onchange = async e => { const file=e.target.files[0]; if(!file)return; const question=questionManager.getQuestion(questionId); if(!question)return;
-      try { const setId=Number(question.setId||document.getElementById('currentSetSelect')?.value||1); const partId=Number(question.partId||1); const old=question.audio;
+      try { const setId=Number(question.setId||document.getElementById('currentSetSelect')?.value||1); const testId=Number(question.testId||document.getElementById('currentTestSelect')?.value||1); const partId=Number(question.partId||1); const old=question.audio;
         Utils.showToast('正在上传音频到云端…','info');
-        const audio=await audioStorageManager.upload(file,{setId,partId,questionId,onProgress:p=>{}});
+        const audio=await audioStorageManager.upload(file,{setId,testId,partId,questionId,onProgress:p=>{}});
         const updatedAt=new Date().toISOString();
         const sb=await audioStorageManager.client();
-        const {data:updatedRows,error:questionError}=await sb.from('toeic_questions').update({audio,updated_at:updatedAt}).eq('set_id',setId).eq('question_id',String(questionId)).select('question_id');
+        const {data:updatedRows,error:questionError}=await sb.from('toeic_questions').update({audio,updated_at:updatedAt}).eq('set_id',setId).eq('test_id',testId).eq('question_id',String(questionId)).select('question_id');
         if(questionError){try{await audioStorageManager.queueUnreferencedAudio(audio.audioId);}catch(_){}throw new Error(`音频已上传，但题目云端关联更新失败：${questionError.message}`);}
-        if(!updatedRows?.length){const {error:insertError}=await sb.from('toeic_questions').upsert({set_id:setId,part_id:partId,question_id:String(questionId),title:question.title||'',options:question.options||{},correct_answer:question.correctAnswer||'',audio,note:question.note||'',status:question.status||'unanswered',created_at:question.createdAt||updatedAt,updated_at:updatedAt},{onConflict:'set_id,question_id'});if(insertError){try{await audioStorageManager.queueUnreferencedAudio(audio.audioId);}catch(_){}throw new Error(`音频已上传，但题目云端关联创建失败：${insertError.message}`);}}
+        if(!updatedRows?.length){const {error:insertError}=await sb.from('toeic_questions').upsert({set_id:setId,test_id:testId,part_id:partId,question_id:String(questionId),title:question.title||'',options:question.options||{},correct_answer:question.correctAnswer||'',audio,note:question.note||'',status:question.status||'unanswered',created_at:question.createdAt||updatedAt,updated_at:updatedAt},{onConflict:'set_id,test_id,question_id'});if(insertError){try{await audioStorageManager.queueUnreferencedAudio(audio.audioId);}catch(_){}throw new Error(`音频已上传，但题目云端关联创建失败：${insertError.message}`);}}
         question.audio=audio; question.updatedAt=updatedAt; questionManager.saveUserData();
         if(old?.type==='cloud'&&old.audioId&&old.audioId!==audio.audioId){try{await audioStorageManager.remove(old);}catch(err){console.warn('旧音频清理失败，稍后可重试',err);}}
         Utils.showToast('音频已上传并保存到云端，所有登录账号均可使用','success'); this.refreshAudioSection(question);

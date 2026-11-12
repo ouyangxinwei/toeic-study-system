@@ -6,6 +6,7 @@
 class App {
   constructor() {
     this.currentSetId = null;
+    this.currentTestId = 1;
     this.isSearchMode = false;
     this.selectedQuestionIds = new Set();
     this.init();
@@ -27,6 +28,21 @@ class App {
 
       // 恢复用户上次选择的套题，并且只加载该套
       const savedSetId = await this.loadPreferredSetId();
+      const savedTestId = await this.loadPreferredTestId();
+      this.currentTestId = savedTestId;
+      const testPicker = document.getElementById('currentTestSelect');
+      if (testPicker) {
+        testPicker.value = String(savedTestId);
+        testPicker.addEventListener('change', async () => {
+          const testId = Number(testPicker.value);
+          if (![1, 2].includes(testId)) return;
+          this.currentTestId = testId;
+          localStorage.setItem('toeic_current_test_id', String(testId));
+          this.currentSetId = null; this.isSearchMode = false; testPicker.disabled = true;
+          try { await questionManager.renderSetsList(Number(document.getElementById('currentSetSelect').value), testId); await this.savePreferredSetId(Number(document.getElementById('currentSetSelect').value), testId); }
+          finally { testPicker.disabled = false; }
+        });
+      }
       const picker = document.getElementById('currentSetSelect');
       if (picker) {
         picker.value = String(savedSetId);
@@ -39,23 +55,37 @@ class App {
           this.isSearchMode = false;
           picker.disabled = true;
           try {
-            await questionManager.renderSetsList(setId);
-            await this.savePreferredSetId(setId);
+            await questionManager.renderSetsList(setId, this.currentTestId);
+            await this.savePreferredSetId(setId, this.currentTestId);
           } finally {
             picker.disabled = false;
           }
         });
       }
-      await questionManager.renderSetsList(savedSetId);
+      await questionManager.renderSetsList(savedSetId, savedTestId);
       // 登录后自动恢复离线删除和云端音频清理任务。
       try { const pending = await questionManager.processPendingDeletes(); const cleanup = await audioStorageManager.retryPendingCleanup(); if (pending.done || cleanup.length) console.info('V20 删除恢复任务', pending, cleanup); } catch (e) { console.warn('V20 删除恢复任务暂不可执行', e); }
-      window.addEventListener('online', async () => { try { const pending = await questionManager.processPendingDeletes(); await audioStorageManager.retryPendingCleanup(); if (pending.done && this.currentSetId) await this.openSet(this.currentSetId); } catch (e) { console.warn('网络恢复后的删除任务重试失败', e); } });
+      window.addEventListener('online', async () => { try { const pending = await questionManager.processPendingDeletes(); await audioStorageManager.retryPendingCleanup(); if (pending.done && this.currentSetId) await this.openSet(this.currentSetId, this.currentTestId); } catch (e) { console.warn('网络恢复后的删除任务重试失败', e); } });
 
       Utils.showToast('应用加载成功', 'success', 2000);
     } catch (error) {
       console.error('应用初始化失败:', error);
       Utils.showToast('应用初始化失败', 'error');
     }
+  }
+
+  async loadPreferredTestId() {
+    const local = Number(localStorage.getItem('toeic_current_test_id') || 1);
+    const fallback = [1, 2].includes(local) ? local : 1;
+    if (!window.toeicSupabaseReady || !window.toeicSupabase) return fallback;
+    try {
+      const { data: authData } = await window.toeicSupabase.auth.getUser();
+      const userId = authData?.user?.id; if (!userId) return fallback;
+      const { data, error } = await window.toeicSupabase.from('toeic_user_preferences').select('selected_test_id').eq('user_id', userId).maybeSingle();
+      if (error) throw error;
+      const value = Number(data?.selected_test_id); if ([1, 2].includes(value)) { localStorage.setItem('toeic_current_test_id', String(value)); return value; }
+    } catch (error) { console.warn('读取云端 Test 偏好失败，使用本地选择：', error.message || error); }
+    return fallback;
   }
 
   async loadPreferredSetId() {
@@ -80,7 +110,7 @@ class App {
     return fallback;
   }
 
-  async savePreferredSetId(setId) {
+  async savePreferredSetId(setId, testId = this.currentTestId) {
     if (!window.toeicSupabaseReady || !window.toeicSupabase) return;
     try {
       const { data: authData, error: authError } = await window.toeicSupabase.auth.getUser();
@@ -90,6 +120,7 @@ class App {
       const { error } = await window.toeicSupabase.from('toeic_user_preferences').upsert({
         user_id: userId,
         selected_set_id: setId,
+        selected_test_id: Number(testId),
         updated_at: new Date().toISOString()
       }, { onConflict: 'user_id' });
       if (error) throw error;
@@ -215,7 +246,7 @@ document.getElementById('addQuestionForm').addEventListener('submit', (e) => {
     if (statusFilter) filters.status = statusFilter;
 
     // 执行搜索
-    const results = await searchEngine.search(this.currentSetId, keyword, filters);
+    const results = await searchEngine.search(this.currentSetId, keyword, filters, this.currentTestId);
 
     // 显示搜索结果
     this.displaySearchResults(results);
@@ -235,13 +266,14 @@ document.getElementById('addQuestionForm').addEventListener('submit', (e) => {
    * 打开套题
    * @param {number} setId - 套题ID
    */
-  async openSet(setId) {
+  async openSet(setId, testId = this.currentTestId) {
     this.currentSetId = setId;
+    this.currentTestId = Number(testId) || 1;
     this.isSearchMode = false;
 
     try {
       // 加载套题数据
-      const setData = await questionManager.loadSet(setId);
+      const setData = await questionManager.loadSet(setId, this.currentTestId);
       if (!setData) {
         Utils.showToast('加载套题失败', 'error');
         return;
@@ -272,7 +304,7 @@ document.getElementById('addQuestionForm').addEventListener('submit', (e) => {
     backBtn.className = 'back-btn';
     backBtn.textContent = '← 返回套题列表';
     backBtn.addEventListener('click', () => {
-      questionManager.renderSetsList();
+      questionManager.renderSetsList(Number(localStorage.getItem('toeic_current_set_id') || 1), this.currentTestId);
       this.currentSetId = null;
       this.isSearchMode = false;
     });
@@ -281,7 +313,7 @@ document.getElementById('addQuestionForm').addEventListener('submit', (e) => {
     // 套题标题
     const title = document.createElement('h2');
     title.className = 'set-detail-title';
-    title.textContent = setData.setName;
+    title.textContent = `${setData.setName} · ${setData.testName || `Test ${setData.testId || 1}`}`;
     setsList.appendChild(title);
     const bulkBar=document.createElement('div'); bulkBar.className='bulk-delete-toolbar';
     const hint=document.createElement('span'); hint.textContent='勾选需要删除的题目：';
@@ -402,16 +434,16 @@ document.getElementById('addQuestionForm').addEventListener('submit', (e) => {
         : question.audio?.type === 'cloud'
         ? (refCount > 1 ? `云端音频：${preview.audio.file_name}；目前被 ${refCount} 道题目共用，删除本题只解除本题关联，其他题目继续使用。` : `云端音频：${preview?.audio?.file_name || question.audio.fileName || '已关联音频'}；若无其他引用，将同时删除服务器文件。`)
         : (question.audio?.type === 'local' ? '本题为本地旧音频；删除题目时清除本地关联，不会删除原始音频文件以外的其他文件。' : '本题没有云端音频文件。');
-      const confirmed = window.confirm(`确定删除第 ${this.currentSetId} 套题目 ${question.questionId} 吗？\n\n${audioText}\n\n正在播放的音频已停止。删除后将清理本题缓存和关联，操作无法撤销。`);
+      const confirmed = window.confirm(`确定删除第 ${this.currentSetId} 套 Test ${this.currentTestId} 的题目 ${question.questionId} 吗？\n\n${audioText}\n\n正在播放的音频已停止。删除后将清理本题缓存和关联，操作无法撤销。`);
       if (!confirmed) return;
       try {
-        const result = await questionManager.deleteQuestion(this.currentSetId, question.questionId);
+        const result = await questionManager.deleteQuestion(this.currentSetId, question.questionId, this.currentTestId);
         let message = `题目 ${question.questionId} 已删除`;
         if (result.pending_server) message += '；服务器删除已加入待同步队列，联网后自动处理';
         else if (result.delete_audio) message += result.cleanup?.completed ? '；云端音频及索引已删除' : '；云端音频待重试清理';
         else if (result.audio_id) message += `；共享音频保留（仍有 ${result.references_remaining || 0} 道题目引用）`;
         Utils.showToast(message, result.cleanup && !result.cleanup.completed ? 'warning' : 'success', 6000);
-        await this.openSet(this.currentSetId);
+        await this.openSet(this.currentSetId, this.currentTestId);
       } catch (error) {
         console.error('删除题目失败:', error);
         Utils.showToast(`删除失败：${error.message || '未知错误'}`, 'error', 8000);
@@ -433,6 +465,7 @@ document.getElementById('addQuestionForm').addEventListener('submit', (e) => {
           <h2>修改题目</h2>
           <form id="editQuestionForm">
             <div class="form-group"><label>套题编号 *</label><select id="editSetId" required>${Array.from({length:16},(_,i)=>`<option value="${i+1}">第${i+1}套</option>`).join('')}</select></div>
+            <div class="form-group"><label>Test *</label><select id="editTestId"><option value="1">Test 1</option><option value="2">Test 2</option></select></div>
             <div class="form-group"><label>Part *</label><select id="editPartId" required>${Array.from({length:7},(_,i)=>`<option value="${i+1}">Part ${i+1}</option>`).join('')}</select></div>
             <div class="form-group"><label>题号 *</label><input id="editQuestionId" required></div>
             <div class="form-group"><label>题目标题/题干 *</label><textarea id="editTitle" rows="4" required></textarea></div>
@@ -493,6 +526,8 @@ document.getElementById('addQuestionForm').addEventListener('submit', (e) => {
         submit.disabled = true; submit.textContent = '正在保存…';
         const oldSetId = Number(modal.dataset.oldSetId);
         const oldQuestionId = modal.dataset.oldQuestionId;
+        const oldTestId = Number(modal.dataset.oldTestId || 1);
+        const testId = Number(document.getElementById('editTestId').value);
         const setId = Number(document.getElementById('editSetId').value);
         const partId = Number(document.getElementById('editPartId').value);
         const questionId = document.getElementById('editQuestionId').value.trim();
@@ -507,7 +542,7 @@ document.getElementById('addQuestionForm').addEventListener('submit', (e) => {
             if(file.size > 20*1024*1024) throw new Error('音频文件不能超过20 MB');
             if(!file.type.startsWith('audio/')) throw new Error('请选择有效的音频文件');
             modal.querySelector('#editAudioUploadStatus').textContent='正在上传新音频…';
-            newlyUploadedAudio=await audioStorageManager.upload(file,{setId,partId,questionId,onProgress:p=>{modal.querySelector('#editAudioUploadStatus').textContent=`正在上传新音频… ${p}%`;}});
+            newlyUploadedAudio=await audioStorageManager.upload(file,{setId,testId,partId,questionId,onProgress:p=>{modal.querySelector('#editAudioUploadStatus').textContent=`正在上传新音频… ${p}%`;}});
             nextAudio=newlyUploadedAudio;
           } else if(selectedSharedId) {
             const sb=await audioStorageManager.client();
@@ -521,6 +556,7 @@ document.getElementById('addQuestionForm').addEventListener('submit', (e) => {
           }
           const updated = {
             questionId,
+            testId,
             title: document.getElementById('editTitle').value.trim(),
             options: { A: document.getElementById('editOptionA').value.trim(), B: document.getElementById('editOptionB').value.trim(), C: document.getElementById('editOptionC').value.trim(), D: document.getElementById('editOptionD').value.trim() },
             correctAnswer: document.getElementById('editCorrectAnswer').value,
@@ -530,14 +566,17 @@ document.getElementById('addQuestionForm').addEventListener('submit', (e) => {
             partId, updatedAt: new Date().toISOString()
           };
           if(originalAudio?.type==='cloud' && originalAudio.audioId && originalAudio.audioId!==nextAudio?.audioId) audioPlayer.stopForAudioId(originalAudio.audioId);
-          const savedQuestion = await questionManager.editQuestion(oldSetId, oldQuestionId, setId, updated);
+          const savedQuestion = await questionManager.editQuestion(oldSetId, oldQuestionId, setId, updated, oldTestId);
           this.stopEditAudioPreview();
           modal.style.display = 'none';
           this.currentSetId = setId;
+          this.currentTestId = testId;
+          const testPicker = document.getElementById('currentTestSelect'); if (testPicker) testPicker.value = String(testId);
+          localStorage.setItem('toeic_current_test_id', String(testId));
           const picker = document.getElementById('currentSetSelect'); if (picker) picker.value = String(setId);
           localStorage.setItem('toeic_current_set_id', String(setId));
-          await this.savePreferredSetId(setId);
-          await questionManager.renderSetsList(setId);
+          await this.savePreferredSetId(setId, testId);
+          await questionManager.renderSetsList(setId, testId);
           Utils.showToast(savedQuestion?.audioCleanupPending ? '题目和新音频关联已保存；旧云端音频清理失败，系统会自动重试。' : '题目修改成功，音频关联已保存。', savedQuestion?.audioCleanupPending ? 'warning' : 'success', 6000);
         } catch (error) {
           if(newlyUploadedAudio?.audioId) { try { const queued=await audioStorageManager.queueUnreferencedAudio(newlyUploadedAudio.audioId); if(queued?.job_id) await audioStorageManager.runCleanupJob(queued.job_id); } catch(cleanupError) { console.warn('保存失败的新音频已保留待清理',cleanupError); } }
@@ -548,10 +587,12 @@ document.getElementById('addQuestionForm').addEventListener('submit', (e) => {
     }
     const audio = question.audio || {type:'none'};
     modal.dataset.oldSetId = String(this.currentSetId || questionManager.currentSet?.setId || 1);
+    modal.dataset.oldTestId = String(question.testId || this.currentTestId || 1);
     modal.dataset.oldQuestionId = String(question.questionId);
     modal.dataset.removeAudio='false';
     modal._originalAudio={...audio};
     document.getElementById('editSetId').value = modal.dataset.oldSetId;
+    document.getElementById('editTestId').value = modal.dataset.oldTestId;
     document.getElementById('editPartId').value = String(question.partId || 1);
     document.getElementById('editQuestionId').value = question.questionId || '';
     document.getElementById('editTitle').value = question.title || '';
@@ -704,14 +745,14 @@ document.getElementById('addQuestionForm').addEventListener('submit', (e) => {
   async bulkDeleteSelectedQuestions() {
     const ids=Array.from(this.selectedQuestionIds);
     if(!this.currentSetId || !ids.length){Utils.showToast('请先勾选需要删除的题目','info');return;}
-    if(!confirm(`确定批量删除第 ${this.currentSetId} 套的 ${ids.length} 道题目吗？\n\n系统会逐题停止播放、检查共享音频引用，并且只清理不再被任何题目使用的云端音频。网络中断时会建立待同步删除任务。`))return;
+    if(!confirm(`确定批量删除第 ${this.currentSetId} 套 Test ${this.currentTestId} 的 ${ids.length} 道题目吗？\n\n系统会逐题停止播放、检查共享音频引用，并且只清理不再被任何题目使用的云端音频。网络中断时会建立待同步删除任务。`))return;
     const succeeded=[]; const failed=[];
     for(const id of ids){
-      try{const q=questionManager.getQuestion(id);audioPlayer.stopForQuestion(id,this.currentSetId);if(q?.audio?.audioId)this.stopCloudAudioPreview(q.audio.audioId);await questionManager.deleteQuestion(this.currentSetId,id);succeeded.push(id);}
+      try{const q=questionManager.getQuestion(id);audioPlayer.stopForQuestion(id,this.currentSetId);if(q?.audio?.audioId)this.stopCloudAudioPreview(q.audio.audioId);await questionManager.deleteQuestion(this.currentSetId,id,this.currentTestId);succeeded.push(id);}
       catch(e){failed.push({id,error:e.message||String(e)});}
     }
     this.selectedQuestionIds.clear();
-    await this.openSet(this.currentSetId);
+    await this.openSet(this.currentSetId, this.currentTestId);
     const detail=failed.length?`；失败 ${failed.length} 道：${failed.map(x=>`${x.id}（${x.error}）`).join('；')}`:'';
     Utils.showToast(`批量删除完成：成功 ${succeeded.length} 道${detail}`,failed.length?'warning':'success',9000);
   }
@@ -725,7 +766,7 @@ document.getElementById('addQuestionForm').addEventListener('submit', (e) => {
     try {
       if (!window.toeicSupabaseReady || !window.toeicSupabase) throw new Error('请先登录并连接 Supabase');
       const sb = window.toeicSupabase;
-      const { data, error } = await sb.from('toeic_audio_files').select('id,file_name,file_size,mime_type,storage_path,status,set_id,part_id,created_at').order('created_at', { ascending: false });
+      const { data, error } = await sb.from('toeic_audio_files').select('id,file_name,file_size,mime_type,storage_path,status,set_id,test_id,part_id,created_at').order('created_at', { ascending: false });
       if (error) throw error;
       let modal = document.getElementById('cloudAudioManagerModal');
       if (!modal) { modal = document.createElement('div'); modal.id = 'cloudAudioManagerModal'; modal.className = 'modal'; document.body.appendChild(modal); }
@@ -734,7 +775,7 @@ document.getElementById('addQuestionForm').addEventListener('submit', (e) => {
       if (!data?.length) list.textContent = '目前没有云端音频记录。';
       for (const audio of (data || [])) {
         const row = document.createElement('div'); row.className = 'audio-manager-row'; row.dataset.name = (audio.file_name || '').toLowerCase(); row.dataset.set = String(audio.set_id || ''); row.dataset.part = String(audio.part_id || '');
-        const info = document.createElement('div'); info.textContent = `${audio.file_name} · ${(Number(audio.file_size || 0) / 1024 / 1024).toFixed(2)} MB · 第${audio.set_id}套 Part ${audio.part_id} · ${audio.status || 'active'} · ${audio.storage_path}`;
+        const info = document.createElement('div'); info.textContent = `${audio.file_name} · ${(Number(audio.file_size || 0) / 1024 / 1024).toFixed(2)} MB · 第${audio.set_id}套 Test ${audio.test_id || 1} Part ${audio.part_id} · ${audio.status || 'active'} · ${audio.storage_path}`;
         const actions = document.createElement('div'); actions.className = 'audio-manager-actions';
         const play = document.createElement('button'); play.type='button'; play.textContent='播放';
         play.addEventListener('click', async () => { try { const src=await audioStorageManager.getPlaybackUrl({type:'cloud',audioId:audio.id,storagePath:audio.storage_path}); const player=new Audio(src); player.dataset.audioId=audio.id; this.cloudAudioPreviewPlayer=player; player.addEventListener('ended',()=>audioStorageManager.revokeUrl(src),{once:true}); await player.play(); } catch(e) { Utils.showToast(`播放失败：${e.message||e}`,'error',6000); } });
@@ -743,7 +784,7 @@ document.getElementById('addQuestionForm').addEventListener('submit', (e) => {
         const refsBtn = document.createElement('button'); refsBtn.type='button'; refsBtn.textContent='查看引用';
         refsBtn.addEventListener('click', async () => { try { const p=await audioStorageManager.getDeletePreview(audio.id); const refs=p.references.length?p.references.map(r=>`第${r.set_id}套 / ${r.question_id}`).join('、'):'无题目引用'; alert(`引用数量：${p.references.length}\n${refs}`); } catch(e) { Utils.showToast(`读取引用失败：${e.message||e}`,'error'); } });
         const del = document.createElement('button'); del.type='button'; del.className='delete-question-btn'; del.textContent='删除共享音频';
-        del.addEventListener('click', async () => { try { this.stopCloudAudioPreview(audio.id); audioPlayer.stopForAudioId(audio.id); const preview=await audioStorageManager.getDeletePreview(audio.id); const refText=preview.references.length?preview.references.map(r=>`第${r.set_id}套 / ${r.question_id}`).join('、'):'无题目引用'; if(!confirm(`确定删除共享音频「${audio.file_name}」吗？\n\n引用数量：${preview.references.length}\n引用题目：${refText}\n\n所有引用题目将被标记为音频缺失，所有登录账号都会受到影响。`))return; const result=await audioStorageManager.deleteSharedAudio(audio.id); Utils.showToast(result.cleanup?.completed?'共享音频已从云端删除':'共享音频删除失败，已加入待重试队列',result.cleanup?.completed?'success':'warning',7000); modal.remove(); await this.showCloudAudioManager(); if(this.currentSetId)await this.openSet(this.currentSetId); } catch(e) { Utils.showToast(`删除共享音频失败：${e.message||e}`,'error',8000); } });
+        del.addEventListener('click', async () => { try { this.stopCloudAudioPreview(audio.id); audioPlayer.stopForAudioId(audio.id); const preview=await audioStorageManager.getDeletePreview(audio.id); const refText=preview.references.length?preview.references.map(r=>`第${r.set_id}套 Test ${r.test_id || 1} / ${r.question_id}`).join('、'):'无题目引用'; if(!confirm(`确定删除共享音频「${audio.file_name}」吗？\n\n引用数量：${preview.references.length}\n引用题目：${refText}\n\n所有引用题目将被标记为音频缺失，所有登录账号都会受到影响。`))return; const result=await audioStorageManager.deleteSharedAudio(audio.id); Utils.showToast(result.cleanup?.completed?'共享音频已从云端删除':'共享音频删除失败，已加入待重试队列',result.cleanup?.completed?'success':'warning',7000); modal.remove(); await this.showCloudAudioManager(); if(this.currentSetId)await this.openSet(this.currentSetId,this.currentTestId); } catch(e) { Utils.showToast(`删除共享音频失败：${e.message||e}`,'error',8000); } });
         actions.append(play,download,refsBtn,del); row.append(info,actions); list.appendChild(row);
       }
       const applyFilters=()=>{const term=modal.querySelector('#audioManagerSearch').value.trim().toLowerCase();const set=modal.querySelector('#audioManagerSet').value;const part=modal.querySelector('#audioManagerPart').value;list.querySelectorAll('.audio-manager-row').forEach(row=>{row.hidden=!(row.dataset.name.includes(term)&&(!set||row.dataset.set===set)&&(!part||row.dataset.part===part));});};
@@ -761,10 +802,10 @@ document.getElementById('addQuestionForm').addEventListener('submit', (e) => {
 
     if (this.currentSetId) {
       // 同步当前套题
-      await syncManager.syncToRemote(this.currentSetId);
+      await syncManager.syncToRemote(this.currentSetId, this.currentTestId);
     } else {
       // 同步所有套题
-      const confirmSync = confirm('确定要将本机当前题库同步到 Supabase 云端吗？将同步 1–16 套题，不会删除云端多出的题目。');
+      const confirmSync = confirm('确定要将本机当前题库同步到 Supabase 云端吗？将同步当前选择的套题和 Test，不会删除云端多出的题目。');
       if (confirmSync) {
         await syncManager.syncToRemote();
       }
@@ -779,12 +820,12 @@ document.getElementById('addQuestionForm').addEventListener('submit', (e) => {
       if (this.isSearchMode) {
         this.handleSearch();
       } else {
-        questionManager.loadSet(this.currentSetId).then(setData => {
+        questionManager.loadSet(this.currentSetId, this.currentTestId).then(setData => {
           this.displaySetDetail(setData);
         });
       }
     } else {
-      questionManager.renderSetsList();
+      questionManager.renderSetsList(Number(localStorage.getItem('toeic_current_set_id') || 1), this.currentTestId);
     }
   }
   
@@ -798,6 +839,7 @@ showAddQuestionModal() {
     // 如果当前已选择套题，自动填充
     if (this.currentSetId) {
         document.getElementById('formSetId').value = this.currentSetId;
+        document.getElementById('formTestId').value = String(this.currentTestId);
     }
 }
 
@@ -815,6 +857,7 @@ closeAddQuestionModal() {
  */
 async handleAddQuestion() {
     const setId = Number(document.getElementById('formSetId').value);
+    const testId = Number(document.getElementById('formTestId').value);
     const partId = Number(document.getElementById('formPartId').value);
     const questionId = document.getElementById('formQuestionId').value.trim();
     const title = document.getElementById('formTitle').value.trim();
@@ -854,23 +897,26 @@ async handleAddQuestion() {
     submitButton.disabled = true;
     submitButton.textContent = '正在保存…';
     try {
-      await questionManager.addQuestion(setId, partId, newQuestion);
+      await questionManager.addQuestion(setId, partId, newQuestion, testId);
       this.currentSetId = setId;
+      this.currentTestId = testId;
       this.isSearchMode = false;
       document.getElementById('searchInput').value = '';
       document.getElementById('partFilter').value = '';
       document.getElementById('statusFilter').value = '';
       this.closeAddQuestionModal();
-      await this.openSet(setId);
+      await this.openSet(setId, testId);
       Utils.showToast('题目录入成功，已写入 Supabase 云端数据库。', 'success', 5000);
     } catch (error) {
       console.error('录入题目失败:', error, error.cause || '');
       // 云端写入失败时，addQuestion 已先保存到 localStorage；仍刷新页面让用户看到题目。
       if (error.localSaved) {
         this.currentSetId = setId;
+        this.currentTestId = testId;
+        const testPicker = document.getElementById('currentTestSelect'); if (testPicker) testPicker.value = String(testId);
         this.isSearchMode = false;
         try {
-          const setData = await questionManager.loadSet(setId);
+          const setData = await questionManager.loadSet(setId, testId);
           if (setData) this.displaySetDetail(setData);
         } catch (refreshError) {
           console.error('刷新本地题目视图失败:', refreshError);
