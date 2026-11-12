@@ -42,7 +42,7 @@ class QuestionManager {
    * @param {number} setId - 套题ID
    * @returns {Promise<Object>} 套题数据
    */
-  async loadSet(setId) {
+  async loadSet(setId, testId = 1) {
     const loadRequestId = ++this.loadRequestId;
     // 静态题库加载与浏览器本地数据解析分开处理：本地缓存损坏不应导致整套题无法打开。
     let loadedSet;
@@ -53,9 +53,14 @@ class QuestionManager {
         throw new Error(`读取 ${fileName} 失败（HTTP ${response.status}）。请确认项目目录完整，并通过本地 HTTP 服务器打开。`);
       }
       loadedSet = await response.json();
-      if (!loadedSet || !Array.isArray(loadedSet.parts)) {
-        throw new Error(`${fileName} 的数据格式不正确：缺少 parts 数组`);
-      }
+      if (!loadedSet || !Array.isArray(loadedSet.tests)) throw new Error(`${fileName} 的数据格式不正确：缺少 tests 数组`);
+      const selectedTest = loadedSet.tests.find(test => Number(test.testId) === Number(testId));
+      if (!selectedTest || !Array.isArray(selectedTest.parts)) throw new Error(`${fileName} 中不存在 Test ${testId}`);
+      // 兼容旧模块的 parts 接口；正式数据存储在 tests[].parts。
+      loadedSet.testId = Number(testId);
+      loadedSet.testName = selectedTest.testName;
+      loadedSet.totalQuestions = selectedTest.totalQuestions;
+      loadedSet.parts = selectedTest.parts;
     } catch (error) {
       console.error(`加载第${setId}套静态题库失败:`, error);
       let message = error.message || `无法加载第${setId}套题目`;
@@ -69,8 +74,8 @@ class QuestionManager {
     }
 
     // 单独读取本地数据。若旧版本留下了损坏的缓存，仍可正常加载静态题库。
-    const storageKey = `set${setId}_data`;
-    const rawUserData = localStorage.getItem(storageKey);
+    const storageKey = `set${setId}_test${testId}_data`;
+    const rawUserData = localStorage.getItem(storageKey) || (Number(testId) === 1 ? localStorage.getItem(`set${setId}_data`) : null);
     if (rawUserData) {
       try {
         const parsed = JSON.parse(rawUserData);
@@ -99,7 +104,7 @@ class QuestionManager {
           rows = this.cloudQuestionsBySet.get(Number(setId)) || [];
         } else {
           const { data, error } = await window.toeicSupabase
-            .from('toeic_questions').select('*').eq('set_id', Number(setId));
+            .from('toeic_questions').select('*').eq('set_id', Number(setId)).eq('test_id', Number(testId));
           if (error) throw error;
           rows = data || [];
         }
@@ -126,7 +131,7 @@ class QuestionManager {
           part.questionCount = part.questions.length;
         });
         }
-        const {data:deletedRows,error:deletedError}=await window.toeicSupabase.from('toeic_question_deletions').select('question_id').eq('set_id',Number(setId));
+        const {data:deletedRows,error:deletedError}=await window.toeicSupabase.from('toeic_question_deletions').select('question_id').eq('set_id',Number(setId)).eq('test_id',Number(testId));
         if(deletedError)throw deletedError;
         (deletedRows||[]).forEach(row=>cloudDeletedQuestionIds.add(String(row.question_id)));
       } catch (error) {
@@ -138,7 +143,7 @@ class QuestionManager {
     // V20 删除墓碑优先于静态题库，避免普通同步再次把已删除题目上传/恢复。
     try {
       const tombstones = JSON.parse(localStorage.getItem('toeic_v20_deleted_questions') || '{}');
-      const prefix = `${Number(setId)}:`;
+      const prefix = `${Number(setId)}:${Number(testId)}:`;
       loadedSet.parts.forEach(part => {
         part.questions = part.questions.filter(q => !tombstones[`${prefix}${String(q.questionId)}`] && !cloudDeletedQuestionIds.has(String(q.questionId)));
         part.questionCount = part.questions.length;
@@ -192,7 +197,7 @@ class QuestionManager {
   saveUserData() {
     if (!this.currentSet) return;
 
-    const storageKey = `set${this.currentSet.setId}_data`;
+    const storageKey = `set${this.currentSet.setId}_test${this.currentSet.testId || 1}_data`;
     // 保留新增题目等已有用户数据，避免保存状态/笔记时被覆盖。
     let userData = {};
     try {
@@ -217,12 +222,12 @@ class QuestionManager {
     localStorage.setItem(storageKey, JSON.stringify(userData));
     if (window.toeicSupabaseReady && window.toeicSupabase) {
       const rows = this.currentSet.parts.flatMap(part => part.questions.map(question => ({
-        set_id: Number(this.currentSet.setId), part_id: Number(part.partId), question_id: question.questionId,
+        set_id: Number(this.currentSet.setId), test_id: Number(this.currentSet.testId || 1), part_id: Number(part.partId), question_id: question.questionId,
         title: question.title || '', options: question.options || {}, correct_answer: question.correctAnswer || '',
         audio: question.audio || { type: 'none' }, note: question.note || '',
         status: question.status || 'unanswered', updated_at: question.updatedAt || new Date().toISOString()
       })));
-      window.toeicSupabase.from('toeic_questions').upsert(rows, { onConflict: 'set_id,question_id' })
+      window.toeicSupabase.from('toeic_questions').upsert(rows, { onConflict: 'set_id,test_id,question_id' })
         .then(({ error }) => { if (error) console.error('同步题目状态/笔记到 Supabase 失败:', error); });
     }
   }
