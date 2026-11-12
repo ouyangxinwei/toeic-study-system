@@ -796,3 +796,22 @@ body {
 .edit-audio-actions .danger-btn{background:#b91c1c;color:#fff;border:0;border-radius:6px;padding:8px 12px;cursor:pointer}
 .edit-audio-actions .secondary-btn{background:#475569;color:#fff;border:0;border-radius:6px;padding:8px 12px;cursor:pointer}
 .edit-audio-actions button:disabled{opacity:.55;cursor:not-allowed}
+
+
+/* V22 grouped TOEIC material display */
+.question-groups-list { display: grid; gap: 18px; }
+.question-group { background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 18px; box-shadow: 0 1px 3px rgba(0,0,0,.05); }
+.question-group-title { margin: 0 0 14px; padding-bottom: 10px; border-bottom: 1px solid #e5e7eb; color: #374151; font-size: 1.05rem; }
+.group-question-list { display: grid; gap: 12px; min-width: 0; }
+.group-question-list .question-card { margin: 0; }
+.listening-group-layout, .reading-group-layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; align-items: start; }
+.group-transcript-pane, .group-material-pane { min-width: 0; max-height: 620px; overflow: auto; padding: 16px; border-radius: 9px; background: #f8fafc; border: 1px solid #e2e8f0; }
+.group-transcript-pane h5, .group-material-pane h5, .group-questions-pane h5 { margin: 0 0 12px; color: #334155; font-size: 1rem; }
+.group-transcript-text, .group-passage-text { white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.85; }
+.group-passage + .group-passage { border-top: 1px solid #dbe2ea; margin-top: 16px; padding-top: 16px; }
+.group-passage h6 { margin: 0 0 8px; font-size: .95rem; color: #475569; }
+.group-questions-pane { min-width: 0; }
+.quick-answer-area { margin: 10px 0; }
+.quick-answer-toggle { border: 1px solid #c7d2fe; background: #eef2ff; color: #3730a3; border-radius: 6px; padding: 7px 12px; cursor: pointer; font-size: .9rem; }
+.quick-answer-content { margin-top: 8px; padding: 10px 12px; background: #ecfdf5; color: #065f46; border-left: 3px solid #10b981; border-radius: 6px; font-weight: 600; }
+.quick-answer-content[hidden] { display: none; }

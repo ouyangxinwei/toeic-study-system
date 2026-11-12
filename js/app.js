@@ -332,22 +332,170 @@ document.getElementById('addQuestionForm').addEventListener('submit', (e) => {
    * @param {Object} part - Part数据
    * @returns {HTMLElement} Part区域元素
    */
+  /**
+   * 将题目按共享材料/TOEIC题型组织成展示组。
+   * 不修改原始题目对象和 JSON；分组只存在于展示层。
+   */
+  buildQuestionGroups(part) {
+    const questions = Array.isArray(part.questions) ? part.questions : [];
+    const partId = Number(part.partId);
+    const readMaterial = question => {
+      const note = String(question.note || '');
+      const shared = note.match(/【共用[^】]*】([\s\S]*?)(?=\n【人工确认】|\n原始音频：|\n问题音频：|$)/);
+      if (shared && shared[1].trim()) return shared[1].trim();
+      if (Array.isArray(question.passages) && question.passages.length) return JSON.stringify(question.passages);
+      for (const key of ['passageText', 'articleText', 'readingText', 'passage', 'transcript', 'materialText']) {
+        const value = question[key];
+        if (typeof value === 'string' && value.trim()) return value.trim();
+      }
+      return '';
+    };
+    const readGroupKey = question => {
+      for (const key of ['passageGroupId', 'groupId', 'materialId', 'conversationId', 'talkId', 'articleGroupId']) {
+        if (question[key] !== undefined && question[key] !== null && String(question[key]).trim()) return String(question[key]);
+      }
+      const material = readMaterial(question);
+      return material ? 'material:' + material : '';
+    };
+    const makeGroupsByKey = () => {
+      const groups = [];
+      questions.forEach(question => {
+        const key = readGroupKey(question);
+        const last = groups[groups.length - 1];
+        if (key && last && last.key === key) last.questions.push(question);
+        else groups.push({ key, questions: [question] });
+      });
+      return groups;
+    };
+    const chunk = size => {
+      const groups = [];
+      for (let i = 0; i < questions.length; i += size) groups.push({ key: '', questions: questions.slice(i, i + size) });
+      return groups;
+    };
+
+    let groups;
+    if (partId === 3 || partId === 4) {
+      groups = makeGroupsByKey();
+      // 当前录入结构中共享转录保存在 note；缺少转录的题目按官方每组三题顺序兜底。
+      if (groups.some(group => !group.key)) groups = chunk(3);
+    } else if (partId === 5) {
+      groups = chunk(5);
+    } else if (partId === 6) {
+      groups = makeGroupsByKey();
+      if (groups.some(group => !group.key)) groups = chunk(4);
+    } else if (partId === 7) {
+      groups = makeGroupsByKey();
+      // Part 7 不按固定题数猜测文章边界；没有材料关联字段时保持单题，避免错配文章。
+    } else {
+      groups = questions.map(question => ({ key: '', questions: [question] }));
+    }
+
+    return groups.map((group, index) => ({
+      ...group,
+      index: index + 1,
+      material: readMaterial(group.questions.find(question => readMaterial(question)) || group.questions[0] || {}),
+      passages: (group.questions.find(question => Array.isArray(question.passages) && question.passages.length) || {}).passages || []
+    }));
+  }
+
+  createQuestionGroup(part, group) {
+    const partId = Number(part.partId);
+    const wrapper = document.createElement('section');
+    wrapper.className = 'question-group' + (partId === 7 ? ' question-group-reading' : '');
+    const firstId = group.questions[0]?.questionId || '';
+    const lastId = group.questions[group.questions.length - 1]?.questionId || firstId;
+    const heading = document.createElement('h4');
+    heading.className = 'question-group-title';
+    heading.textContent = `材料组 ${group.index} · ${firstId}${lastId && lastId !== firstId ? ' – ' + lastId : ''}（${group.questions.length}题）`;
+    wrapper.appendChild(heading);
+
+    const materialText = group.material || '';
+    const passages = group.passages || [];
+    const isReading = partId === 6 || partId === 7;
+    const renderMaterial = pane => {
+      if (passages.length) {
+        passages.forEach((passage, index) => {
+          const article = document.createElement('article');
+          article.className = 'group-passage';
+          const title = document.createElement('h6');
+          title.textContent = typeof passage === 'string' ? `Passage ${index + 1}` : (passage.title || `Passage ${index + 1}`);
+          const body = document.createElement('div');
+          body.className = 'group-passage-text';
+          body.textContent = typeof passage === 'string' ? passage : (passage.text || passage.content || '');
+          article.append(title, body);
+          pane.appendChild(article);
+        });
+      } else {
+        const body = document.createElement('div');
+        body.className = isReading ? 'group-passage-text' : 'group-transcript-text';
+        body.textContent = materialText || (isReading
+          ? '该组尚未录入文章材料。录入后可通过 passageText、articleText 或 passages 与题目关联。'
+          : '该组尚未录入共享转录。');
+        pane.appendChild(body);
+      }
+    };
+
+    if (partId === 3 || partId === 4) {
+      const materialPane = document.createElement('div');
+      materialPane.className = 'group-transcript-pane';
+      const materialTitle = document.createElement('h5');
+      materialTitle.textContent = partId === 3 ? 'Conversation Transcript / 对话转录' : 'Talk Transcript / 独白转录';
+      materialPane.appendChild(materialTitle);
+      if (group.questions[0]?.audio && audioPlayer.checkAudioExists(group.questions[0].audio)) {
+        audioPlayer.renderAudioPlayer(group.questions[0], materialPane);
+      }
+      renderMaterial(materialPane);
+      wrapper.appendChild(materialPane);
+      const list = document.createElement('div');
+      list.className = 'group-question-list';
+      group.questions.forEach(question => list.appendChild(this.createQuestionCard(question)));
+      wrapper.appendChild(list);
+    } else if (isReading) {
+      const layout = document.createElement('div');
+      layout.className = 'reading-group-layout';
+      const materialPane = document.createElement('div');
+      materialPane.className = 'group-material-pane';
+      const materialTitle = document.createElement('h5');
+      materialTitle.textContent = 'Reading Passage / 阅读文章';
+      materialPane.appendChild(materialTitle);
+      renderMaterial(materialPane);
+
+      const questionPane = document.createElement('div');
+      questionPane.className = 'group-questions-pane';
+      const questionTitle = document.createElement('h5');
+      questionTitle.textContent = 'Questions / 对应问题';
+      questionPane.appendChild(questionTitle);
+      const list = document.createElement('div');
+      list.className = 'group-question-list';
+      group.questions.forEach(question => list.appendChild(this.createQuestionCard(question)));
+      questionPane.appendChild(list);
+      layout.append(materialPane, questionPane);
+      wrapper.appendChild(layout);
+    } else {
+      const list = document.createElement('div');
+      list.className = 'group-question-list';
+      group.questions.forEach(question => list.appendChild(this.createQuestionCard(question)));
+      wrapper.appendChild(list);
+    }
+    return wrapper;
+  }
+
   createPartSection(part) {
     const section = document.createElement('div');
     section.className = 'part-section';
-
     section.innerHTML = `
       <h3 class="part-title">${part.partName} (${part.questionCount}题)</h3>
-      <div class="questions-list"></div>
+      <div class="question-groups-list"></div>
     `;
-
-    const questionsList = section.querySelector('.questions-list');
-    
-    part.questions.forEach(question => {
-      const questionCard = this.createQuestionCard(question);
-      questionsList.appendChild(questionCard);
-    });
-
+    const groupsList = section.querySelector('.question-groups-list');
+    if ([1, 2].includes(Number(part.partId))) {
+      const questionsList = document.createElement('div');
+      questionsList.className = 'questions-list';
+      (part.questions || []).forEach(question => questionsList.appendChild(this.createQuestionCard(question)));
+      groupsList.appendChild(questionsList);
+    } else {
+      this.buildQuestionGroups(part).forEach(group => groupsList.appendChild(this.createQuestionGroup(part, group)));
+    }
     return section;
   }
 
@@ -372,6 +520,10 @@ document.getElementById('addQuestionForm').addEventListener('submit', (e) => {
       <div class="question-preview">
         ${searchEngine.truncateText(question.title, 100)}
       </div>
+      <div class="quick-answer-area">
+        <button type="button" class="quick-answer-toggle" aria-expanded="false">显示答案</button>
+        <div class="quick-answer-content" hidden></div>
+      </div>
       <div class="question-actions">
         <button class="view-detail-btn" data-question-id="${question.questionId}">
           查看详情
@@ -394,6 +546,23 @@ document.getElementById('addQuestionForm').addEventListener('submit', (e) => {
     // 绑定事件
     const bulkCheckbox=card.querySelector('.bulk-select-question');
     bulkCheckbox.addEventListener('change',()=>{ if(bulkCheckbox.checked)this.selectedQuestionIds.add(String(question.questionId)); else this.selectedQuestionIds.delete(String(question.questionId)); const btn=document.querySelector('.bulk-delete-toolbar button'); if(btn)btn.textContent=`删除选中题目（${this.selectedQuestionIds.size}）`; });
+    const quickAnswerButton = card.querySelector('.quick-answer-toggle');
+    const quickAnswerContent = card.querySelector('.quick-answer-content');
+    quickAnswerButton.addEventListener('click', () => {
+      const shouldShow = quickAnswerContent.hidden;
+      if (shouldShow) {
+        const answer = String(question.correctAnswer || '').trim();
+        const answerText = question.options && answer ? question.options[answer] : '';
+        const explanation = String(question.explanation || '').trim();
+        quickAnswerContent.textContent = answer
+          ? `正确答案：${answer}${answerText ? ' · ' + answerText : ''}${explanation ? '\n解析：' + explanation : ''}`
+          : '正确答案尚未录入';
+      }
+      quickAnswerContent.hidden = !shouldShow;
+      quickAnswerButton.textContent = shouldShow ? '隐藏答案' : '显示答案';
+      quickAnswerButton.setAttribute('aria-expanded', String(shouldShow));
+    });
+
     const viewBtn = card.querySelector('.view-detail-btn');
     viewBtn.addEventListener('click', () => {
       this.showQuestionDetail(question.questionId);
