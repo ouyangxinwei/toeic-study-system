@@ -465,6 +465,7 @@ document.getElementById('addQuestionForm').addEventListener('submit', (e) => {
           <h2>修改题目</h2>
           <form id="editQuestionForm">
             <div class="form-group"><label>套题编号 *</label><select id="editSetId" required>${Array.from({length:16},(_,i)=>`<option value="${i+1}">第${i+1}套</option>`).join('')}</select></div>
+            <div class="form-group"><label>Test *</label><select id="editTestId"><option value="1">Test 1</option><option value="2">Test 2</option></select></div>
             <div class="form-group"><label>Part *</label><select id="editPartId" required>${Array.from({length:7},(_,i)=>`<option value="${i+1}">Part ${i+1}</option>`).join('')}</select></div>
             <div class="form-group"><label>题号 *</label><input id="editQuestionId" required></div>
             <div class="form-group"><label>题目标题/题干 *</label><textarea id="editTitle" rows="4" required></textarea></div>
@@ -525,6 +526,8 @@ document.getElementById('addQuestionForm').addEventListener('submit', (e) => {
         submit.disabled = true; submit.textContent = '正在保存…';
         const oldSetId = Number(modal.dataset.oldSetId);
         const oldQuestionId = modal.dataset.oldQuestionId;
+        const oldTestId = Number(modal.dataset.oldTestId || 1);
+        const testId = Number(document.getElementById('editTestId').value);
         const setId = Number(document.getElementById('editSetId').value);
         const partId = Number(document.getElementById('editPartId').value);
         const questionId = document.getElementById('editQuestionId').value.trim();
@@ -553,6 +556,7 @@ document.getElementById('addQuestionForm').addEventListener('submit', (e) => {
           }
           const updated = {
             questionId,
+            testId,
             title: document.getElementById('editTitle').value.trim(),
             options: { A: document.getElementById('editOptionA').value.trim(), B: document.getElementById('editOptionB').value.trim(), C: document.getElementById('editOptionC').value.trim(), D: document.getElementById('editOptionD').value.trim() },
             correctAnswer: document.getElementById('editCorrectAnswer').value,
@@ -562,14 +566,17 @@ document.getElementById('addQuestionForm').addEventListener('submit', (e) => {
             partId, updatedAt: new Date().toISOString()
           };
           if(originalAudio?.type==='cloud' && originalAudio.audioId && originalAudio.audioId!==nextAudio?.audioId) audioPlayer.stopForAudioId(originalAudio.audioId);
-          const savedQuestion = await questionManager.editQuestion(oldSetId, oldQuestionId, setId, updated);
+          const savedQuestion = await questionManager.editQuestion(oldSetId, oldQuestionId, setId, updated, oldTestId);
           this.stopEditAudioPreview();
           modal.style.display = 'none';
           this.currentSetId = setId;
+          this.currentTestId = testId;
+          const testPicker = document.getElementById('currentTestSelect'); if (testPicker) testPicker.value = String(testId);
+          localStorage.setItem('toeic_current_test_id', String(testId));
           const picker = document.getElementById('currentSetSelect'); if (picker) picker.value = String(setId);
           localStorage.setItem('toeic_current_set_id', String(setId));
-          await this.savePreferredSetId(setId);
-          await questionManager.renderSetsList(setId, this.currentTestId);
+          await this.savePreferredSetId(setId, testId);
+          await questionManager.renderSetsList(setId, testId);
           Utils.showToast(savedQuestion?.audioCleanupPending ? '题目和新音频关联已保存；旧云端音频清理失败，系统会自动重试。' : '题目修改成功，音频关联已保存。', savedQuestion?.audioCleanupPending ? 'warning' : 'success', 6000);
         } catch (error) {
           if(newlyUploadedAudio?.audioId) { try { const queued=await audioStorageManager.queueUnreferencedAudio(newlyUploadedAudio.audioId); if(queued?.job_id) await audioStorageManager.runCleanupJob(queued.job_id); } catch(cleanupError) { console.warn('保存失败的新音频已保留待清理',cleanupError); } }
@@ -580,10 +587,12 @@ document.getElementById('addQuestionForm').addEventListener('submit', (e) => {
     }
     const audio = question.audio || {type:'none'};
     modal.dataset.oldSetId = String(this.currentSetId || questionManager.currentSet?.setId || 1);
+    modal.dataset.oldTestId = String(question.testId || this.currentTestId || 1);
     modal.dataset.oldQuestionId = String(question.questionId);
     modal.dataset.removeAudio='false';
     modal._originalAudio={...audio};
     document.getElementById('editSetId').value = modal.dataset.oldSetId;
+    document.getElementById('editTestId').value = modal.dataset.oldTestId;
     document.getElementById('editPartId').value = String(question.partId || 1);
     document.getElementById('editQuestionId').value = question.questionId || '';
     document.getElementById('editTitle').value = question.title || '';
