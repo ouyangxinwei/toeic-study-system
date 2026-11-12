@@ -101,7 +101,7 @@ def _convert_transcript_part(
             raise MigrationError(f"Part {part_id} 存在非对象题目")
         if question.get("materialId"):
             continue
-        material_text, remaining_note = split_note(question.get("note"), prefix)
+        material_text, remaining_note = split_note(question.get("note"), prefix, multiline=True)
         if material_text:
             extracted.append((question, material_text, remaining_note))
 
