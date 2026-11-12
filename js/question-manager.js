@@ -306,7 +306,7 @@ class QuestionManager {
   /** 修改题目所有可录入字段，并同步到云端。支持修改套题、Part 和题号。 */
   async editQuestion(oldSetId, oldQuestionId, newSetId, updated, oldTestId = this.currentSet?.testId || 1) {
     const targetSetId = Number(newSetId);
-    const targetTestId = Number(updated.testId || oldTestId);
+    const targetTestId = Number(updated.testId ?? oldTestId);
     const oldSet = await this.loadSet(Number(oldSetId), Number(oldTestId));
     if (!oldSet) throw new Error(`无法加载第${oldSetId}套题目`);
     const oldPart = oldSet.parts.find(p => p.questions.some(q => String(q.questionId) === String(oldQuestionId)));
@@ -317,7 +317,7 @@ class QuestionManager {
     const targetPart = targetSet.parts.find(p => Number(p.partId) === Number(updated.partId));
     if (!targetPart) throw new Error(`第${targetSetId}套中不存在 Part ${updated.partId}`);
     const duplicate = targetSet.parts.some(p => p.questions.some(q =>
-      !(Number(oldSetId) === targetSetId && String(q.questionId) === String(oldQuestionId)) && String(q.questionId) === String(updated.questionId)
+      !(Number(oldSetId) === targetSetId && Number(oldTestId) === targetTestId && String(q.questionId) === String(oldQuestionId)) && String(q.questionId) === String(updated.questionId)
     ));
     if (duplicate) throw new Error(`题号 ${updated.questionId} 已存在`);
 
