@@ -52,7 +52,7 @@ class ExportManager {
       const jsonContent = this.buildJSONContent(setData);
       
       // 生成文件名
-      const filename = `set${String(setId).padStart(2, '0')}_wrong_questions_${this.getDateString()}.json`;
+      const filename = `set${String(setId).padStart(2, '0')}_test${testId}_wrong_questions_${this.getDateString()}.json`;
       
       // 下载文件
       Utils.downloadFile(jsonContent, filename, 'application/json');
@@ -135,7 +135,7 @@ class ExportManager {
     const exportData = {
       setId: setData.setId,
       setName: setData.setName,
-      testId: setData.testId || testId,
+      testId: setData.testId || 1,
       testName: setData.testName || `Test ${setData.testId || 1}`, 
       exportTime: new Date().toISOString(),
       totalQuestions: 0,
