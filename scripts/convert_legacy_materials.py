@@ -40,14 +40,21 @@ def read_json(path: Path) -> tuple[Any, bytes]:
     return json.loads(raw.decode("utf-8-sig")), raw
 
 
-def split_note(note: Any, prefix: str) -> tuple[str, str]:
+def split_note(note: Any, prefix: str, multiline: bool = False) -> tuple[str, str]:
     """Return (material text, remaining note), without discarding annotations."""
     if not isinstance(note, str) or not note.startswith(prefix):
         return "", note if isinstance(note, str) else ""
-    body = note[len(prefix):]
+    body = note[len(prefix):].lstrip("\\r\\n")
     lines = body.splitlines()
-    material = lines[0].strip() if lines else ""
-    remainder = "\n".join(lines[1:]).strip()
+    annotation_markers = ("【人工确认】", "材料来源：", "说明：", "原始音频：", "问题音频：")
+    split_at = next(
+        (i for i, line in enumerate(lines) if line.lstrip().startswith(annotation_markers)),
+        len(lines),
+    )
+    material_lines = lines[:split_at]
+    note_lines = lines[split_at:]
+    material = "\\n".join(material_lines).strip() if multiline else (material_lines[0].strip() if material_lines else "")
+    remainder = "\\n".join(note_lines).strip()
     return material, remainder
 
 
@@ -115,10 +122,7 @@ def _convert_transcript_part(
         for question, _text, remaining_note in rows:
             question["materialId"] = material_id
             # The transcript is moved to Material; keep all non-material note text.
-            if remaining_note:
-                question["note"] = remaining_note
-            else:
-                question.pop("note", None)
+            question["note"] = remaining_note
         report["materials"].append({
             "materialId": material_id,
             "partId": part_id,
@@ -139,7 +143,7 @@ def _convert_part6(
     for index, question in enumerate(questions):
         if not isinstance(question, dict):
             raise MigrationError("Part 6 存在非对象题目")
-        material_text, remaining_note = split_note(question.get("note"), PART6_PREFIX)
+        material_text, remaining_note = split_note(question.get("note"), PART6_PREFIX, multiline=True)
         if not material_text:
             continue
         key = material_group_key(question, f"legacy-part6-group-{index + 1:02d}")
