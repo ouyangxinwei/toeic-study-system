@@ -1,5 +1,14 @@
 # 更新日志
 
+## V22.3.0 - 旧版共享材料安全转换工具
+- 新增 `scripts/convert_legacy_materials.py`，支持第 6 套 Test 1 的 Part 3 / 4 / 6 / 7 旧材料转换。
+- Part 3 / 4 按共享转录分组，转录提升至 Test.materials[]；人工确认、音频来源等非材料笔记保留在原题 note。
+- Part 6 按 materialId / passageGroupId 聚合重复正文；Part 7 将组首题 passages[] 提升为 document_set Material，并将 passage.text 规范为 passage.content。
+- 默认生成 preview.json 与 converted.json，源题库保持不变；人工检查后才可显式执行 `--apply --confirm-replace REPLACE`。
+- 替换前核对源文件及转换文件 SHA-256，并自动备份原始 JSON；检测到文件变化或材料冲突时拒绝替换。
+- 新增转换器单元测试，覆盖材料提取、笔记与题目字段保留、冲突保护、显式确认和源文件校验。
+- 未执行实际题库迁移；未修改任何 `data/sets/*.json`，未连接 Supabase，未修改认证/RLS/运行时页面。
+
 ## V22.2.0 - 题库 JSON 结构检查工具
 - 新增 `scripts/validate_question_bank.py`，可检查全部 16 套题或指定 Set / Test。
 - 检查 JSON 解析、Set/Test/Part 层级、缺失 Part、题号格式与重复、实际题量、选项、正确答案、音频字段和共享材料引用。
