@@ -399,7 +399,7 @@ class QuestionManager {
     // 云端事务已确认题目删除或已进入离线队列后，才清除本地题目与相关缓存。
     part.questions = part.questions.filter(q => String(q.questionId) !== String(questionId));
     part.questionCount = part.questions.length;
-    const key = `set${setId}_data`;
+    const key = `set${setId}_test${this.currentSet.testId || 1}_data`;
     let cache = {}; try { cache = JSON.parse(localStorage.getItem(key) || '{}'); } catch (_) {}
     delete cache[questionId];
     localStorage.setItem(key, JSON.stringify(cache));
@@ -551,7 +551,7 @@ class QuestionManager {
     return this.cloudCachePromise;
   }
 
-  async renderSetsList(setId = Number(localStorage.getItem('toeic_current_set_id') || 1)) {
+  async renderSetsList(setId = Number(localStorage.getItem('toeic_current_set_id') || 1), testId = Number(localStorage.getItem('toeic_current_test_id') || 1)) {
     const requestId = ++this.renderRequestId;
     const setsList = document.getElementById('setsList');
     if (!setsList) {
@@ -568,7 +568,7 @@ class QuestionManager {
     // 只加载所选套题，避免启动时读取全部 15 套及全量云端缓存。
     this.cloudQuestionsBySet = null;
     this.cloudCachePromise = null;
-    const setData = await this.loadSet(selectedSetId);
+    const setData = await this.loadSet(selectedSetId, testId);
     if (!setData || requestId !== this.renderRequestId) return;
     this.currentSet = setData;
     const stats = this.getStatistics();
