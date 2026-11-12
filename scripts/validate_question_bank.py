@@ -84,8 +84,9 @@ class BankValidator:
                 self.issue("ERROR", "TEST_NOT_OBJECT", str(path), "tests 中存在非对象元素")
                 continue
             test_id = self._as_int(test.get("testId"))
-            if test_id is None:
-                self.issue("ERROR", "TEST_ID_INVALID", str(path), "存在缺少有效 testId 的试卷")
+            if test_id not in (1, 2):
+                self.issue("ERROR", "TEST_ID_INVALID", str(path),
+                           f"testId 只能为 1 或 2，发现：{test.get('testId')!r}")
                 continue
             if test_id in test_ids_seen:
                 self.issue("ERROR", "DUPLICATE_TEST_ID", f"Set {set_id:02d}",
@@ -349,6 +350,8 @@ def build_parser() -> argparse.ArgumentParser:
                         help="输出 JSON 格式报告，便于后续自动化处理")
     parser.add_argument("--fail-on-warning", action="store_true",
                         help="存在 WARN 时也返回非零退出码")
+    parser.add_argument("--max-issues", type=int, default=100,
+                        help="终端最多显示多少条问题；0 表示全部显示（默认 100）")
     return parser
 
 
@@ -356,6 +359,10 @@ def main(argv: Optional[List[str]] = None) -> int:
     args = build_parser().parse_args(argv)
     if args.sets and any(set_id < 1 or set_id > 16 for set_id in args.sets):
         print("错误：--set 只允许 1–16。", file=sys.stderr)
+        return 2
+
+    if args.max_issues < 0:
+        print("错误：--max-issues 不能小于 0。", file=sys.stderr)
         return 2
 
     root = args.root.resolve() if args.root else Path(__file__).resolve().parents[1]
@@ -376,8 +383,12 @@ def main(argv: Optional[List[str]] = None) -> int:
             print(f"  Set {item['set']:02d} Test {item['test']}: "
                   f"{item['question_count']}/200（{state}）")
         print(f"\n检查结果：{report['errors']} 个错误，{report['warnings']} 个警告")
-        for item in report["issues"]:
+        visible_issues = report["issues"][:args.max_issues] if args.max_issues else report["issues"]
+        for item in visible_issues:
             print(f"[{item['level']}] {item['code']} | {item['location']} | {item['message']}")
+        hidden_count = len(report["issues"]) - len(visible_issues)
+        if hidden_count:
+            print(f"... 另有 {hidden_count} 条问题未显示；使用 --max-issues 0 查看全部。")
         if not report["issues"]:
             print("未发现结构问题。")
 
