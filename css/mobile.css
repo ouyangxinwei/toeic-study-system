@@ -122,3 +122,14 @@
         font-size: 14px;
     }
 }
+
+/* V22 responsive material groups */
+@media (max-width: 900px) {
+  .listening-group-layout, .reading-group-layout { grid-template-columns: minmax(0, 1fr); }
+  .group-transcript-pane, .group-material-pane { max-height: 42vh; }
+}
+@media (max-width: 768px) {
+  .question-group { padding: 12px; }
+  .group-transcript-pane, .group-material-pane { padding: 12px; max-height: 45vh; }
+  .group-question-list { gap: 10px; }
+}
