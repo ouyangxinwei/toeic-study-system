@@ -140,7 +140,7 @@ class LegacyMaterialConverterTests(unittest.TestCase):
             output.write_text('{"setId":6}', encoding="utf-8")
             write_json(preview, {"setId": 6, "testId": 1, "source": str(source.resolve()), "output": str(output.resolve()), "sourceSha256": "not-current", "outputSha256": sha256_bytes(output.read_bytes())})
             with self.assertRaises(MigrationError):
-                apply_replacement(source, output, preview, root / "backups", "REPLACE")
+                apply_replacement(source, output, preview, root / "backups", "REPLACE", 6, 1)
 
 
 if __name__ == "__main__":
