@@ -784,7 +784,7 @@ document.getElementById('addQuestionForm').addEventListener('submit', (e) => {
         const refsBtn = document.createElement('button'); refsBtn.type='button'; refsBtn.textContent='查看引用';
         refsBtn.addEventListener('click', async () => { try { const p=await audioStorageManager.getDeletePreview(audio.id); const refs=p.references.length?p.references.map(r=>`第${r.set_id}套 / ${r.question_id}`).join('、'):'无题目引用'; alert(`引用数量：${p.references.length}\n${refs}`); } catch(e) { Utils.showToast(`读取引用失败：${e.message||e}`,'error'); } });
         const del = document.createElement('button'); del.type='button'; del.className='delete-question-btn'; del.textContent='删除共享音频';
-        del.addEventListener('click', async () => { try { this.stopCloudAudioPreview(audio.id); audioPlayer.stopForAudioId(audio.id); const preview=await audioStorageManager.getDeletePreview(audio.id); const refText=preview.references.length?preview.references.map(r=>`第${r.set_id}套 Test ${r.test_id || 1} / ${r.question_id}`).join('、'):'无题目引用'; if(!confirm(`确定删除共享音频「${audio.file_name}」吗？\n\n引用数量：${preview.references.length}\n引用题目：${refText}\n\n所有引用题目将被标记为音频缺失，所有登录账号都会受到影响。`))return; const result=await audioStorageManager.deleteSharedAudio(audio.id); Utils.showToast(result.cleanup?.completed?'共享音频已从云端删除':'共享音频删除失败，已加入待重试队列',result.cleanup?.completed?'success':'warning',7000); modal.remove(); await this.showCloudAudioManager(); if(this.currentSetId)await this.openSet(this.currentSetId); } catch(e) { Utils.showToast(`删除共享音频失败：${e.message||e}`,'error',8000); } });
+        del.addEventListener('click', async () => { try { this.stopCloudAudioPreview(audio.id); audioPlayer.stopForAudioId(audio.id); const preview=await audioStorageManager.getDeletePreview(audio.id); const refText=preview.references.length?preview.references.map(r=>`第${r.set_id}套 Test ${r.test_id || 1} / ${r.question_id}`).join('、'):'无题目引用'; if(!confirm(`确定删除共享音频「${audio.file_name}」吗？\n\n引用数量：${preview.references.length}\n引用题目：${refText}\n\n所有引用题目将被标记为音频缺失，所有登录账号都会受到影响。`))return; const result=await audioStorageManager.deleteSharedAudio(audio.id); Utils.showToast(result.cleanup?.completed?'共享音频已从云端删除':'共享音频删除失败，已加入待重试队列',result.cleanup?.completed?'success':'warning',7000); modal.remove(); await this.showCloudAudioManager(); if(this.currentSetId)await this.openSet(this.currentSetId,this.currentTestId); } catch(e) { Utils.showToast(`删除共享音频失败：${e.message||e}`,'error',8000); } });
         actions.append(play,download,refsBtn,del); row.append(info,actions); list.appendChild(row);
       }
       const applyFilters=()=>{const term=modal.querySelector('#audioManagerSearch').value.trim().toLowerCase();const set=modal.querySelector('#audioManagerSet').value;const part=modal.querySelector('#audioManagerPart').value;list.querySelectorAll('.audio-manager-row').forEach(row=>{row.hidden=!(row.dataset.name.includes(term)&&(!set||row.dataset.set===set)&&(!part||row.dataset.part===part));});};
@@ -912,6 +912,8 @@ async handleAddQuestion() {
       // 云端写入失败时，addQuestion 已先保存到 localStorage；仍刷新页面让用户看到题目。
       if (error.localSaved) {
         this.currentSetId = setId;
+        this.currentTestId = testId;
+        const testPicker = document.getElementById('currentTestSelect'); if (testPicker) testPicker.value = String(testId);
         this.isSearchMode = false;
         try {
           const setData = await questionManager.loadSet(setId, testId);
