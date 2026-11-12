@@ -2,12 +2,12 @@
   "setId": 6,
   "setName": "第6套模拟题",
   "totalQuestions": 400,
-  "lastUpdated": "2026-11-12T05:10:49.054Z",
+  "lastUpdated": "2026-11-12T00:00:00Z",
   "tests": [
     {
       "testId": 1,
       "testName": "Test 1",
-      "totalQuestions": 146,
+      "totalQuestions": 200,
       "parts": [
         {
           "partId": 1,
@@ -2543,8 +2543,1319 @@
           "partId": 7,
           "partName": "Part 7 - Reading Comprehension",
           "partType": "reading",
-          "questionCount": 0,
-          "questions": []
+          "questionCount": 54,
+          "questions": [
+            {
+              "questionId": "6-7-147",
+              "passageGroupId": "set06-t1-p7-g01",
+              "materialId": "set06-t1-p7-g01",
+              "title": "What does Freda ask Stacy to do?",
+              "options": {
+                "A": "Open the store tomorrow morning",
+                "B": "Take her car to the repair shop",
+                "C": "Work until 10 P.M. on Wednesday",
+                "D": "Prepare the new work schedule"
+              },
+              "correctAnswer": "A",
+              "explanation": "Freda asks Stacy to open the store in the morning; Freda offers to cover Stacy's usual afternoon shift.",
+              "audio": {
+                "type": "local",
+                "path": ""
+              },
+              "note": "材料来源：127 特典 35 T1 Pt7 Q147-148 文書.mp3\n说明：依据用户提供的音频转写整理；专有名词及个别转写细节可能存在 ASR 误差，题目以材料可支持的信息为准。",
+              "status": "unanswered",
+              "createdAt": "2026-11-12T00:00:00Z",
+              "updatedAt": "2026-11-12T00:00:00Z",
+              "passages": [
+                {
+                  "title": "Text Message — Freda Sanchez, April 6, 7:54 P.M.",
+                  "text": "Stacy,\nI see on the new schedule that you usually work in the afternoon, but could you possibly open the store for me tomorrow morning? I've been having problems with my car, and I need to take it to my mechanic. But the repair shop doesn't open until 10 tomorrow morning. I can do your usual Wednesday afternoon shift starting at 2, and because Wednesday nights have extended hours, I'll stay until 9. Let me know if this works for you.\n—Freda"
+                }
+              ]
+            },
+            {
+              "questionId": "6-7-148",
+              "passageGroupId": "set06-t1-p7-g01",
+              "materialId": "set06-t1-p7-g01",
+              "title": "Why does Freda need Stacy's help?",
+              "options": {
+                "A": "She has to attend a staff meeting.",
+                "B": "Her car needs to be repaired.",
+                "C": "She has an appointment with a customer.",
+                "D": "The store is changing its opening hours."
+              },
+              "correctAnswer": "B",
+              "explanation": "Freda says that she needs to take her car to a mechanic, but the repair shop does not open until 10 A.M.",
+              "audio": {
+                "type": "local",
+                "path": ""
+              },
+              "note": "材料来源：127 特典 35 T1 Pt7 Q147-148 文書.mp3\n说明：依据用户提供的音频转写整理；专有名词及个别转写细节可能存在 ASR 误差，题目以材料可支持的信息为准。",
+              "status": "unanswered",
+              "createdAt": "2026-11-12T00:00:00Z",
+              "updatedAt": "2026-11-12T00:00:00Z"
+            },
+            {
+              "questionId": "6-7-149",
+              "passageGroupId": "set06-t1-p7-g02",
+              "materialId": "set06-t1-p7-g02",
+              "title": "What is the purpose of the form?",
+              "options": {
+                "A": "To request a change to a flight reservation",
+                "B": "To report luggage that has not arrived",
+                "C": "To obtain a refund for a canceled trip",
+                "D": "To arrange transportation to an airport"
+              },
+              "correctAnswer": "B",
+              "explanation": "The document is explicitly a missing-baggage claim form and records details about the passenger's unreturned suitcase.",
+              "audio": {
+                "type": "local",
+                "path": ""
+              },
+              "note": "材料来源：128 特典 36 T1 Pt7 Q149-150 文書.mp3\n说明：依据用户提供的音频转写整理；专有名词及个别转写细节可能存在 ASR 误差，题目以材料可支持的信息为准。",
+              "status": "unanswered",
+              "createdAt": "2026-11-12T00:00:00Z",
+              "updatedAt": "2026-11-12T00:00:00Z",
+              "passages": [
+                {
+                  "title": "Ozone Online — Missing Baggage Form",
+                  "text": "Date of claim: May 2, 3:00 P.M.\nFlight number: 1869\nPassenger: Alessandra Spencer\nDeparture city: Atlanta\nArrival city: Boston\nDestination address: Winthrop Street Hotel, 456 Quincy Street, Boston\nContents: Clothing, two pairs of shoes, toiletries, three books, hairdryer, gifts\nBag description: Company hard-sided blue suitcase with wheels\nValue of contents: $200\nReimbursement if bag is not returned within two weeks: [form field]\nFor internal use: Bag confirmed to be on later flight 1921. Kristoff Delivery will deliver the item to the customer at the destination address within 24 hours of the claim.\nRecorded by: Delante Amad"
+                }
+              ]
+            },
+            {
+              "questionId": "6-7-150",
+              "passageGroupId": "set06-t1-p7-g02",
+              "materialId": "set06-t1-p7-g02",
+              "title": "What is indicated about Ms. Spencer's suitcase?",
+              "options": {
+                "A": "It will be delivered to her hotel.",
+                "B": "It contains fragile electronic equipment.",
+                "C": "It was sent to Atlanta by mistake.",
+                "D": "It has already been reimbursed."
+              },
+              "correctAnswer": "A",
+              "explanation": "The internal-use section says the bag is on a later flight and will be delivered to the destination address within 24 hours.",
+              "audio": {
+                "type": "local",
+                "path": ""
+              },
+              "note": "材料来源：128 特典 36 T1 Pt7 Q149-150 文書.mp3\n说明：依据用户提供的音频转写整理；专有名词及个别转写细节可能存在 ASR 误差，题目以材料可支持的信息为准。",
+              "status": "unanswered",
+              "createdAt": "2026-11-12T00:00:00Z",
+              "updatedAt": "2026-11-12T00:00:00Z"
+            },
+            {
+              "questionId": "6-7-151",
+              "passageGroupId": "set06-t1-p7-g03",
+              "materialId": "set06-t1-p7-g03",
+              "title": "What is the purpose of the memo?",
+              "options": {
+                "A": "To announce a new maintenance policy",
+                "B": "To introduce a newly appointed director",
+                "C": "To provide information about an employee's retirement",
+                "D": "To invite staff to a training seminar"
+              },
+              "correctAnswer": "C",
+              "explanation": "The memo announces Ron Donowitz's retirement and explains the transition arrangements.",
+              "audio": {
+                "type": "local",
+                "path": ""
+              },
+              "note": "材料来源：129 特典 37 T1 Pt7 Q151-152 文書.mp3\n说明：依据用户提供的音频转写整理；专有名词及个别转写细节可能存在 ASR 误差，题目以材料可支持的信息为准。",
+              "status": "unanswered",
+              "createdAt": "2026-11-12T00:00:00Z",
+              "updatedAt": "2026-11-12T00:00:00Z",
+              "passages": [
+                {
+                  "title": "Memo — Breastwood Furnishings",
+                  "text": "To: All Breastwood Furnishings Staff\nFrom: Paul Ho, President\nDate: Wednesday, August 23\nSubject: Ron Donowitz\n\nYesterday, I received notice that Ron Donowitz will retire at the end of October. As many of you know, Ron has been our director of facilities for 30 years. Managing a facility's maintenance department is a challenge in any company, and Ron set the highest standard by which his successors will be measured. The Human Resources Division will be posting the facilities director position shortly. Our goal will be to fill the position internally. Ron will be using accrued vacation leave between now and his retirement date, but he will come in occasionally to train his replacement. He will also be here for a retirement luncheon on October 20 at noon in the cafeteria. All employees are welcome to attend."
+                }
+              ]
+            },
+            {
+              "questionId": "6-7-152",
+              "passageGroupId": "set06-t1-p7-g03",
+              "materialId": "set06-t1-p7-g03",
+              "title": "What does Paul Ho say about the facilities director position?",
+              "options": {
+                "A": "It will be advertised internally.",
+                "B": "It will be eliminated at the end of October.",
+                "C": "It has already been filled.",
+                "D": "It will be transferred to another company."
+              },
+              "correctAnswer": "A",
+              "explanation": "The memo says Human Resources will post the position and the goal is to fill it internally.",
+              "audio": {
+                "type": "local",
+                "path": ""
+              },
+              "note": "材料来源：129 特典 37 T1 Pt7 Q151-152 文書.mp3\n说明：依据用户提供的音频转写整理；专有名词及个别转写细节可能存在 ASR 误差，题目以材料可支持的信息为准。",
+              "status": "unanswered",
+              "createdAt": "2026-11-12T00:00:00Z",
+              "updatedAt": "2026-11-12T00:00:00Z"
+            },
+            {
+              "questionId": "6-7-153",
+              "passageGroupId": "set06-t1-p7-g04",
+              "materialId": "set06-t1-p7-g04",
+              "title": "What does Fumiyo want to do?",
+              "options": {
+                "A": "Review a restaurant's updated menu",
+                "B": "Register for a cooking class",
+                "C": "Order food for a business meeting",
+                "D": "Contact a new restaurant supplier"
+              },
+              "correctAnswer": "A",
+              "explanation": "Fumiyo wants the latest summer menu list so she can update the restaurant's website.",
+              "audio": {
+                "type": "local",
+                "path": ""
+              },
+              "note": "材料来源：130 特典 38 T1 Pt7 Q153-154 文書.mp3\n说明：依据用户提供的音频转写整理；专有名词及个别转写细节可能存在 ASR 误差，题目以材料可支持的信息为准。",
+              "status": "unanswered",
+              "createdAt": "2026-11-12T00:00:00Z",
+              "updatedAt": "2026-11-12T00:00:00Z",
+              "passages": [
+                {
+                  "title": "Text Message Chain",
+                  "text": "Fumiyo Komatsu — 2:42 P.M.\nNelly, by any chance did someone from the Evergreen restaurant send you a list of the summer menu items? I wanted to start updating their site, but I don't have the latest list.\n\nNelly Artemiva — 2:43 P.M.\nThe chef emailed it to me this morning, but I want to go over the changes with you first. Do you have time now? Why don't I stop by your office around 4:30? Will you be available?\n\nFumiyo Komatsu — 2:46 P.M.\nMost likely. I have to go to a training session at 3:30, but it shouldn't last long."
+                }
+              ]
+            },
+            {
+              "questionId": "6-7-154",
+              "passageGroupId": "set06-t1-p7-g04",
+              "materialId": "set06-t1-p7-g04",
+              "title": "What does Nelly suggest?",
+              "options": {
+                "A": "Sending the menu directly to the restaurant",
+                "B": "Meeting Fumiyo at about 4:30 P.M.",
+                "C": "Postponing the website update until tomorrow",
+                "D": "Attending the training session together"
+              },
+              "correctAnswer": "B",
+              "explanation": "Nelly proposes stopping by Fumiyo's office around 4:30 P.M.",
+              "audio": {
+                "type": "local",
+                "path": ""
+              },
+              "note": "材料来源：130 特典 38 T1 Pt7 Q153-154 文書.mp3\n说明：依据用户提供的音频转写整理；专有名词及个别转写细节可能存在 ASR 误差，题目以材料可支持的信息为准。",
+              "status": "unanswered",
+              "createdAt": "2026-11-12T00:00:00Z",
+              "updatedAt": "2026-11-12T00:00:00Z"
+            },
+            {
+              "questionId": "6-7-155",
+              "passageGroupId": "set06-t1-p7-g05",
+              "materialId": "set06-t1-p7-g05",
+              "title": "Why is Dr. Martin writing to Mr. Lander?",
+              "options": {
+                "A": "To remind him about an unpaid bill",
+                "B": "To offer him a complimentary service",
+                "C": "To announce a change in office location",
+                "D": "To request a review of a dental product"
+              },
+              "correctAnswer": "B",
+              "explanation": "The letter offers a complimentary teeth-whitening service as a loyalty promotion.",
+              "audio": {
+                "type": "local",
+                "path": ""
+              },
+              "note": "材料来源：131 特典 39 T1 Pt7 Q155-157 文書.mp3\n说明：依据用户提供的音频转写整理；专有名词及个别转写细节可能存在 ASR 误差，题目以材料可支持的信息为准。",
+              "status": "unanswered",
+              "createdAt": "2026-11-12T00:00:00Z",
+              "updatedAt": "2026-11-12T00:00:00Z",
+              "passages": [
+                {
+                  "title": "Letter — Plantec Dental",
+                  "text": "Mr. Hugh Lander\n86 Pasco Road\nKororā, Wellington 6012\n\nDear Mr. Lander,\n\nIt is time for your biennial check-up. Plantec Dental is honored to serve as your dental care provider. To reward your loyalty, I am proud to offer you a complimentary teeth-whitening service. This special promotion is available only to clients who have completed at least six biennial checkups at Plantec Dental.\n\nTo qualify, I will need to examine your teeth to ensure they are healthy enough to undergo a professional whitening service. If your teeth are in good condition, you will receive four whitening gel tubes, two trays custom-fit for your teeth, and one tube of whitening toothpaste.\n\nPlease contact Plantec Dental to schedule your next appointment and take advantage of this special promotion.\n\nSincerely,\nDr. Marlis Martin, DMD"
+                }
+              ]
+            },
+            {
+              "questionId": "6-7-156",
+              "passageGroupId": "set06-t1-p7-g05",
+              "materialId": "set06-t1-p7-g05",
+              "title": "What is required for a client to qualify for the promotion?",
+              "options": {
+                "A": "Having completed at least six checkups at the clinic",
+                "B": "Purchasing a year's supply of toothpaste",
+                "C": "Recommending three new patients",
+                "D": "Scheduling an appointment before the end of the month"
+              },
+              "correctAnswer": "A",
+              "explanation": "The promotion is limited to clients who have completed at least six biennial checkups at Plantec Dental.",
+              "audio": {
+                "type": "local",
+                "path": ""
+              },
+              "note": "材料来源：131 特典 39 T1 Pt7 Q155-157 文書.mp3\n说明：依据用户提供的音频转写整理；专有名词及个别转写细节可能存在 ASR 误差，题目以材料可支持的信息为准。",
+              "status": "unanswered",
+              "createdAt": "2026-11-12T00:00:00Z",
+              "updatedAt": "2026-11-12T00:00:00Z"
+            },
+            {
+              "questionId": "6-7-157",
+              "passageGroupId": "set06-t1-p7-g05",
+              "materialId": "set06-t1-p7-g05",
+              "title": "What will Dr. Martin do before providing the service?",
+              "options": {
+                "A": "Send the client a questionnaire",
+                "B": "Verify the client's insurance coverage",
+                "C": "Examine the client's teeth",
+                "D": "Order a custom dental appliance"
+              },
+              "correctAnswer": "C",
+              "explanation": "The letter states that Dr. Martin must examine the teeth to ensure they are healthy enough for whitening.",
+              "audio": {
+                "type": "local",
+                "path": ""
+              },
+              "note": "材料来源：131 特典 39 T1 Pt7 Q155-157 文書.mp3\n说明：依据用户提供的音频转写整理；专有名词及个别转写细节可能存在 ASR 误差，题目以材料可支持的信息为准。",
+              "status": "unanswered",
+              "createdAt": "2026-11-12T00:00:00Z",
+              "updatedAt": "2026-11-12T00:00:00Z"
+            },
+            {
+              "questionId": "6-7-158",
+              "passageGroupId": "set06-t1-p7-g06",
+              "materialId": "set06-t1-p7-g06",
+              "title": "What inspired Mr. Marsh to establish Nupjewel's Paradise?",
+              "options": {
+                "A": "A request from a wedding venue",
+                "B": "A shortage of wedding photographers",
+                "C": "The difficulty he experienced planning his own wedding",
+                "D": "An opportunity to purchase a grocery store"
+              },
+              "correctAnswer": "C",
+              "explanation": "The article explains that planning his own wedding was difficult and led him to create a service that simplifies the process.",
+              "audio": {
+                "type": "local",
+                "path": ""
+              },
+              "note": "材料来源：132 特典 40 T1 Pt7 Q158-160 文書.mp3\n说明：依据用户提供的音频转写整理；专有名词及个别转写细节可能存在 ASR 误差，题目以材料可支持的信息为准。",
+              "status": "unanswered",
+              "createdAt": "2026-11-12T00:00:00Z",
+              "updatedAt": "2026-11-12T00:00:00Z",
+              "passages": [
+                {
+                  "title": "Article — Wedding Planning Made Easy",
+                  "text": "Hindle, September 9\n\nAlbert Marsh knows firsthand that planning a wedding can be a time-consuming and energy-draining endeavor. He and his fiancée had to crisscross Tindle to find vendors that suited their budget and style requirements. It occurred to him that there had to be a better way to make the necessary wedding preparations.\n\nMr. Marsh acted on that idea. Barely a year into his marriage, he created Nupjewel's Paradise, a company that aims to simplify wedding planning. Located at 248 Palmchat Drive, on the site of the former Harrison grocery store, the company has partnered with 50 wedding-industry professionals. Customers appreciate being able to book the services they need in one location, says Mr. Marsh. Vendors, in turn, have easier access to a large number of clients.\n\nMr. Marsh says he has received requests from people interested in opening their own businesses under his brand name, which would make them distributors of his services. He is open to that possibility. Just months after opening Nupjewel's Paradise, he says, it became apparent that there was a great need for his services. He cannot be everywhere at once and would welcome some help."
+                }
+              ]
+            },
+            {
+              "questionId": "6-7-159",
+              "passageGroupId": "set06-t1-p7-g06",
+              "materialId": "set06-t1-p7-g06",
+              "title": "What is indicated about Nupjewel's Paradise?",
+              "options": {
+                "A": "It works with numerous wedding-industry professionals.",
+                "B": "It specializes in selling wedding decorations.",
+                "C": "It is located inside a hotel.",
+                "D": "It has been operating for more than ten years."
+              },
+              "correctAnswer": "A",
+              "explanation": "The article says the company has partnered with 50 wedding-industry professionals.",
+              "audio": {
+                "type": "local",
+                "path": ""
+              },
+              "note": "材料来源：132 特典 40 T1 Pt7 Q158-160 文書.mp3\n说明：依据用户提供的音频转写整理；专有名词及个别转写细节可能存在 ASR 误差，题目以材料可支持的信息为准。",
+              "status": "unanswered",
+              "createdAt": "2026-11-12T00:00:00Z",
+              "updatedAt": "2026-11-12T00:00:00Z"
+            },
+            {
+              "questionId": "6-7-160",
+              "passageGroupId": "set06-t1-p7-g06",
+              "materialId": "set06-t1-p7-g06",
+              "title": "What does Mr. Marsh suggest he may do in the future?",
+              "options": {
+                "A": "Close the company's original location",
+                "B": "Expand through other businesses using his brand",
+                "C": "Stop offering services to individual customers",
+                "D": "Develop a wedding-planning training course"
+              },
+              "correctAnswer": "B",
+              "explanation": "He has received inquiries from people who want to operate businesses under his brand, and he is open to the possibility.",
+              "audio": {
+                "type": "local",
+                "path": ""
+              },
+              "note": "材料来源：132 特典 40 T1 Pt7 Q158-160 文書.mp3\n说明：依据用户提供的音频转写整理；专有名词及个别转写细节可能存在 ASR 误差，题目以材料可支持的信息为准。",
+              "status": "unanswered",
+              "createdAt": "2026-11-12T00:00:00Z",
+              "updatedAt": "2026-11-12T00:00:00Z"
+            },
+            {
+              "questionId": "6-7-161",
+              "passageGroupId": "set06-t1-p7-g07",
+              "materialId": "set06-t1-p7-g07",
+              "title": "What is one feature of Finarrantry Tree Farm?",
+              "options": {
+                "A": "It offers guided tours every hour.",
+                "B": "It has five kilometers of hiking trails.",
+                "C": "It provides overnight accommodations.",
+                "D": "It rents bicycles to visitors."
+              },
+              "correctAnswer": "B",
+              "explanation": "The brochure specifically lists five kilometers of hiking trails.",
+              "audio": {
+                "type": "local",
+                "path": ""
+              },
+              "note": "材料来源：133 特典 41 T1 Pt7 Q161-163 文書.mp3\n说明：依据用户提供的音频转写整理；专有名词及个别转写细节可能存在 ASR 误差，题目以材料可支持的信息为准。",
+              "status": "unanswered",
+              "createdAt": "2026-11-12T00:00:00Z",
+              "updatedAt": "2026-11-12T00:00:00Z",
+              "passages": [
+                {
+                  "title": "Brochure — Visit Finarrantry Tree Farm",
+                  "text": "Are you interested in old-growth forests, wildflowers, wildlife habitats, hiking, and being outdoors? If so, Finarrantry Tree Farm is the perfect place for you.\n\nThe farm was donated 25 years ago by the Fitter family to the LAD Forestry Center, which now operates it as an educational site and park. It features five kilometers of hiking trails, as well as streams and riverbanks to explore. It is open to the public year-round for self-guided tours.\n\nGroups of 10 or more must register at least two weeks before visiting. From April to September, the hours are 7 A.M. to 9 P.M. From October to March, the hours are 8 A.M. to 5 P.M.\n\nFacilities include covered picnic areas and an indoor education center, which can be reserved for a small fee.\n\nInformation: www.finaryntreefarm.co.uk/reservations\n42 Mayberry Road, Edinburgh EH4 6BU | 0131 496 1234"
+                }
+              ]
+            },
+            {
+              "questionId": "6-7-162",
+              "passageGroupId": "set06-t1-p7-g07",
+              "materialId": "set06-t1-p7-g07",
+              "title": "What are groups of 10 or more required to do?",
+              "options": {
+                "A": "Pay an admission fee in advance",
+                "B": "Bring their own picnic supplies",
+                "C": "Register at least two weeks before visiting",
+                "D": "Reserve a guide for the entire day"
+              },
+              "correctAnswer": "C",
+              "explanation": "The brochure states that groups of 10 or more must register at least two weeks before their visit.",
+              "audio": {
+                "type": "local",
+                "path": ""
+              },
+              "note": "材料来源：133 特典 41 T1 Pt7 Q161-163 文書.mp3\n说明：依据用户提供的音频转写整理；专有名词及个别转写细节可能存在 ASR 误差，题目以材料可支持的信息为准。",
+              "status": "unanswered",
+              "createdAt": "2026-11-12T00:00:00Z",
+              "updatedAt": "2026-11-12T00:00:00Z"
+            },
+            {
+              "questionId": "6-7-163",
+              "passageGroupId": "set06-t1-p7-g07",
+              "materialId": "set06-t1-p7-g07",
+              "title": "What can visitors reserve for an additional fee?",
+              "options": {
+                "A": "The indoor education center",
+                "B": "A private hiking trail",
+                "C": "A covered parking space",
+                "D": "A guided wildlife tour"
+              },
+              "correctAnswer": "A",
+              "explanation": "The brochure says the indoor education center can be reserved for a small fee.",
+              "audio": {
+                "type": "local",
+                "path": ""
+              },
+              "note": "材料来源：133 特典 41 T1 Pt7 Q161-163 文書.mp3\n说明：依据用户提供的音频转写整理；专有名词及个别转写细节可能存在 ASR 误差，题目以材料可支持的信息为准。",
+              "status": "unanswered",
+              "createdAt": "2026-11-12T00:00:00Z",
+              "updatedAt": "2026-11-12T00:00:00Z"
+            },
+            {
+              "questionId": "6-7-164",
+              "passageGroupId": "set06-t1-p7-g08",
+              "materialId": "set06-t1-p7-g08",
+              "title": "What is the article mainly about?",
+              "options": {
+                "A": "Ways companies can use video conferencing",
+                "B": "How to train new human resources managers",
+                "C": "The decline of international business travel",
+                "D": "Methods for improving employee performance reviews"
+              },
+              "correctAnswer": "A",
+              "explanation": "The article discusses how companies can evaluate and use video-conferencing systems, especially for hiring and other business activities.",
+              "audio": {
+                "type": "local",
+                "path": ""
+              },
+              "note": "材料来源：134 特典 42 T1 Pt7 Q164-167 文書.mp3\n说明：依据用户提供的音频转写整理；专有名词及个别转写细节可能存在 ASR 误差，题目以材料可支持的信息为准。",
+              "status": "unanswered",
+              "createdAt": "2026-11-12T00:00:00Z",
+              "updatedAt": "2026-11-12T00:00:00Z",
+              "passages": [
+                {
+                  "title": "Article — Video Conferencing for Hiring",
+                  "text": "While in-person interviews are not going away, many human resources departments have come to rely on video conferencing for candidate screening. Using video has reduced unproductive communication between job seekers and employers, and both parties appreciate the ability to schedule interviews more easily.\n\nFinding a video-conferencing vendor can be challenging, especially for smaller companies. Libba Renwick, Human Resources Director at Adinama Clothing Manufacturers, recommends that companies think broadly about their needs. For example, she asks whether on-site meetings currently taking place could be conducted just as effectively by video conference.\n\nAnother consideration, according to Ms. Renwick, is that businesses often use the same technology for activities such as employee training. The cost savings could be significant for international companies. She cautions that potential vendors should be asked how proposed systems will be customized without creating unreasonable costs or placing a strain on information-technology staff.\n\nSome companies may need only basic video capabilities, while others may seek advanced functions, such as built-in analytics software that allows managers to score and rank video interviews in real time."
+                }
+              ]
+            },
+            {
+              "questionId": "6-7-165",
+              "passageGroupId": "set06-t1-p7-g08",
+              "materialId": "set06-t1-p7-g08",
+              "title": "According to Ms. Renwick, what should companies consider when selecting a vendor?",
+              "options": {
+                "A": "Whether the vendor has offices in every country",
+                "B": "Whether the system can support other business activities",
+                "C": "Whether employees already own compatible cameras",
+                "D": "Whether the service includes free technical staff"
+              },
+              "correctAnswer": "B",
+              "explanation": "Ms. Renwick notes that the same technology may be used for employee training as well as interviews.",
+              "audio": {
+                "type": "local",
+                "path": ""
+              },
+              "note": "材料来源：134 特典 42 T1 Pt7 Q164-167 文書.mp3\n说明：依据用户提供的音频转写整理；专有名词及个别转写细节可能存在 ASR 误差，题目以材料可支持的信息为准。",
+              "status": "unanswered",
+              "createdAt": "2026-11-12T00:00:00Z",
+              "updatedAt": "2026-11-12T00:00:00Z"
+            },
+            {
+              "questionId": "6-7-166",
+              "passageGroupId": "set06-t1-p7-g08",
+              "materialId": "set06-t1-p7-g08",
+              "title": "What does Ms. Renwick caution companies about?",
+              "options": {
+                "A": "Choosing systems that are difficult to customize affordably",
+                "B": "Replacing all in-person interviews immediately",
+                "C": "Hiring additional staff before buying equipment",
+                "D": "Using video conferencing for employee training"
+              },
+              "correctAnswer": "A",
+              "explanation": "She advises asking vendors how systems can be customized without unreasonable costs or excessive demands on IT staff.",
+              "audio": {
+                "type": "local",
+                "path": ""
+              },
+              "note": "材料来源：134 特典 42 T1 Pt7 Q164-167 文書.mp3\n说明：依据用户提供的音频转写整理；专有名词及个别转写细节可能存在 ASR 误差，题目以材料可支持的信息为准。",
+              "status": "unanswered",
+              "createdAt": "2026-11-12T00:00:00Z",
+              "updatedAt": "2026-11-12T00:00:00Z"
+            },
+            {
+              "questionId": "6-7-167",
+              "passageGroupId": "set06-t1-p7-g08",
+              "materialId": "set06-t1-p7-g08",
+              "title": "What is suggested about some companies?",
+              "options": {
+                "A": "They may not need advanced video features.",
+                "B": "They are required to use analytics software.",
+                "C": "They prefer conducting interviews only in person.",
+                "D": "They cannot afford basic video capabilities."
+              },
+              "correctAnswer": "A",
+              "explanation": "The final paragraph says some companies may need only basic video capabilities, while others may want advanced functions.",
+              "audio": {
+                "type": "local",
+                "path": ""
+              },
+              "note": "材料来源：134 特典 42 T1 Pt7 Q164-167 文書.mp3\n说明：依据用户提供的音频转写整理；专有名词及个别转写细节可能存在 ASR 误差，题目以材料可支持的信息为准。",
+              "status": "unanswered",
+              "createdAt": "2026-11-12T00:00:00Z",
+              "updatedAt": "2026-11-12T00:00:00Z"
+            },
+            {
+              "questionId": "6-7-168",
+              "passageGroupId": "set06-t1-p7-g09",
+              "materialId": "set06-t1-p7-g09",
+              "title": "What change will Talk First Technologies make effective June 1?",
+              "options": {
+                "A": "It will stop offering long-term service contracts.",
+                "B": "It will increase the price of all mobile devices.",
+                "C": "It will discontinue monthly billing statements.",
+                "D": "It will require customers to use its mobile app."
+              },
+              "correctAnswer": "A",
+              "explanation": "The page says the company will cease offering one- and two-year service contracts and bill all services monthly.",
+              "audio": {
+                "type": "local",
+                "path": ""
+              },
+              "note": "材料来源：135 特典 43 T1 Pt7 Q168-171 文書.mp3\n说明：依据用户提供的音频转写整理；专有名词及个别转写细节可能存在 ASR 误差，题目以材料可支持的信息为准。",
+              "status": "unanswered",
+              "createdAt": "2026-11-12T00:00:00Z",
+              "updatedAt": "2026-11-12T00:00:00Z",
+              "passages": [
+                {
+                  "title": "Web Page — Talk First Technologies: News and Updates",
+                  "text": "You spoke, we listened. Effective June 1, Talk First Technologies customers will have the following options.\n\nMONTH-TO-MONTH PLANS\nTalk First Technologies will cease offering one- and two-year service contracts. All services will be billed monthly.\n\nNEW PLANS\nNew options include a low-cost plan with unlimited calling and text messaging for $45 per month. Customers can purchase data by the gigabyte when needed, or choose the TechFan plan, which lets them try state-of-the-art mobile devices before they are released for public sale.\n\nDEVICE UPGRADES\nCustomers may purchase any phone at any time at the full retail price. An installment plan, which allows customers to pay a little each month with no interest charge, is also available.\n\nEMPLOYER BILLING STATEMENTS\nThe one-page monthly bill lists essential information: services used, charges, and the payment due date. Customers are encouraged to try the Talk First app to view their statement and pay their balance by phone."
+                }
+              ]
+            },
+            {
+              "questionId": "6-7-169",
+              "passageGroupId": "set06-t1-p7-g09",
+              "materialId": "set06-t1-p7-g09",
+              "title": "What is a feature of the TechFan plan?",
+              "options": {
+                "A": "It includes free international shipping.",
+                "B": "It allows customers to try unreleased devices.",
+                "C": "It provides unlimited data at no extra cost.",
+                "D": "It offers discounted business phone lines."
+              },
+              "correctAnswer": "B",
+              "explanation": "The TechFan plan lets customers try devices before they are released for public sale.",
+              "audio": {
+                "type": "local",
+                "path": ""
+              },
+              "note": "材料来源：135 特典 43 T1 Pt7 Q168-171 文書.mp3\n说明：依据用户提供的音频转写整理；专有名词及个别转写细节可能存在 ASR 误差，题目以材料可支持的信息为准。",
+              "status": "unanswered",
+              "createdAt": "2026-11-12T00:00:00Z",
+              "updatedAt": "2026-11-12T00:00:00Z"
+            },
+            {
+              "questionId": "6-7-170",
+              "passageGroupId": "set06-t1-p7-g09",
+              "materialId": "set06-t1-p7-g09",
+              "title": "What is indicated about the installment plan?",
+              "options": {
+                "A": "It is available only to business customers.",
+                "B": "It requires a one-year service contract.",
+                "C": "It does not charge interest.",
+                "D": "It can be used only for older phones."
+              },
+              "correctAnswer": "C",
+              "explanation": "The page says customers can pay a little each month with no interest charge.",
+              "audio": {
+                "type": "local",
+                "path": ""
+              },
+              "note": "材料来源：135 特典 43 T1 Pt7 Q168-171 文書.mp3\n说明：依据用户提供的音频转写整理；专有名词及个别转写细节可能存在 ASR 误差，题目以材料可支持的信息为准。",
+              "status": "unanswered",
+              "createdAt": "2026-11-12T00:00:00Z",
+              "updatedAt": "2026-11-12T00:00:00Z"
+            },
+            {
+              "questionId": "6-7-171",
+              "passageGroupId": "set06-t1-p7-g09",
+              "materialId": "set06-t1-p7-g09",
+              "title": "What does the company encourage customers to do?",
+              "options": {
+                "A": "Visit a retail store to pay their bills",
+                "B": "Switch to an annual payment schedule",
+                "C": "Use the app to view and pay their bills",
+                "D": "Request a printed statement every month"
+              },
+              "correctAnswer": "C",
+              "explanation": "Customers are encouraged to use the Talk First app to view statements and pay their balances.",
+              "audio": {
+                "type": "local",
+                "path": ""
+              },
+              "note": "材料来源：135 特典 43 T1 Pt7 Q168-171 文書.mp3\n说明：依据用户提供的音频转写整理；专有名词及个别转写细节可能存在 ASR 误差，题目以材料可支持的信息为准。",
+              "status": "unanswered",
+              "createdAt": "2026-11-12T00:00:00Z",
+              "updatedAt": "2026-11-12T00:00:00Z"
+            },
+            {
+              "questionId": "6-7-172",
+              "passageGroupId": "set06-t1-p7-g10",
+              "materialId": "set06-t1-p7-g10",
+              "title": "Why has the meeting with the Danish partners been rescheduled?",
+              "options": {
+                "A": "A new laptop release will affect the development schedule.",
+                "B": "The partners have canceled their annual conference.",
+                "C": "The employees requested additional vacation time.",
+                "D": "A flight to Denmark has been discontinued."
+              },
+              "correctAnswer": "A",
+              "explanation": "Melvin explains that the competitor's upcoming laptop release means their own model must be developed sooner.",
+              "audio": {
+                "type": "local",
+                "path": ""
+              },
+              "note": "材料来源：136 特典 44 T1 Pt7 Q172-175 文書.mp3\n说明：依据用户提供的音频转写整理；专有名词及个别转写细节可能存在 ASR 误差，题目以材料可支持的信息为准。",
+              "status": "unanswered",
+              "createdAt": "2026-11-12T00:00:00Z",
+              "updatedAt": "2026-11-12T00:00:00Z",
+              "passages": [
+                {
+                  "title": "Online Chat Discussion",
+                  "text": "Melvin Arrocho — 1:39 P.M.: Hi, Brenda. Have you made flight arrangements for us yet?\n\nBrenda Costa — 1:40 P.M.: Yes, we depart for Denmark on March 14 at 2 P.M. Any problems?\n\nMelvin Arrocho — 1:42 P.M.: Yes, actually. The meeting with our Danish partners has been moved up one week to next Wednesday. We just found out that Aeronetic will release its new laptop early next year, so we need to speed up development of our own new model.\n\nVince Gale — 1:43 P.M.: Really? I'm supposed to go camping with my family next week.\n\nBrenda Costa — 1:44 P.M.: I signed up for a three-day amateur tennis tournament. My first match is on Wednesday.\n\nMelvin Arrocho — 1:45 P.M.: And I have tickets for a one-time-only performance by the Brendan Berg-Belle Company that same day. It's out of our hands, I'm afraid. Brenda, please rebook us for March 7.\n\nBrenda Costa — 1:46 P.M.: Sure, I'll check whether flights are available.\n\nBrenda Costa — 1:52 P.M.: There's a flight at 11:35 P.M. Is that time okay with both of you?\n\nMelvin Arrocho — 1:54 P.M.: Sure. Ms. Max realizes this last-minute change is an imposition on us and will make sure we are compensated somehow.\n\nBrenda Costa — 1:55 P.M.: That's very considerate of her. There are only four seats left on that flight, Vince, so make up your mind fast.\n\nVince Gale — 2:01 P.M.: Sorry, I had to step away from my desk. Yes, I suppose.\n\nMelvin Arrocho — 2:02 P.M.: Good. Brenda, please go ahead and make those arrangements now."
+                }
+              ]
+            },
+            {
+              "questionId": "6-7-173",
+              "passageGroupId": "set06-t1-p7-g10",
+              "materialId": "set06-t1-p7-g10",
+              "title": "What is indicated about Vince Gale?",
+              "options": {
+                "A": "He has already booked a flight for March 7.",
+                "B": "He has a personal activity planned for the original meeting date.",
+                "C": "He will not be able to travel to Denmark.",
+                "D": "He is responsible for contacting the Danish partners."
+              },
+              "correctAnswer": "B",
+              "explanation": "Vince says he is supposed to go camping with his family next week, when the meeting has been moved.",
+              "audio": {
+                "type": "local",
+                "path": ""
+              },
+              "note": "材料来源：136 特典 44 T1 Pt7 Q172-175 文書.mp3\n说明：依据用户提供的音频转写整理；专有名词及个别转写细节可能存在 ASR 误差，题目以材料可支持的信息为准。",
+              "status": "unanswered",
+              "createdAt": "2026-11-12T00:00:00Z",
+              "updatedAt": "2026-11-12T00:00:00Z"
+            },
+            {
+              "questionId": "6-7-174",
+              "passageGroupId": "set06-t1-p7-g10",
+              "materialId": "set06-t1-p7-g10",
+              "title": "At 1:55 P.M., what does Brenda mean when she says, “make up your mind fast”?",
+              "options": {
+                "A": "Vince should decide whether to take the remaining seat.",
+                "B": "Vince should choose a different airline.",
+                "C": "Vince should tell his family about the schedule change.",
+                "D": "Vince should purchase a ticket for the performance."
+              },
+              "correctAnswer": "A",
+              "explanation": "Brenda says only four seats remain on the 11:35 P.M. flight and urges Vince to decide quickly.",
+              "audio": {
+                "type": "local",
+                "path": ""
+              },
+              "note": "材料来源：136 特典 44 T1 Pt7 Q172-175 文書.mp3\n说明：依据用户提供的音频转写整理；专有名词及个别转写细节可能存在 ASR 误差，题目以材料可支持的信息为准。",
+              "status": "unanswered",
+              "createdAt": "2026-11-12T00:00:00Z",
+              "updatedAt": "2026-11-12T00:00:00Z"
+            },
+            {
+              "questionId": "6-7-175",
+              "passageGroupId": "set06-t1-p7-g10",
+              "materialId": "set06-t1-p7-g10",
+              "title": "What will Brenda most likely do next?",
+              "options": {
+                "A": "Cancel the original meeting",
+                "B": "Contact the Danish partners",
+                "C": "Book the newly discussed flight",
+                "D": "Request compensation from Ms. Max"
+              },
+              "correctAnswer": "C",
+              "explanation": "After Vince agrees, Melvin asks Brenda to proceed with the arrangements.",
+              "audio": {
+                "type": "local",
+                "path": ""
+              },
+              "note": "材料来源：136 特典 44 T1 Pt7 Q172-175 文書.mp3\n说明：依据用户提供的音频转写整理；专有名词及个别转写细节可能存在 ASR 误差，题目以材料可支持的信息为准。",
+              "status": "unanswered",
+              "createdAt": "2026-11-12T00:00:00Z",
+              "updatedAt": "2026-11-12T00:00:00Z"
+            },
+            {
+              "questionId": "6-7-176",
+              "passageGroupId": "set06-t1-p7-g11",
+              "materialId": "set06-t1-p7-g11",
+              "title": "What is the purpose of the email?",
+              "options": {
+                "A": "To announce changes to a conference schedule",
+                "B": "To request proposals for a new marketing campaign",
+                "C": "To introduce a new consulting team",
+                "D": "To explain how to register for an exhibition"
+              },
+              "correctAnswer": "A",
+              "explanation": "Tristan Fields informs staff of three changes involving presenters and presentation topics.",
+              "audio": {
+                "type": "local",
+                "path": ""
+              },
+              "note": "材料来源：137 特典 45 T1 Pt7 Q176-180 文書.mp3;138 特典 46 T1 Pt7 Q176-180 文書.mp3\n说明：依据用户提供的音频转写整理；专有名词及个别转写细节可能存在 ASR 误差，题目以材料可支持的信息为准。",
+              "status": "unanswered",
+              "createdAt": "2026-11-12T00:00:00Z",
+              "updatedAt": "2026-11-12T00:00:00Z",
+              "passages": [
+                {
+                  "title": "Conference Schedule",
+                  "text": "Adfinity Summit — Sydney, June 1–4\nPresenters: Vargas Jones; Martha Orr\nPresentation: Friends and Social Media Advertising\n\nAnnual Overdrive Marketing Conference — Melbourne, June 4–7\nPresenters: Martha Orr; Victor Voss\nPresentations: Visuals That Tell Your Story; Product Launch: 7 Pitfalls to Avoid\n\nPull Ahead Expo — Brisbane, June 15–19\nPresenters: August Jones; Martha Orr\nPresentation: Effective Presentation Techniques\n\nDiaspawn — Perth, June 20–24\nPresenters: Martha Orr; Alexa Rojas\nPresentation: Four Keys to Brand Loyalty — Let Your Success Do the Talking; Navigating the Marketing Labyrinth"
+                },
+                {
+                  "title": "Email — June Conference Schedule",
+                  "text": "To: All Row & Consulting Team Members\nFrom: Tristan Fields, Manager\nDate: April 15\nSubject: June Conference Schedule\n\nDear Row & Consulting Team Members,\n\nI need to bring several developments regarding the conference schedule to your attention. First, Mr. Voss has been asked to be the closing keynote speaker on the last day of the Adfinity Summit. Since this conflicts with his current schedule, Ms. Rollhaus will take over for him at the annual Overdrive Marketing Conference.\n\nSecondly, Mr. Jones must go abroad in mid-June, so he cannot join Ms. Orr at the Pull Ahead Expo. We have asked the conference organizers to drop his session from their schedule.\n\nFinally, Ms. Orr has been requested by Diaspawn to change her presentation topic. They would like her to address the theme of her recent book, so she should deliver her Data Impact Revolution talk there instead of her planned topic.\n\nThank you,\nTristan Fields"
+                }
+              ]
+            },
+            {
+              "questionId": "6-7-177",
+              "passageGroupId": "set06-t1-p7-g11",
+              "materialId": "set06-t1-p7-g11",
+              "title": "According to the email, who will replace Victor Voss at the Overdrive Marketing Conference?",
+              "options": {
+                "A": "Vargas Jones",
+                "B": "Martha Orr",
+                "C": "Ms. Rollhaus",
+                "D": "Alexa Rojas"
+              },
+              "correctAnswer": "C",
+              "explanation": "The email states that Ms. Rollhaus will take over for Mr. Voss at the Overdrive conference.",
+              "audio": {
+                "type": "local",
+                "path": ""
+              },
+              "note": "材料来源：137 特典 45 T1 Pt7 Q176-180 文書.mp3;138 特典 46 T1 Pt7 Q176-180 文書.mp3\n说明：依据用户提供的音频转写整理；专有名词及个别转写细节可能存在 ASR 误差，题目以材料可支持的信息为准。",
+              "status": "unanswered",
+              "createdAt": "2026-11-12T00:00:00Z",
+              "updatedAt": "2026-11-12T00:00:00Z"
+            },
+            {
+              "questionId": "6-7-178",
+              "passageGroupId": "set06-t1-p7-g11",
+              "materialId": "set06-t1-p7-g11",
+              "title": "What will happen to Mr. Jones's session at the Pull Ahead Expo?",
+              "options": {
+                "A": "It will be moved to the final day.",
+                "B": "It will be given by Ms. Orr.",
+                "C": "It will be removed from the schedule.",
+                "D": "It will be presented online."
+              },
+              "correctAnswer": "C",
+              "explanation": "Because Mr. Jones must travel abroad, the organizers have been asked to drop his session.",
+              "audio": {
+                "type": "local",
+                "path": ""
+              },
+              "note": "材料来源：137 特典 45 T1 Pt7 Q176-180 文書.mp3;138 特典 46 T1 Pt7 Q176-180 文書.mp3\n说明：依据用户提供的音频转写整理；专有名词及个别转写细节可能存在 ASR 误差，题目以材料可支持的信息为准。",
+              "status": "unanswered",
+              "createdAt": "2026-11-12T00:00:00Z",
+              "updatedAt": "2026-11-12T00:00:00Z"
+            },
+            {
+              "questionId": "6-7-179",
+              "passageGroupId": "set06-t1-p7-g11",
+              "materialId": "set06-t1-p7-g11",
+              "title": "Which presentation will Ms. Orr give at the Diaspawn event?",
+              "options": {
+                "A": "Friends and Social Media Advertising",
+                "B": "Data Impact Revolution",
+                "C": "Effective Presentation Techniques",
+                "D": "Navigating the Marketing Labyrinth"
+              },
+              "correctAnswer": "B",
+              "explanation": "The email says Diaspawn requested a topic based on her recent book, and she should deliver her Data Impact Revolution talk.",
+              "audio": {
+                "type": "local",
+                "path": ""
+              },
+              "note": "材料来源：137 特典 45 T1 Pt7 Q176-180 文書.mp3;138 特典 46 T1 Pt7 Q176-180 文書.mp3\n说明：依据用户提供的音频转写整理；专有名词及个别转写细节可能存在 ASR 误差，题目以材料可支持的信息为准。",
+              "status": "unanswered",
+              "createdAt": "2026-11-12T00:00:00Z",
+              "updatedAt": "2026-11-12T00:00:00Z"
+            },
+            {
+              "questionId": "6-7-180",
+              "passageGroupId": "set06-t1-p7-g11",
+              "materialId": "set06-t1-p7-g11",
+              "title": "At which event will Ms. Rollhaus speak?",
+              "options": {
+                "A": "Adfinity Summit",
+                "B": "Annual Overdrive Marketing Conference",
+                "C": "Pull Ahead Expo",
+                "D": "Diaspawn"
+              },
+              "correctAnswer": "B",
+              "explanation": "The email specifically assigns Ms. Rollhaus to replace Mr. Voss at the annual Overdrive Marketing Conference.",
+              "audio": {
+                "type": "local",
+                "path": ""
+              },
+              "note": "材料来源：137 特典 45 T1 Pt7 Q176-180 文書.mp3;138 特典 46 T1 Pt7 Q176-180 文書.mp3\n说明：依据用户提供的音频转写整理；专有名词及个别转写细节可能存在 ASR 误差，题目以材料可支持的信息为准。",
+              "status": "unanswered",
+              "createdAt": "2026-11-12T00:00:00Z",
+              "updatedAt": "2026-11-12T00:00:00Z"
+            },
+            {
+              "questionId": "6-7-181",
+              "passageGroupId": "set06-t1-p7-g12",
+              "materialId": "set06-t1-p7-g12",
+              "title": "For what position is Mr. Chen applying?",
+              "options": {
+                "A": "Production line worker",
+                "B": "Facilities director",
+                "C": "Quality assurance manager",
+                "D": "Training coordinator"
+              },
+              "correctAnswer": "A",
+              "explanation": "The opening paragraph states that he is applying for a production line worker position.",
+              "audio": {
+                "type": "local",
+                "path": ""
+              },
+              "note": "材料来源：139 特典 47 T1 Pt7 Q181-185 文書.mp3;140 特典 48 T1 Pt7 Q181-185 文書.mp3\n说明：依据用户提供的音频转写整理；专有名词及个别转写细节可能存在 ASR 误差，题目以材料可支持的信息为准。",
+              "status": "unanswered",
+              "createdAt": "2026-11-12T00:00:00Z",
+              "updatedAt": "2026-11-12T00:00:00Z",
+              "passages": [
+                {
+                  "title": "Application Letter",
+                  "text": "January 15\nBernice J. Todd\nFilvy Company\nFree 56 Main Street\nDearborn, Michigan 48124\n\nDear Ms. Todd,\n\nI am writing to apply for the position of production line worker at Filvy Company. I currently work for an electronics manufacturer, but I previously worked at Collins Corporation, and I am excited at the prospect of working in that field again.\n\nI have been employed in manufacturing for 14 years and have broad knowledge of assembly equipment in many industries, including furniture and textiles. Supervisors consistently praise my attention to detail and ability to learn new processes quickly.\n\nAs requested, I have enclosed my résumé and a list of references. I have also included my current supervisor's report from a course I led a few months ago. I was asked to train new employees on our production-line assembly equipment, and my supervisor noted my effectiveness. In addition, I developed materials to teach about workplace cleanliness at my previous job and would be happy to discuss that experience with you.\n\nSincerely,\nAndrew D. Chen"
+                },
+                {
+                  "title": "Résumé — Andrew D. Chen",
+                  "text": "Address: 2781 Moore Street, Ann Arbor, Michigan 4805\n\nOverview: Production line worker with many years of experience in manufacturing plants of various sizes.\n\nExperience: Trainer of new employees on assembly equipment.\n\nWork Experience:\nCall Peck Incorporated, Ypsilanti, Michigan — Current position, 5 years. Assists in developing standards for safety and environmental compliance.\n\nCollins Corporation, Detroit, Michigan — 4 years. Worked on various components of a new line of energy-efficient automobiles. Received quality-assurance ratings in the top 10% of all production-line workers."
+                }
+              ]
+            },
+            {
+              "questionId": "6-7-182",
+              "passageGroupId": "set06-t1-p7-g12",
+              "materialId": "set06-t1-p7-g12",
+              "title": "What does Mr. Chen say he did at a previous job?",
+              "options": {
+                "A": "Designed a new automobile engine",
+                "B": "Developed workplace-cleanliness training materials",
+                "C": "Managed a company's payroll system",
+                "D": "Supervised a team of sales representatives"
+              },
+              "correctAnswer": "B",
+              "explanation": "In the letter, he says he developed materials to teach about workplace cleanliness at his previous job.",
+              "audio": {
+                "type": "local",
+                "path": ""
+              },
+              "note": "材料来源：139 特典 47 T1 Pt7 Q181-185 文書.mp3;140 特典 48 T1 Pt7 Q181-185 文書.mp3\n说明：依据用户提供的音频转写整理；专有名词及个别转写细节可能存在 ASR 误差，题目以材料可支持的信息为准。",
+              "status": "unanswered",
+              "createdAt": "2026-11-12T00:00:00Z",
+              "updatedAt": "2026-11-12T00:00:00Z"
+            },
+            {
+              "questionId": "6-7-183",
+              "passageGroupId": "set06-t1-p7-g12",
+              "materialId": "set06-t1-p7-g12",
+              "title": "What is indicated about Mr. Chen's current employer?",
+              "options": {
+                "A": "It manufactures electronic products.",
+                "B": "It operates a chain of furniture stores.",
+                "C": "It is located in Detroit.",
+                "D": "It recently opened a training center."
+              },
+              "correctAnswer": "A",
+              "explanation": "The letter says he currently works for an electronics manufacturer.",
+              "audio": {
+                "type": "local",
+                "path": ""
+              },
+              "note": "材料来源：139 特典 47 T1 Pt7 Q181-185 文書.mp3;140 特典 48 T1 Pt7 Q181-185 文書.mp3\n说明：依据用户提供的音频转写整理；专有名词及个别转写细节可能存在 ASR 误差，题目以材料可支持的信息为准。",
+              "status": "unanswered",
+              "createdAt": "2026-11-12T00:00:00Z",
+              "updatedAt": "2026-11-12T00:00:00Z"
+            },
+            {
+              "questionId": "6-7-184",
+              "passageGroupId": "set06-t1-p7-g12",
+              "materialId": "set06-t1-p7-g12",
+              "title": "How long did Mr. Chen work for Collins Corporation?",
+              "options": {
+                "A": "Three years",
+                "B": "Four years",
+                "C": "Five years",
+                "D": "Fourteen years"
+              },
+              "correctAnswer": "B",
+              "explanation": "The résumé lists four years at Collins Corporation.",
+              "audio": {
+                "type": "local",
+                "path": ""
+              },
+              "note": "材料来源：139 特典 47 T1 Pt7 Q181-185 文書.mp3;140 特典 48 T1 Pt7 Q181-185 文書.mp3\n说明：依据用户提供的音频转写整理；专有名词及个别转写细节可能存在 ASR 误差，题目以材料可支持的信息为准。",
+              "status": "unanswered",
+              "createdAt": "2026-11-12T00:00:00Z",
+              "updatedAt": "2026-11-12T00:00:00Z"
+            },
+            {
+              "questionId": "6-7-185",
+              "passageGroupId": "set06-t1-p7-g12",
+              "materialId": "set06-t1-p7-g12",
+              "title": "What is suggested about Mr. Chen?",
+              "options": {
+                "A": "He has experience training other employees.",
+                "B": "He has never worked in automobile manufacturing.",
+                "C": "He is seeking his first manufacturing job.",
+                "D": "He specializes in designing office furniture."
+              },
+              "correctAnswer": "A",
+              "explanation": "The letter and résumé both describe his experience training new employees on assembly equipment.",
+              "audio": {
+                "type": "local",
+                "path": ""
+              },
+              "note": "材料来源：139 特典 47 T1 Pt7 Q181-185 文書.mp3;140 特典 48 T1 Pt7 Q181-185 文書.mp3\n说明：依据用户提供的音频转写整理；专有名词及个别转写细节可能存在 ASR 误差，题目以材料可支持的信息为准。",
+              "status": "unanswered",
+              "createdAt": "2026-11-12T00:00:00Z",
+              "updatedAt": "2026-11-12T00:00:00Z"
+            },
+            {
+              "questionId": "6-7-186",
+              "passageGroupId": "set06-t1-p7-g13",
+              "materialId": "set06-t1-p7-g13",
+              "title": "What is the purpose of the first email?",
+              "options": {
+                "A": "To announce the opening of a new store",
+                "B": "To correct information in an advertisement",
+                "C": "To cancel a series of workshops",
+                "D": "To introduce a new brand of printer ink"
+              },
+              "correctAnswer": "B",
+              "explanation": "Office Flash explains that its flyer incorrectly stated that the ballpoint pens were available in all colors.",
+              "audio": {
+                "type": "local",
+                "path": ""
+              },
+              "note": "材料来源：141 特典 49 T1 Pt7 Q186-190 文書.mp3;142 特典 50 T1 Pt7 Q186-190 文書.mp3;143 特典 51 T1 Pt7 Q186-190 文書.mp3\n说明：依据用户提供的音频转写整理；专有名词及个别转写细节可能存在 ASR 误差，题目以材料可支持的信息为准。",
+              "status": "unanswered",
+              "createdAt": "2026-11-12T00:00:00Z",
+              "updatedAt": "2026-11-12T00:00:00Z",
+              "passages": [
+                {
+                  "title": "Advertisement — Office Flash: This Month's Top Deals",
+                  "text": "Multi-purpose white copy paper: Normally $34.95 per box; now $27.50.\n\nPro-Ford printer ink, color or black: Normally $24.95 per cartridge; now $19.95.\n\nBollograph ballpoint pens, all colors: Normally $8.95 per box of 24; now $6.50.\n\n20% off all antivirus software with an instant in-store rebate.\n\nFree indoor workshops on getting organized at home and in the office. Space is limited. Register at www.officeflash.net/classes.\n\nMay 4: 2–4 P.M.\nMay 11: 8:30–11:30 A.M.\nMay 18: 7–9 P.M.\nMay 25: 12:30–2:30 P.M."
+                },
+                {
+                  "title": "Email 1 — Correction",
+                  "text": "From: mdeals@officeflash.net\nTo: J. Choi (jchoi.j@bizmail.com)\nDate: April 21\nSubject: Correction\n\nDear Office Flash Customer,\n\nWe regret to inform you that our latest flyer contained an error regarding an advertised item. The ballpoint pens are not available in all colors—only in black. To show our commitment to our customers, we are offering an e-coupon good for one box of blue or red pens at 50% off. The coupon can be used when our new shipment of colored pens arrives on April 28. Simply respond to this email and request the coupon.\n\nPlease note that this offer does not apply to the copy paper or printer ink, because those items were in stock when the flyer was distributed.\n\nThank you for your understanding and loyalty.\nOffice Flash Team"
+                },
+                {
+                  "title": "Email 2 — Customer Reply",
+                  "text": "From: jchoi.j@bizmail.com\nTo: deals@officeflash.net\nDate: April 22\nSubject: Regarding Correction\n\nHi,\n\nI would definitely like to be sent the coupon you offered in your email. Also, I no longer have a copy of the flyer, but I remember reading that you were offering workshops on organizing a home or office space. I am very interested in attending one, but I am only available in the evenings. Do you offer any classes that would fit my schedule?\n\nThanks,\nJ. Choi"
+                }
+              ]
+            },
+            {
+              "questionId": "6-7-187",
+              "passageGroupId": "set06-t1-p7-g13",
+              "materialId": "set06-t1-p7-g13",
+              "title": "What is being offered to customers who want colored pens?",
+              "options": {
+                "A": "A free box of pens",
+                "B": "A 50-percent-off coupon",
+                "C": "A refund for a previous purchase",
+                "D": "Free delivery on their next order"
+              },
+              "correctAnswer": "B",
+              "explanation": "The correction email offers a coupon for one box of blue or red pens at 50% off.",
+              "audio": {
+                "type": "local",
+                "path": ""
+              },
+              "note": "材料来源：141 特典 49 T1 Pt7 Q186-190 文書.mp3;142 特典 50 T1 Pt7 Q186-190 文書.mp3;143 特典 51 T1 Pt7 Q186-190 文書.mp3\n说明：依据用户提供的音频转写整理；专有名词及个别转写细节可能存在 ASR 误差，题目以材料可支持的信息为准。",
+              "status": "unanswered",
+              "createdAt": "2026-11-12T00:00:00Z",
+              "updatedAt": "2026-11-12T00:00:00Z"
+            },
+            {
+              "questionId": "6-7-188",
+              "passageGroupId": "set06-t1-p7-g13",
+              "materialId": "set06-t1-p7-g13",
+              "title": "Which workshop time would suit J. Choi?",
+              "options": {
+                "A": "May 4, 2–4 P.M.",
+                "B": "May 11, 8:30–11:30 A.M.",
+                "C": "May 18, 7–9 P.M.",
+                "D": "May 25, 12:30–2:30 P.M."
+              },
+              "correctAnswer": "C",
+              "explanation": "J. Choi is available only in the evenings. The May 18 workshop is scheduled from 7 to 9 P.M.",
+              "audio": {
+                "type": "local",
+                "path": ""
+              },
+              "note": "材料来源：141 特典 49 T1 Pt7 Q186-190 文書.mp3;142 特典 50 T1 Pt7 Q186-190 文書.mp3;143 特典 51 T1 Pt7 Q186-190 文書.mp3\n说明：依据用户提供的音频转写整理；专有名词及个别转写细节可能存在 ASR 误差，题目以材料可支持的信息为准。",
+              "status": "unanswered",
+              "createdAt": "2026-11-12T00:00:00Z",
+              "updatedAt": "2026-11-12T00:00:00Z"
+            },
+            {
+              "questionId": "6-7-189",
+              "passageGroupId": "set06-t1-p7-g13",
+              "materialId": "set06-t1-p7-g13",
+              "title": "What does J. Choi ask Office Flash to do?",
+              "options": {
+                "A": "Reserve a place in every workshop",
+                "B": "Send a coupon for colored pens",
+                "C": "Deliver copy paper to an office",
+                "D": "Extend the advertised sale"
+              },
+              "correctAnswer": "B",
+              "explanation": "J. Choi says they would like to receive the coupon offered in the previous email.",
+              "audio": {
+                "type": "local",
+                "path": ""
+              },
+              "note": "材料来源：141 特典 49 T1 Pt7 Q186-190 文書.mp3;142 特典 50 T1 Pt7 Q186-190 文書.mp3;143 特典 51 T1 Pt7 Q186-190 文書.mp3\n说明：依据用户提供的音频转写整理；专有名词及个别转写细节可能存在 ASR 误差，题目以材料可支持的信息为准。",
+              "status": "unanswered",
+              "createdAt": "2026-11-12T00:00:00Z",
+              "updatedAt": "2026-11-12T00:00:00Z"
+            },
+            {
+              "questionId": "6-7-190",
+              "passageGroupId": "set06-t1-p7-g13",
+              "materialId": "set06-t1-p7-g13",
+              "title": "What can be inferred about the copy paper and printer ink?",
+              "options": {
+                "A": "They are excluded from the coupon offer.",
+                "B": "They will arrive at the store on April 28.",
+                "C": "They are available only in black.",
+                "D": "They are no longer being sold."
+              },
+              "correctAnswer": "A",
+              "explanation": "The correction email explicitly says the coupon does not apply to copy paper or printer ink because those items were in stock.",
+              "audio": {
+                "type": "local",
+                "path": ""
+              },
+              "note": "材料来源：141 特典 49 T1 Pt7 Q186-190 文書.mp3;142 特典 50 T1 Pt7 Q186-190 文書.mp3;143 特典 51 T1 Pt7 Q186-190 文書.mp3\n说明：依据用户提供的音频转写整理；专有名词及个别转写细节可能存在 ASR 误差，题目以材料可支持的信息为准。",
+              "status": "unanswered",
+              "createdAt": "2026-11-12T00:00:00Z",
+              "updatedAt": "2026-11-12T00:00:00Z"
+            },
+            {
+              "questionId": "6-7-191",
+              "passageGroupId": "set06-t1-p7-g14",
+              "materialId": "set06-t1-p7-g14",
+              "title": "What is the estimated total cost of the move before any additional stair fees?",
+              "options": {
+                "A": "$95",
+                "B": "$120",
+                "C": "$155",
+                "D": "$185"
+              },
+              "correctAnswer": "C",
+              "explanation": "The estimate lists a total of $155, including two crew members for two hours and a $35 transport fee.",
+              "audio": {
+                "type": "local",
+                "path": ""
+              },
+              "note": "材料来源：144 特典 52 T1 Pt7 Q191-195 文書.mp3;145 特典 53 T1 Pt7 Q191-195 文書.mp3;146 特典 54 T1 Pt7 Q191-195 文書.mp3\n说明：依据用户提供的音频转写整理；专有名词及个别转写细节可能存在 ASR 误差，题目以材料可支持的信息为准。",
+              "status": "unanswered",
+              "createdAt": "2026-11-12T00:00:00Z",
+              "updatedAt": "2026-11-12T00:00:00Z",
+              "passages": [
+                {
+                  "title": "Moving Cost Estimate — Marlow Movers",
+                  "text": "Locations: 168 Roland Street, Brooklyn; 1422 Longway Avenue, Jersey City\n\nPrepared by: Denise Monteiro\nDate: March 15\nPrepared for: Sri Lankan Imports LLC\n\nPickup: 151 West 24th Street, Suite 15, New York, NY 10011\nDelivery: 240 Garrison Boulevard, Floor 4, Suite 43, New York, NY 10013\n\nItems to be moved:\n20 standard-size file-storage boxes\n3 four-drawer vertical filing cabinets\n1 mid-sized desk\n1 wheeled office chair\n\nLabor: Two crew members\nCost per hour per crew member: $30\nDuration: 2 hours\nTruck rental and transport: $35 flat fee\nEstimated total: $155\n\nTransport includes fuel and tolls. Estimated labor fees do not include additional labor for pickups or deliveries in buildings without elevator service. Where applicable, $3 per flight of stairs is added to the base hourly rate of each crew member."
+                },
+                {
+                  "title": "Building Notice",
+                  "text": "Posted Tuesday, March 19\n\nNOTICE TO ALL RESIDENTIAL AND COMMERCIAL TENANTS\n\nThe elevator in this building will be out of service for routine maintenance on Wednesday, March 27.\n\nThank you,\nBuilding Management\n240 Garrison Boulevard"
+                },
+                {
+                  "title": "Email — Move Update",
+                  "text": "From: Dinesh Agumagay, Office Manager\nTo: Jayay Kumar\nDate: March 20\nSubject: Move\n\nDear Mr. Kumar,\n\nI wanted to provide you with an update about the transition to our new office suite on Garrison Boulevard. I learned today that the elevator there will be out of service on your scheduled move date. We cannot move you earlier because the Garrison location is not yet properly set up. But we also do not want to postpone the move because of your role in the stakeholder meeting on Tuesday, April 2. I understand that you want time to settle in before then and prepare your remarks.\n\nRather than reschedule your move, I have informed the movers about this complication, and they are willing to work with it. I wanted you to know so that you will not be caught by surprise on the day of the move. I am also alerting other staff members who will be affected.\n\nBest,\nDinesh Agumagay\nOffice Manager"
+                }
+              ]
+            },
+            {
+              "questionId": "6-7-192",
+              "passageGroupId": "set06-t1-p7-g14",
+              "materialId": "set06-t1-p7-g14",
+              "title": "What problem will affect the scheduled move?",
+              "options": {
+                "A": "The destination building's elevator will be unavailable.",
+                "B": "The moving company has no available trucks.",
+                "C": "The new office suite has not been rented.",
+                "D": "The pickup location will be closed."
+              },
+              "correctAnswer": "A",
+              "explanation": "The building notice says the elevator at 240 Garrison Boulevard will be out of service on March 27.",
+              "audio": {
+                "type": "local",
+                "path": ""
+              },
+              "note": "材料来源：144 特典 52 T1 Pt7 Q191-195 文書.mp3;145 特典 53 T1 Pt7 Q191-195 文書.mp3;146 特典 54 T1 Pt7 Q191-195 文書.mp3\n说明：依据用户提供的音频转写整理；专有名词及个别转写细节可能存在 ASR 误差，题目以材料可支持的信息为准。",
+              "status": "unanswered",
+              "createdAt": "2026-11-12T00:00:00Z",
+              "updatedAt": "2026-11-12T00:00:00Z"
+            },
+            {
+              "questionId": "6-7-193",
+              "passageGroupId": "set06-t1-p7-g14",
+              "materialId": "set06-t1-p7-g14",
+              "title": "Why does Mr. Agumagay say the move cannot be postponed?",
+              "options": {
+                "A": "The moving company has already been paid.",
+                "B": "The office must be ready for a stakeholder meeting.",
+                "C": "The new suite will be occupied by another company.",
+                "D": "The current office lease expires on March 27."
+              },
+              "correctAnswer": "B",
+              "explanation": "The email says the move should not be postponed because Mr. Kumar has a stakeholder meeting on April 2 and needs time to settle in and prepare.",
+              "audio": {
+                "type": "local",
+                "path": ""
+              },
+              "note": "材料来源：144 特典 52 T1 Pt7 Q191-195 文書.mp3;145 特典 53 T1 Pt7 Q191-195 文書.mp3;146 特典 54 T1 Pt7 Q191-195 文書.mp3\n说明：依据用户提供的音频转写整理；专有名词及个别转写细节可能存在 ASR 误差，题目以材料可支持的信息为准。",
+              "status": "unanswered",
+              "createdAt": "2026-11-12T00:00:00Z",
+              "updatedAt": "2026-11-12T00:00:00Z"
+            },
+            {
+              "questionId": "6-7-194",
+              "passageGroupId": "set06-t1-p7-g14",
+              "materialId": "set06-t1-p7-g14",
+              "title": "What additional charge may apply to the move?",
+              "options": {
+                "A": "A fee for using the loading dock",
+                "B": "A fee for each flight of stairs",
+                "C": "A fee for packing office equipment",
+                "D": "A fee for moving after business hours"
+              },
+              "correctAnswer": "B",
+              "explanation": "The estimate states that $3 per flight of stairs is added to the hourly rate of each crew member when there is no elevator service.",
+              "audio": {
+                "type": "local",
+                "path": ""
+              },
+              "note": "材料来源：144 特典 52 T1 Pt7 Q191-195 文書.mp3;145 特典 53 T1 Pt7 Q191-195 文書.mp3;146 特典 54 T1 Pt7 Q191-195 文書.mp3\n说明：依据用户提供的音频转写整理；专有名词及个别转写细节可能存在 ASR 误差，题目以材料可支持的信息为准。",
+              "status": "unanswered",
+              "createdAt": "2026-11-12T00:00:00Z",
+              "updatedAt": "2026-11-12T00:00:00Z"
+            },
+            {
+              "questionId": "6-7-195",
+              "passageGroupId": "set06-t1-p7-g14",
+              "materialId": "set06-t1-p7-g14",
+              "title": "What has Mr. Agumagay already done?",
+              "options": {
+                "A": "Asked the building to repair the elevator early",
+                "B": "Changed the moving date to April 2",
+                "C": "Informed the movers about the elevator problem",
+                "D": "Canceled the order for the moving truck"
+              },
+              "correctAnswer": "C",
+              "explanation": "He says he has informed the movers about the complication and they are willing to work with it.",
+              "audio": {
+                "type": "local",
+                "path": ""
+              },
+              "note": "材料来源：144 特典 52 T1 Pt7 Q191-195 文書.mp3;145 特典 53 T1 Pt7 Q191-195 文書.mp3;146 特典 54 T1 Pt7 Q191-195 文書.mp3\n说明：依据用户提供的音频转写整理；专有名词及个别转写细节可能存在 ASR 误差，题目以材料可支持的信息为准。",
+              "status": "unanswered",
+              "createdAt": "2026-11-12T00:00:00Z",
+              "updatedAt": "2026-11-12T00:00:00Z"
+            },
+            {
+              "questionId": "6-7-196",
+              "passageGroupId": "set06-t1-p7-g15",
+              "materialId": "set06-t1-p7-g15",
+              "title": "What is the main topic of the editor's note?",
+              "options": {
+                "A": "The development of self-driving trucks",
+                "B": "The cost of international passenger flights",
+                "C": "The design of a new freight railway",
+                "D": "The history of GPS navigation devices"
+              },
+              "correctAnswer": "A",
+              "explanation": "The note previews articles about technology and GPS advances related to self-driving trucks.",
+              "audio": {
+                "type": "local",
+                "path": ""
+              },
+              "note": "材料来源：147 特典 55 T1 Pt7 Q196-200 文書.mp3;148 特典 56 T1 Pt7 Q196-200 文書.mp3;149 特典 57 T1 Pt7 Q196-200 文書.mp3\n说明：依据用户提供的音频转写整理；专有名词及个别转写细节可能存在 ASR 误差，题目以材料可支持的信息为准。",
+              "status": "unanswered",
+              "createdAt": "2026-11-12T00:00:00Z",
+              "updatedAt": "2026-11-12T00:00:00Z",
+              "passages": [
+                {
+                  "title": "Editor's Note — Transport Quarterly",
+                  "text": "The news often talks about the use of driverless passenger cars in the near future, but self-driving trucks (SDTs) will likely be transporting deliveries on the country's roadways even sooner, perhaps within the next several years. In our autumn issue, we check in with industry experts for analysis of issues related to SDTs. Jane Tilley of Tellerton Technologies takes a look at the technology that is literally driving SDTs. Leo Radosh of the Tapton Engineering Group describes advances in global positioning system (GPS) technology and the role it will play in the acceptance of SDTs."
+                },
+                {
+                  "title": "Email — Guest Speaker Invitation",
+                  "text": "From: Dr. Lodon Gagnon, Bunbury Institute of Technology\nTo: K. Moodyama, M. Solutions\nDate: January 14\nSubject: Visiting BIT\n\nDear Ms. Moodyama,\n\nI teach an undergraduate course called Transportation and Distribution at the Bunbury Institute of Technology (BIT), which includes a unit on cost structures for freight carriers. I would like to invite you to visit my class as a guest speaker. I saw your article in Transport Quarterly and was going to assign it as required reading for my students. It then occurred to me that your company is only a ten-minute drive from our campus. My students would be very interested in your thoughts on self-driving fleets.\n\nThe class meets Tuesday and Thursday mornings from 9:00 to 11:15, and there are 74 students enrolled. I can fit your visit into the schedule at any point between now and our exams on March 12. Although I do not have a budget to compensate you for your time or travel, I would be delighted to treat you to lunch after class.\n\nI hope you will consider visiting us at BIT in the near future.\n\nYours truly,\nDr. Lodon Gagnon\nDepartment of Transportation Engineering"
+                },
+                {
+                  "title": "Expense Report — Bunbury Institute of Technology",
+                  "text": "Employee: Dr. Lodon Gagnon\nDepartment: Transportation Engineering\nDate: February 12\nAmount: £40\nDescription: Lunch at the Faculty Club hosting a guest lecturer for course 316, Transportation and Distribution.\n\nAttach original receipts in order to receive reimbursement. All expenses above £200 must be pre-approved by the dean of faculty.\n\nApproved for payment by Frank Nadal on February 19."
+                }
+              ]
+            },
+            {
+              "questionId": "6-7-197",
+              "passageGroupId": "set06-t1-p7-g15",
+              "materialId": "set06-t1-p7-g15",
+              "title": "Why does Dr. Gagnon contact Ms. Moodyama?",
+              "options": {
+                "A": "To ask her to review a student research paper",
+                "B": "To invite her to speak to his class",
+                "C": "To offer her a position at the institute",
+                "D": "To request funding for a transportation project"
+              },
+              "correctAnswer": "B",
+              "explanation": "Dr. Gagnon explicitly invites Ms. Moodyama to visit his class as a guest speaker.",
+              "audio": {
+                "type": "local",
+                "path": ""
+              },
+              "note": "材料来源：147 特典 55 T1 Pt7 Q196-200 文書.mp3;148 特典 56 T1 Pt7 Q196-200 文書.mp3;149 特典 57 T1 Pt7 Q196-200 文書.mp3\n说明：依据用户提供的音频转写整理；专有名词及个别转写细节可能存在 ASR 误差，题目以材料可支持的信息为准。",
+              "status": "unanswered",
+              "createdAt": "2026-11-12T00:00:00Z",
+              "updatedAt": "2026-11-12T00:00:00Z"
+            },
+            {
+              "questionId": "6-7-198",
+              "passageGroupId": "set06-t1-p7-g15",
+              "materialId": "set06-t1-p7-g15",
+              "title": "What is indicated about Ms. Moodyama's company?",
+              "options": {
+                "A": "It is located relatively close to the institute.",
+                "B": "It has recently opened a university campus.",
+                "C": "It manufactures GPS devices for students.",
+                "D": "It is responsible for organizing the course."
+              },
+              "correctAnswer": "A",
+              "explanation": "Dr. Gagnon says her company is only a ten-minute drive from the BIT campus.",
+              "audio": {
+                "type": "local",
+                "path": ""
+              },
+              "note": "材料来源：147 特典 55 T1 Pt7 Q196-200 文書.mp3;148 特典 56 T1 Pt7 Q196-200 文書.mp3;149 特典 57 T1 Pt7 Q196-200 文書.mp3\n说明：依据用户提供的音频转写整理；专有名词及个别转写细节可能存在 ASR 误差，题目以材料可支持的信息为准。",
+              "status": "unanswered",
+              "createdAt": "2026-11-12T00:00:00Z",
+              "updatedAt": "2026-11-12T00:00:00Z"
+            },
+            {
+              "questionId": "6-7-199",
+              "passageGroupId": "set06-t1-p7-g15",
+              "materialId": "set06-t1-p7-g15",
+              "title": "What does Dr. Gagnon offer Ms. Moodyama?",
+              "options": {
+                "A": "Payment for her travel expenses",
+                "B": "A permanent teaching position",
+                "C": "Lunch after her presentation",
+                "D": "A complimentary hotel stay"
+              },
+              "correctAnswer": "C",
+              "explanation": "Although he cannot pay her for her time or travel, he offers to treat her to lunch after class.",
+              "audio": {
+                "type": "local",
+                "path": ""
+              },
+              "note": "材料来源：147 特典 55 T1 Pt7 Q196-200 文書.mp3;148 特典 56 T1 Pt7 Q196-200 文書.mp3;149 特典 57 T1 Pt7 Q196-200 文書.mp3\n说明：依据用户提供的音频转写整理；专有名词及个别转写细节可能存在 ASR 误差，题目以材料可支持的信息为准。",
+              "status": "unanswered",
+              "createdAt": "2026-11-12T00:00:00Z",
+              "updatedAt": "2026-11-12T00:00:00Z"
+            },
+            {
+              "questionId": "6-7-200",
+              "passageGroupId": "set06-t1-p7-g15",
+              "materialId": "set06-t1-p7-g15",
+              "title": "What is the £40 expense for?",
+              "options": {
+                "A": "Purchasing GPS equipment",
+                "B": "Hosting a guest lecturer for lunch",
+                "C": "Traveling to a transportation conference",
+                "D": "Buying textbooks for the course"
+              },
+              "correctAnswer": "B",
+              "explanation": "The expense report describes the £40 charge as lunch at the Faculty Club for a guest lecturer.",
+              "audio": {
+                "type": "local",
+                "path": ""
+              },
+              "note": "材料来源：147 特典 55 T1 Pt7 Q196-200 文書.mp3;148 特典 56 T1 Pt7 Q196-200 文書.mp3;149 特典 57 T1 Pt7 Q196-200 文書.mp3\n说明：依据用户提供的音频转写整理；专有名词及个别转写细节可能存在 ASR 误差，题目以材料可支持的信息为准。",
+              "status": "unanswered",
+              "createdAt": "2026-11-12T00:00:00Z",
+              "updatedAt": "2026-11-12T00:00:00Z"
+            }
+          ]
         }
       ]
     },
