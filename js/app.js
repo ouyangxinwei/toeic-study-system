@@ -748,7 +748,7 @@ document.getElementById('addQuestionForm').addEventListener('submit', (e) => {
     if(!confirm(`确定批量删除第 ${this.currentSetId} 套的 ${ids.length} 道题目吗？\n\n系统会逐题停止播放、检查共享音频引用，并且只清理不再被任何题目使用的云端音频。网络中断时会建立待同步删除任务。`))return;
     const succeeded=[]; const failed=[];
     for(const id of ids){
-      try{const q=questionManager.getQuestion(id);audioPlayer.stopForQuestion(id,this.currentSetId);if(q?.audio?.audioId)this.stopCloudAudioPreview(q.audio.audioId);await questionManager.deleteQuestion(this.currentSetId,id);succeeded.push(id);}
+      try{const q=questionManager.getQuestion(id);audioPlayer.stopForQuestion(id,this.currentSetId);if(q?.audio?.audioId)this.stopCloudAudioPreview(q.audio.audioId);await questionManager.deleteQuestion(this.currentSetId,id,this.currentTestId);succeeded.push(id);}
       catch(e){failed.push({id,error:e.message||String(e)});}
     }
     this.selectedQuestionIds.clear();
