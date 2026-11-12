@@ -287,3 +287,32 @@ V20.1 的编辑题目窗口支持保留当前音频、上传替换、试听、�
 - 分组逻辑只改变前端展示，不改写原始 JSON 结构和题目 ID。
 
 当前样本为第6套 Test 1。该样本目前包含 Part 1–4 的100道听力题，Part 5–7 暂无题目，因此 Part 5–7 的布局接入逻辑需在录入对应真实题目后继续验收。
+
+
+## 题库 JSON 结构检查工具
+
+项目内置只读检查脚本，使用 Python 标准库，不需要安装第三方依赖。请在项目根目录执行：
+
+```bash
+# 检查全部 16 套题的 Test 1 / Test 2
+python scripts/validate_question_bank.py
+
+# 只检查第 6 套
+python scripts/validate_question_bank.py --set 6
+
+# 只检查第 6 套 Test 1
+python scripts/validate_question_bank.py --set 6 --test 1
+
+# 输出 JSON 报告
+python scripts/validate_question_bank.py --set 6 --json
+
+# 将警告也视为失败（适合后续 CI）
+python scripts/validate_question_bank.py --fail-on-warning
+
+# 运行检查工具自身的单元测试
+python -m unittest discover -s tests -v
+```
+
+检查项包括 JSON 与 Set/Test/Part 层级、题号格式和重复、Part/试卷实际题量、选项和正确答案、音频字段、共享材料引用及旧格式兼容提示。缺题、未录答案、未录选项和未配置音频会作为警告，不会误判为 JSON 结构损坏；无效引用、重复题号、错误字段类型等作为错误。
+
+**安全边界：** 该工具只读取 `data/sets/*.json` 并在终端输出报告，不会自动修复、覆盖或删除任何题目数据，也不会连接 Supabase。
