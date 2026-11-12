@@ -6,6 +6,7 @@
 class App {
   constructor() {
     this.currentSetId = null;
+    this.currentTestId = 1;
     this.isSearchMode = false;
     this.selectedQuestionIds = new Set();
     this.init();
@@ -27,6 +28,21 @@ class App {
 
       // 恢复用户上次选择的套题，并且只加载该套
       const savedSetId = await this.loadPreferredSetId();
+      const savedTestId = await this.loadPreferredTestId();
+      this.currentTestId = savedTestId;
+      const testPicker = document.getElementById('currentTestSelect');
+      if (testPicker) {
+        testPicker.value = String(savedTestId);
+        testPicker.addEventListener('change', async () => {
+          const testId = Number(testPicker.value);
+          if (![1, 2].includes(testId)) return;
+          this.currentTestId = testId;
+          localStorage.setItem('toeic_current_test_id', String(testId));
+          this.currentSetId = null; this.isSearchMode = false; testPicker.disabled = true;
+          try { await questionManager.renderSetsList(Number(document.getElementById('currentSetSelect').value), testId); await this.savePreferredSetId(Number(document.getElementById('currentSetSelect').value), testId); }
+          finally { testPicker.disabled = false; }
+        });
+      }
       const picker = document.getElementById('currentSetSelect');
       if (picker) {
         picker.value = String(savedSetId);
@@ -39,14 +55,14 @@ class App {
           this.isSearchMode = false;
           picker.disabled = true;
           try {
-            await questionManager.renderSetsList(setId);
-            await this.savePreferredSetId(setId);
+            await questionManager.renderSetsList(setId, this.currentTestId);
+            await this.savePreferredSetId(setId, this.currentTestId);
           } finally {
             picker.disabled = false;
           }
         });
       }
-      await questionManager.renderSetsList(savedSetId);
+      await questionManager.renderSetsList(savedSetId, savedTestId);
       // 登录后自动恢复离线删除和云端音频清理任务。
       try { const pending = await questionManager.processPendingDeletes(); const cleanup = await audioStorageManager.retryPendingCleanup(); if (pending.done || cleanup.length) console.info('V20 删除恢复任务', pending, cleanup); } catch (e) { console.warn('V20 删除恢复任务暂不可执行', e); }
       window.addEventListener('online', async () => { try { const pending = await questionManager.processPendingDeletes(); await audioStorageManager.retryPendingCleanup(); if (pending.done && this.currentSetId) await this.openSet(this.currentSetId); } catch (e) { console.warn('网络恢复后的删除任务重试失败', e); } });
@@ -56,6 +72,20 @@ class App {
       console.error('应用初始化失败:', error);
       Utils.showToast('应用初始化失败', 'error');
     }
+  }
+
+  async loadPreferredTestId() {
+    const local = Number(localStorage.getItem('toeic_current_test_id') || 1);
+    const fallback = [1, 2].includes(local) ? local : 1;
+    if (!window.toeicSupabaseReady || !window.toeicSupabase) return fallback;
+    try {
+      const { data: authData } = await window.toeicSupabase.auth.getUser();
+      const userId = authData?.user?.id; if (!userId) return fallback;
+      const { data, error } = await window.toeicSupabase.from('toeic_user_preferences').select('selected_test_id').eq('user_id', userId).maybeSingle();
+      if (error) throw error;
+      const value = Number(data?.selected_test_id); if ([1, 2].includes(value)) { localStorage.setItem('toeic_current_test_id', String(value)); return value; }
+    } catch (error) { console.warn('读取云端 Test 偏好失败，使用本地选择：', error.message || error); }
+    return fallback;
   }
 
   async loadPreferredSetId() {
@@ -80,7 +110,7 @@ class App {
     return fallback;
   }
 
-  async savePreferredSetId(setId) {
+  async savePreferredSetId(setId, testId = this.currentTestId) {
     if (!window.toeicSupabaseReady || !window.toeicSupabase) return;
     try {
       const { data: authData, error: authError } = await window.toeicSupabase.auth.getUser();
@@ -90,6 +120,7 @@ class App {
       const { error } = await window.toeicSupabase.from('toeic_user_preferences').upsert({
         user_id: userId,
         selected_set_id: setId,
+        selected_test_id: Number(testId),
         updated_at: new Date().toISOString()
       }, { onConflict: 'user_id' });
       if (error) throw error;
@@ -235,13 +266,14 @@ document.getElementById('addQuestionForm').addEventListener('submit', (e) => {
    * 打开套题
    * @param {number} setId - 套题ID
    */
-  async openSet(setId) {
+  async openSet(setId, testId = this.currentTestId) {
     this.currentSetId = setId;
+    this.currentTestId = Number(testId) || 1;
     this.isSearchMode = false;
 
     try {
       // 加载套题数据
-      const setData = await questionManager.loadSet(setId);
+      const setData = await questionManager.loadSet(setId, this.currentTestId);
       if (!setData) {
         Utils.showToast('加载套题失败', 'error');
         return;
@@ -281,7 +313,7 @@ document.getElementById('addQuestionForm').addEventListener('submit', (e) => {
     // 套题标题
     const title = document.createElement('h2');
     title.className = 'set-detail-title';
-    title.textContent = setData.setName;
+    title.textContent = `${setData.setName} · ${setData.testName || `Test ${setData.testId || 1}`}`;
     setsList.appendChild(title);
     const bulkBar=document.createElement('div'); bulkBar.className='bulk-delete-toolbar';
     const hint=document.createElement('span'); hint.textContent='勾选需要删除的题目：';
@@ -798,6 +830,7 @@ showAddQuestionModal() {
     // 如果当前已选择套题，自动填充
     if (this.currentSetId) {
         document.getElementById('formSetId').value = this.currentSetId;
+        document.getElementById('formTestId').value = String(this.currentTestId);
     }
 }
 
@@ -815,6 +848,7 @@ closeAddQuestionModal() {
  */
 async handleAddQuestion() {
     const setId = Number(document.getElementById('formSetId').value);
+    const testId = Number(document.getElementById('formTestId').value);
     const partId = Number(document.getElementById('formPartId').value);
     const questionId = document.getElementById('formQuestionId').value.trim();
     const title = document.getElementById('formTitle').value.trim();
@@ -854,14 +888,15 @@ async handleAddQuestion() {
     submitButton.disabled = true;
     submitButton.textContent = '正在保存…';
     try {
-      await questionManager.addQuestion(setId, partId, newQuestion);
+      await questionManager.addQuestion(setId, partId, newQuestion, testId);
       this.currentSetId = setId;
+      this.currentTestId = testId;
       this.isSearchMode = false;
       document.getElementById('searchInput').value = '';
       document.getElementById('partFilter').value = '';
       document.getElementById('statusFilter').value = '';
       this.closeAddQuestionModal();
-      await this.openSet(setId);
+      await this.openSet(setId, testId);
       Utils.showToast('题目录入成功，已写入 Supabase 云端数据库。', 'success', 5000);
     } catch (error) {
       console.error('录入题目失败:', error, error.cause || '');
@@ -870,7 +905,7 @@ async handleAddQuestion() {
         this.currentSetId = setId;
         this.isSearchMode = false;
         try {
-          const setData = await questionManager.loadSet(setId);
+          const setData = await questionManager.loadSet(setId, testId);
           if (setData) this.displaySetDetail(setData);
         } catch (refreshError) {
           console.error('刷新本地题目视图失败:', refreshError);
