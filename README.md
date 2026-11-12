@@ -309,6 +309,9 @@ python scripts/validate_question_bank.py --set 6 --json
 # 将警告也视为失败（适合后续 CI）
 python scripts/validate_question_bank.py --fail-on-warning
 
+# 限制终端输出的问题数量（默认最多显示 100 条）
+python scripts/validate_question_bank.py --max-issues 50
+
 # 运行检查工具自身的单元测试
 python -m unittest discover -s tests -v
 ```
