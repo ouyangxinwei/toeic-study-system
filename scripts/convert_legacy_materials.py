@@ -325,12 +325,18 @@ def build_preview(args: argparse.Namespace, source: Path, output: Path, preview:
     print("原始 JSON 未修改。人工检查两个输出文件后，才可执行 --apply。")
 
 
-def apply_replacement(source: Path, output: Path, preview: Path, backup_dir: Path, token: str) -> None:
+def apply_replacement(source: Path, output: Path, preview: Path, backup_dir: Path, token: str, set_id: int, test_id: int) -> None:
     if token != "REPLACE":
         raise MigrationError("替换操作必须显式传入 --confirm-replace REPLACE")
     if not source.is_file() or not output.is_file() or not preview.is_file():
         raise MigrationError("缺少源文件、转换文件或预览报告；请先运行默认预览模式")
     report = json.loads(preview.read_text(encoding="utf-8"))
+    if report.get("setId") != set_id or report.get("testId") != test_id:
+        raise MigrationError("预览报告的 Set / Test 与当前命令不一致")
+    if Path(report.get("source", "")).resolve() != source.resolve():
+        raise MigrationError("预览报告对应的源文件路径与当前命令不一致")
+    if Path(report.get("output", "")).resolve() != output.resolve():
+        raise MigrationError("预览报告对应的转换文件路径与当前命令不一致")
     source_hash = sha256_bytes(source.read_bytes())
     output_hash = sha256_bytes(output.read_bytes())
     if source_hash != report.get("sourceSha256"):
@@ -379,7 +385,7 @@ def main() -> int:
         if source.resolve() == output.resolve() or source.resolve() == preview.resolve():
             raise MigrationError("输出文件不能与源 JSON 相同")
         if args.apply:
-            apply_replacement(source, output, preview, backup_dir, args.confirm_replace)
+            apply_replacement(source, output, preview, backup_dir, args.confirm_replace, args.set_id, args.test_id)
         else:
             build_preview(args, source, output, preview)
         return 0
