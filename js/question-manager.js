@@ -61,6 +61,7 @@ class QuestionManager {
       loadedSet.testName = selectedTest.testName;
       loadedSet.totalQuestions = selectedTest.totalQuestions;
       loadedSet.parts = selectedTest.parts;
+      loadedSet.parts.forEach(part => part.questions.forEach(question => { question.setId = Number(setId); question.testId = Number(testId); question.partId = Number(part.partId); }));
     } catch (error) {
       console.error(`加载第${setId}套静态题库失败:`, error);
       let message = error.message || `无法加载第${setId}套题目`;
@@ -298,14 +299,15 @@ class QuestionManager {
   }
 
   /** 修改题目所有可录入字段，并同步到云端。支持修改套题、Part 和题号。 */
-  async editQuestion(oldSetId, oldQuestionId, newSetId, updated) {
+  async editQuestion(oldSetId, oldQuestionId, newSetId, updated, oldTestId = this.currentSet?.testId || 1) {
     const targetSetId = Number(newSetId);
-    const oldSet = await this.loadSet(Number(oldSetId));
+    const targetTestId = Number(updated.testId || oldTestId);
+    const oldSet = await this.loadSet(Number(oldSetId), Number(oldTestId));
     if (!oldSet) throw new Error(`无法加载第${oldSetId}套题目`);
     const oldPart = oldSet.parts.find(p => p.questions.some(q => String(q.questionId) === String(oldQuestionId)));
     const oldQuestion = oldPart && oldPart.questions.find(q => String(q.questionId) === String(oldQuestionId));
     if (!oldQuestion) throw new Error(`未找到原题 ${oldQuestionId}`);
-    const targetSet = targetSetId === Number(oldSetId) ? oldSet : await this.loadSet(targetSetId);
+    const targetSet = targetSetId === Number(oldSetId) && targetTestId === Number(oldTestId) ? oldSet : await this.loadSet(targetSetId, targetTestId);
     if (!targetSet) throw new Error(`无法加载第${targetSetId}套题目`);
     const targetPart = targetSet.parts.find(p => Number(p.partId) === Number(updated.partId));
     if (!targetPart) throw new Error(`第${targetSetId}套中不存在 Part ${updated.partId}`);
@@ -315,16 +317,16 @@ class QuestionManager {
     if (duplicate) throw new Error(`题号 ${updated.questionId} 已存在`);
 
     const now = new Date().toISOString();
-    const saved = { ...oldQuestion, ...updated, setId: targetSetId, questionId: String(updated.questionId), partId: Number(updated.partId), createdAt: oldQuestion.createdAt || now, updatedAt: now };
+    const saved = { ...oldQuestion, ...updated, setId: targetSetId, testId: targetTestId, questionId: String(updated.questionId), partId: Number(updated.partId), createdAt: oldQuestion.createdAt || now, updatedAt: now };
     if (window.toeicSupabaseReady && window.toeicSupabase) {
       const { data: sessionData, error: sessionError } = await window.toeicSupabase.auth.getSession();
       if (sessionError) throw sessionError;
       if (!sessionData.session) throw new Error('登录会话已失效，请重新登录后修改。');
-      const row = { set_id: targetSetId, part_id: saved.partId, question_id: saved.questionId, title: saved.title || '', options: saved.options || {}, correct_answer: saved.correctAnswer || '', audio: saved.audio || {type:'none'}, note: saved.note || '', status: saved.status || 'unanswered', created_at: saved.createdAt, updated_at: saved.updatedAt };
-      const changedKey = Number(oldSetId) !== targetSetId || String(oldQuestionId) !== String(saved.questionId);
+      const row = { set_id: targetSetId, test_id: targetTestId, part_id: saved.partId, question_id: saved.questionId, title: saved.title || '', options: saved.options || {}, correct_answer: saved.correctAnswer || '', audio: saved.audio || {type:'none'}, note: saved.note || '', status: saved.status || 'unanswered', created_at: saved.createdAt, updated_at: saved.updatedAt };
+      const changedKey = Number(oldSetId) !== targetSetId || Number(oldTestId) !== targetTestId || String(oldQuestionId) !== String(saved.questionId);
       if (oldQuestion.audio?.type === 'cloud' && oldQuestion.audio.audioId && oldQuestion.audio.audioId !== saved.audio?.audioId) window.audioPlayer?.stopForAudioId(oldQuestion.audio.audioId);
       const {data:editResult,error:editError}=await window.toeicSupabase.rpc('toeic_save_question_edit',{
-        p_old_set_id:Number(oldSetId),p_old_question_id:String(oldQuestionId),p_new_question:row
+        p_old_set_id:Number(oldSetId),p_old_test_id:Number(oldTestId),p_new_question:row
       });
       if(editError) throw new Error(`云端保存题目/音频关联失败：${editError.message}。请先执行 supabase_v20_1_audio_edit.sql。`);
       if(editResult?.cleanup_job_id){
@@ -334,12 +336,12 @@ class QuestionManager {
     }
 
     // 云端修改成功后再写本地删除墓碑，避免失败时把原题从本机隐藏。
-    try { const tombstones=JSON.parse(localStorage.getItem('toeic_v20_deleted_questions')||'{}'); if(Number(oldSetId)!==targetSetId || String(oldQuestionId)!==String(saved.questionId)) tombstones[`${Number(oldSetId)}:${String(oldQuestionId)}`]=now; delete tombstones[`${targetSetId}:${String(saved.questionId)}`]; localStorage.setItem('toeic_v20_deleted_questions',JSON.stringify(tombstones)); } catch (_) {}
+    try { const tombstones=JSON.parse(localStorage.getItem('toeic_v20_deleted_questions')||'{}'); if(Number(oldSetId)!==targetSetId || Number(oldTestId)!==targetTestId || String(oldQuestionId)!==String(saved.questionId)) tombstones[`${Number(oldSetId)}:${Number(oldTestId)}:${String(oldQuestionId)}`]=now; delete tombstones[`${targetSetId}:${targetTestId}:${String(saved.questionId)}`]; localStorage.setItem('toeic_v20_deleted_questions',JSON.stringify(tombstones)); } catch (_) {}
     // 更新浏览器缓存；若跨套题移动，也清理原套题缓存。
-    const oldKey = `set${Number(oldSetId)}_data`;
+    const oldKey = `set${Number(oldSetId)}_test${Number(oldTestId)}_data`;
     let oldCache = {}; try { oldCache = JSON.parse(localStorage.getItem(oldKey) || '{}'); } catch (_) {}
     delete oldCache[String(oldQuestionId)];
-    if (Number(oldSetId) !== targetSetId || String(oldQuestionId) !== String(saved.questionId)) localStorage.setItem(oldKey, JSON.stringify(oldCache));
+    if (Number(oldSetId) !== targetSetId || Number(oldTestId) !== targetTestId || String(oldQuestionId) !== String(saved.questionId)) localStorage.setItem(oldKey, JSON.stringify(oldCache));
     const oldPartIndex = oldSet.parts.findIndex(p => p.questions.some(q => String(q.questionId) === String(oldQuestionId)));
     if (oldPartIndex >= 0) {
       oldSet.parts[oldPartIndex].questions = oldSet.parts[oldPartIndex].questions.filter(q => String(q.questionId) !== String(oldQuestionId));
@@ -351,7 +353,7 @@ class QuestionManager {
     targetPart.questions.sort((a,b) => String(a.questionId).localeCompare(String(b.questionId), undefined, {numeric:true}));
     targetSet.parts.forEach(p => p.questionCount = p.questions.length);
     this.currentSet = targetSet;
-    const targetKey = `set${targetSetId}_data`;
+    const targetKey = `set${targetSetId}_test${targetTestId}_data`;
     let targetCache = {}; try { targetCache = JSON.parse(localStorage.getItem(targetKey) || '{}'); } catch (_) {}
     targetCache[saved.questionId] = saved;
     localStorage.setItem(targetKey, JSON.stringify(targetCache));
@@ -361,7 +363,7 @@ class QuestionManager {
 
   /** V20 安全删除：服务端事务删除题目/解绑音频并建立可重试的 Storage 清理任务。 */
   async deleteQuestion(setId, questionId, testId = this.currentSet?.testId || 1) {
-    if (!this.currentSet || Number(this.currentSet.setId) !== Number(setId)) {
+    if (!this.currentSet || Number(this.currentSet.setId) !== Number(setId) || Number(this.currentSet.testId || 1) !== Number(testId)) {
       const loaded = await this.loadSet(setId, testId);
       if (!loaded) throw new Error(`无法加载第${setId}套题目`);
     }
@@ -581,6 +583,7 @@ class QuestionManager {
     });
     const picker = document.getElementById('currentSetSelect');
     if (picker && picker.value !== String(selectedSetId)) picker.value = String(selectedSetId);
+    const testPicker = document.getElementById('currentTestSelect'); if (testPicker) testPicker.value = String(testId);
   }
 
   /**
@@ -602,7 +605,7 @@ class QuestionManager {
         </div>
       </div>
       <div class="set-actions">
-        <button onclick="app.openSet(${setData.setId})">进入</button>
+        <button onclick="app.openSet(${setData.setId}, ${setData.testId || 1})">进入</button>
       </div>
     `;
     return card;
