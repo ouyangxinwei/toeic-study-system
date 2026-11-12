@@ -194,7 +194,8 @@ def _normalise_passages(passages: Any, material_id: str) -> list[dict[str, Any]]
             raise MigrationError(f"Part 7 材料组 {material_id} 的 passage 不是对象")
         item = copy.deepcopy(passage)
         if "content" not in item and isinstance(item.get("text"), str):
-            item["content"] = item.pop("text")
+            item["content"] = item["text"]
+        item.pop("text", None)
         if not isinstance(item.get("content"), str):
             raise MigrationError(f"Part 7 材料组 {material_id} 的 passage 缺少文本")
         item.setdefault("passageId", f"doc{index}")
@@ -375,11 +376,11 @@ def main() -> int:
     preview = (args.preview or (args.root / "migration_output" / f"set{args.set_id:02d}_test{args.test_id}.preview.json")).resolve()
     backup_dir = args.root / "migration_output" / "backups"
     try:
+        if source.resolve() == output.resolve() or source.resolve() == preview.resolve():
+            raise MigrationError("输出文件不能与源 JSON 相同")
         if args.apply:
             apply_replacement(source, output, preview, backup_dir, args.confirm_replace)
         else:
-            if source.resolve() == output.resolve() or source.resolve() == preview.resolve():
-                raise MigrationError("输出文件不能与源 JSON 相同")
             build_preview(args, source, output, preview)
         return 0
     except (OSError, UnicodeError, json.JSONDecodeError, MigrationError) as exc:
