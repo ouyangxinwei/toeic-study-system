@@ -434,7 +434,7 @@ document.getElementById('addQuestionForm').addEventListener('submit', (e) => {
         : question.audio?.type === 'cloud'
         ? (refCount > 1 ? `云端音频：${preview.audio.file_name}；目前被 ${refCount} 道题目共用，删除本题只解除本题关联，其他题目继续使用。` : `云端音频：${preview?.audio?.file_name || question.audio.fileName || '已关联音频'}；若无其他引用，将同时删除服务器文件。`)
         : (question.audio?.type === 'local' ? '本题为本地旧音频；删除题目时清除本地关联，不会删除原始音频文件以外的其他文件。' : '本题没有云端音频文件。');
-      const confirmed = window.confirm(`确定删除第 ${this.currentSetId} 套题目 ${question.questionId} 吗？\n\n${audioText}\n\n正在播放的音频已停止。删除后将清理本题缓存和关联，操作无法撤销。`);
+      const confirmed = window.confirm(`确定删除第 ${this.currentSetId} 套 Test ${this.currentTestId} 的题目 ${question.questionId} 吗？\n\n${audioText}\n\n正在播放的音频已停止。删除后将清理本题缓存和关联，操作无法撤销。`);
       if (!confirmed) return;
       try {
         const result = await questionManager.deleteQuestion(this.currentSetId, question.questionId, this.currentTestId);
@@ -745,7 +745,7 @@ document.getElementById('addQuestionForm').addEventListener('submit', (e) => {
   async bulkDeleteSelectedQuestions() {
     const ids=Array.from(this.selectedQuestionIds);
     if(!this.currentSetId || !ids.length){Utils.showToast('请先勾选需要删除的题目','info');return;}
-    if(!confirm(`确定批量删除第 ${this.currentSetId} 套的 ${ids.length} 道题目吗？\n\n系统会逐题停止播放、检查共享音频引用，并且只清理不再被任何题目使用的云端音频。网络中断时会建立待同步删除任务。`))return;
+    if(!confirm(`确定批量删除第 ${this.currentSetId} 套 Test ${this.currentTestId} 的 ${ids.length} 道题目吗？\n\n系统会逐题停止播放、检查共享音频引用，并且只清理不再被任何题目使用的云端音频。网络中断时会建立待同步删除任务。`))return;
     const succeeded=[]; const failed=[];
     for(const id of ids){
       try{const q=questionManager.getQuestion(id);audioPlayer.stopForQuestion(id,this.currentSetId);if(q?.audio?.audioId)this.stopCloudAudioPreview(q.audio.audioId);await questionManager.deleteQuestion(this.currentSetId,id,this.currentTestId);succeeded.push(id);}
@@ -805,7 +805,7 @@ document.getElementById('addQuestionForm').addEventListener('submit', (e) => {
       await syncManager.syncToRemote(this.currentSetId, this.currentTestId);
     } else {
       // 同步所有套题
-      const confirmSync = confirm('确定要将本机当前题库同步到 Supabase 云端吗？将同步 1–16 套题，不会删除云端多出的题目。');
+      const confirmSync = confirm('确定要将本机当前题库同步到 Supabase 云端吗？将同步当前选择的套题和 Test，不会删除云端多出的题目。');
       if (confirmSync) {
         await syncManager.syncToRemote();
       }
