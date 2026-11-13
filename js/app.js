@@ -154,6 +154,10 @@ document.getElementById('addQuestionForm').addEventListener('submit', (e) => {
     e.preventDefault();
     this.handleAddQuestion();
 });
+document.getElementById('formPartId').addEventListener('change', () => {
+    document.getElementById('formOptionD').required = Number(document.getElementById('formPartId').value) !== 2;
+});
+document.getElementById('formOptionD').required = Number(document.getElementById('formPartId').value) !== 2;
     // 搜索按钮
     document.getElementById('searchBtn').addEventListener('click', () => {
       this.handleSearch();
@@ -1038,8 +1042,8 @@ async handleAddQuestion() {
     const audioUrl = document.getElementById('formAudioUrl').value.trim();
     const note = document.getElementById('formNote').value.trim();
 
-    if (!questionId || !title || !optionA || !optionB || !optionC || !optionD) {
-      Utils.showToast('请填写题号、题干和全部四个选项', 'error');
+    if (!questionId || !title || !optionA || !optionB || !optionC || (partId !== 2 && !optionD)) {
+      Utils.showToast(partId === 2 ? '请填写题号、题干和 A-C 三个选项' : '请填写题号、题干和全部四个选项', 'error');
       return;
     }
 
@@ -1047,7 +1051,7 @@ async handleAddQuestion() {
     const newQuestion = {
       questionId,
       title,
-      options: { A: optionA, B: optionB, C: optionC, D: optionD },
+      options: { A: optionA, B: optionB, C: optionC, ...(partId === 2 ? {} : { D: optionD }) },
       correctAnswer,
       audio: audioUrl ? {
         type: /^https?:\/\//i.test(audioUrl) ? 'remote' : 'local',
