@@ -239,7 +239,7 @@ class ExportManager {
    */
   async exportAllSets(format) {
     try {
-      for (let i = 1; i <= 16; i++) for (let t = 1; t <= 2; t++) {
+      for (const i of QuestionScope.setIds) for (const t of QuestionScope.testIds) {
         if (format === 'csv') {
           await this.exportCSV(i, t);
         } else if (format === 'json') {
