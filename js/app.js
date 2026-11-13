@@ -154,10 +154,15 @@ document.getElementById('addQuestionForm').addEventListener('submit', (e) => {
     e.preventDefault();
     this.handleAddQuestion();
 });
-document.getElementById('formPartId').addEventListener('change', () => {
-    document.getElementById('formOptionD').required = Number(document.getElementById('formPartId').value) !== 2;
-});
-document.getElementById('formOptionD').required = Number(document.getElementById('formPartId').value) !== 2;
+const updateAddFormOptions = () => {
+    const isPart2 = Number(document.getElementById('formPartId').value) === 2;
+    document.getElementById('formOptionD').required = !isPart2;
+    const answerD = document.querySelector('#formCorrectAnswer option[value="D"]');
+    if (answerD) answerD.disabled = isPart2;
+    if (isPart2 && document.getElementById('formCorrectAnswer').value === 'D') document.getElementById('formCorrectAnswer').value = 'A';
+};
+document.getElementById('formPartId').addEventListener('change', updateAddFormOptions);
+updateAddFormOptions();
     // 搜索按钮
     document.getElementById('searchBtn').addEventListener('click', () => {
       this.handleSearch();
