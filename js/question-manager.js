@@ -111,7 +111,8 @@ class QuestionManager {
           if (error) throw error;
           rows = data || [];
         }
-        // 只有云端确实有该套题的数据时才覆盖静态题库；云端尚未导入时保留随包附带的题目。
+        // 先按统一范围过滤；只有范围内确实有云端题目时才覆盖静态题库。
+        rows = (rows || []).filter(row => QuestionScope.isPartId(row.part_id));
         if (rows.length > 0) {
         const previousQuestionsById = new Map(loadedSet.parts.flatMap(p => p.questions || []).map(q => [String(q.questionId), q]));
         loadedSet.parts.forEach(part => { part.questions = []; });
@@ -178,7 +179,7 @@ class QuestionManager {
 
     // 将 localStorage 中新增、但静态 JSON 尚不存在的题目合并回题库。
     Object.values(userData).forEach(userQuestion => {
-      if (!userQuestion || !userQuestion.questionId || !QuestionScope.isPartId(userQuestion.partId)) return;
+      if (!userQuestion || !userQuestion.questionId || !QuestionScope.isPartId(userQuestion.partId) || Number(userQuestion.setId) !== Number(targetSet.setId) || Number(userQuestion.testId || 1) !== Number(targetSet.testId || 1)) return;
       const alreadyExists = targetSet.parts.some(part =>
         part.questions.some(question => question.questionId === userQuestion.questionId)
       );
