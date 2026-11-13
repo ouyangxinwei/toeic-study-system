@@ -48,7 +48,7 @@ class App {
         picker.value = String(savedSetId);
         picker.addEventListener('change', async () => {
           const setId = Number(picker.value);
-          if (!Number.isInteger(setId) || setId < 1 || setId > 16) return;
+          if (!QuestionScope.isSetId(setId)) { Utils.showToast('当前仅开放 Set 6–16。', 'warning'); picker.value = String(this.currentSetId || 6); return; }
           // 先立即记录本地选择，再保存云端偏好；即使云端暂时不可用，本机也会记住。
           localStorage.setItem('toeic_current_set_id', String(setId));
           this.currentSetId = null;
@@ -89,8 +89,8 @@ class App {
   }
 
   async loadPreferredSetId() {
-    const localValue = Number(localStorage.getItem('toeic_current_set_id') || 1);
-    const fallback = Number.isInteger(localValue) && localValue >= 1 && localValue <= 16 ? localValue : 1;
+    const localValue = Number(localStorage.getItem('toeic_current_set_id') || 6);
+    const fallback = QuestionScope.isSetId(localValue) ? localValue : 6;
     if (!window.toeicSupabaseReady || !window.toeicSupabase) return fallback;
     try {
       const { data: authData } = await window.toeicSupabase.auth.getUser();
@@ -100,7 +100,7 @@ class App {
         .select('selected_set_id').eq('user_id', userId).maybeSingle();
       if (error) throw error;
       const setId = Number(data && data.selected_set_id);
-      if (Number.isInteger(setId) && setId >= 1 && setId <= 16) {
+      if (QuestionScope.isSetId(setId)) {
         localStorage.setItem('toeic_current_set_id', String(setId));
         return setId;
       }
@@ -154,6 +154,15 @@ document.getElementById('addQuestionForm').addEventListener('submit', (e) => {
     e.preventDefault();
     this.handleAddQuestion();
 });
+const updateAddFormOptions = () => {
+    const isPart2 = Number(document.getElementById('formPartId').value) === 2;
+    document.getElementById('formOptionD').required = !isPart2;
+    const answerD = document.querySelector('#formCorrectAnswer option[value="D"]');
+    if (answerD) answerD.disabled = isPart2;
+    if (isPart2 && document.getElementById('formCorrectAnswer').value === 'D') document.getElementById('formCorrectAnswer').value = 'A';
+};
+document.getElementById('formPartId').addEventListener('change', updateAddFormOptions);
+updateAddFormOptions();
     // 搜索按钮
     document.getElementById('searchBtn').addEventListener('click', () => {
       this.handleSearch();
@@ -304,7 +313,7 @@ document.getElementById('addQuestionForm').addEventListener('submit', (e) => {
     backBtn.className = 'back-btn';
     backBtn.textContent = '← 返回套题列表';
     backBtn.addEventListener('click', () => {
-      questionManager.renderSetsList(Number(localStorage.getItem('toeic_current_set_id') || 1), this.currentTestId);
+      questionManager.renderSetsList(Number(localStorage.getItem('toeic_current_set_id') || 6), this.currentTestId);
       this.currentSetId = null;
       this.isSearchMode = false;
     });
@@ -633,15 +642,15 @@ document.getElementById('addQuestionForm').addEventListener('submit', (e) => {
           <span class="close" id="closeEditQuestionModal">&times;</span>
           <h2>修改题目</h2>
           <form id="editQuestionForm">
-            <div class="form-group"><label>套题编号 *</label><select id="editSetId" required>${Array.from({length:16},(_,i)=>`<option value="${i+1}">第${i+1}套</option>`).join('')}</select></div>
+            <div class="form-group"><label>套题编号 *</label><select id="editSetId" required>${QuestionScope.setIds.map(id=>`<option value="${id}">第${id}套</option>`).join('')}</select></div>
             <div class="form-group"><label>Test *</label><select id="editTestId"><option value="1">Test 1</option><option value="2">Test 2</option></select></div>
-            <div class="form-group"><label>Part *</label><select id="editPartId" required>${Array.from({length:7},(_,i)=>`<option value="${i+1}">Part ${i+1}</option>`).join('')}</select></div>
+            <div class="form-group"><label>Part *</label><select id="editPartId" required>${QuestionScope.partIds.map(id=>`<option value="${id}">Part ${id}</option>`).join('')}</select></div>
             <div class="form-group"><label>题号 *</label><input id="editQuestionId" required></div>
             <div class="form-group"><label>题目标题/题干 *</label><textarea id="editTitle" rows="4" required></textarea></div>
             <div class="form-group"><label>选项 A *</label><input id="editOptionA" required></div>
             <div class="form-group"><label>选项 B *</label><input id="editOptionB" required></div>
             <div class="form-group"><label>选项 C *</label><input id="editOptionC" required></div>
-            <div class="form-group"><label>选项 D *</label><input id="editOptionD" required></div>
+            <div class="form-group"><label>选项 D *</label><input id="editOptionD"></div>
             <div class="form-group"><label>正确答案 *</label><select id="editCorrectAnswer" required><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option></select></div>
             <section class="edit-audio-panel">
               <h3>题目音频</h3>
@@ -659,6 +668,15 @@ document.getElementById('addQuestionForm').addEventListener('submit', (e) => {
           </form>
         </div>`;
       document.body.appendChild(modal);
+      const updateEditFormOptions = () => {
+        const isPart2 = Number(modal.querySelector('#editPartId').value) === 2;
+        modal.querySelector('#editOptionD').required = !isPart2;
+        const answerD = modal.querySelector('#editCorrectAnswer option[value="D"]');
+        if (answerD) answerD.disabled = isPart2;
+        if (isPart2 && modal.querySelector('#editCorrectAnswer').value === 'D') modal.querySelector('#editCorrectAnswer').value = 'A';
+      };
+      modal.querySelector('#editPartId').addEventListener('change', updateEditFormOptions);
+      updateEditFormOptions();
       const close = () => { this.stopEditAudioPreview(); modal.style.display = 'none'; };
       modal.querySelector('#closeEditQuestionModal').addEventListener('click', close);
       modal.querySelector('#cancelEditQuestion').addEventListener('click', close);
@@ -727,7 +745,7 @@ document.getElementById('addQuestionForm').addEventListener('submit', (e) => {
             questionId,
             testId,
             title: document.getElementById('editTitle').value.trim(),
-            options: { A: document.getElementById('editOptionA').value.trim(), B: document.getElementById('editOptionB').value.trim(), C: document.getElementById('editOptionC').value.trim(), D: document.getElementById('editOptionD').value.trim() },
+            options: { A: document.getElementById('editOptionA').value.trim(), B: document.getElementById('editOptionB').value.trim(), C: document.getElementById('editOptionC').value.trim(), ...(partId === 2 ? {} : { D: document.getElementById('editOptionD').value.trim() }) },
             correctAnswer: document.getElementById('editCorrectAnswer').value,
             audio: nextAudio,
             note: document.getElementById('editNote').value.trim(),
@@ -762,7 +780,8 @@ document.getElementById('addQuestionForm').addEventListener('submit', (e) => {
     modal._originalAudio={...audio};
     document.getElementById('editSetId').value = modal.dataset.oldSetId;
     document.getElementById('editTestId').value = modal.dataset.oldTestId;
-    document.getElementById('editPartId').value = String(question.partId || 1);
+    document.getElementById('editPartId').value = String(question.partId || 2);
+    document.getElementById('editPartId').dispatchEvent(new Event('change'));
     document.getElementById('editQuestionId').value = question.questionId || '';
     document.getElementById('editTitle').value = question.title || '';
     document.getElementById('editOptionA').value = question.options?.A || '';
@@ -937,12 +956,13 @@ document.getElementById('addQuestionForm').addEventListener('submit', (e) => {
       const sb = window.toeicSupabase;
       const { data, error } = await sb.from('toeic_audio_files').select('id,file_name,file_size,mime_type,storage_path,status,set_id,test_id,part_id,created_at').order('created_at', { ascending: false });
       if (error) throw error;
+      const scopedAudioRows = (data || []).filter(audio => QuestionScope.isSetId(audio.set_id) && QuestionScope.isTestId(audio.test_id || 1) && QuestionScope.isPartId(audio.part_id));
       let modal = document.getElementById('cloudAudioManagerModal');
       if (!modal) { modal = document.createElement('div'); modal.id = 'cloudAudioManagerModal'; modal.className = 'modal'; document.body.appendChild(modal); }
-      modal.innerHTML = `<div class="modal-content modal-large"><span class="close" id="closeCloudAudioManager">&times;</span><h2>云端音频管理</h2><p>所有登录账号共享。主动删除音频会影响所有引用它的题目。</p><div class="audio-manager-filters"><input id="audioManagerSearch" placeholder="搜索音频文件名"><select id="audioManagerSet"><option value="">全部套题</option>${Array.from({length:16},(_,i)=>`<option value="${i+1}">第${i+1}套</option>`).join('')}</select><select id="audioManagerPart"><option value="">全部 Part</option>${Array.from({length:7},(_,i)=>`<option value="${i+1}">Part ${i+1}</option>`).join('')}</select></div><div id="cloudAudioList"></div><button type="button" id="retryAudioCleanupBtn" class="secondary-btn">重试待清理音频</button></div>`;
+      modal.innerHTML = `<div class="modal-content modal-large"><span class="close" id="closeCloudAudioManager">&times;</span><h2>云端音频管理</h2><p>所有登录账号共享。主动删除音频会影响所有引用它的题目。</p><div class="audio-manager-filters"><input id="audioManagerSearch" placeholder="搜索音频文件名"><select id="audioManagerSet"><option value="">全部套题</option>${QuestionScope.setIds.map(id=>`<option value="${id}">第${id}套</option>`).join('')}</select><select id="audioManagerPart"><option value="">全部 Part</option>${QuestionScope.partIds.map(id=>`<option value="${id}">Part ${id}</option>`).join('')}</select></div><div id="cloudAudioList"></div><button type="button" id="retryAudioCleanupBtn" class="secondary-btn">重试待清理音频</button></div>`;
       const list = modal.querySelector('#cloudAudioList');
-      if (!data?.length) list.textContent = '目前没有云端音频记录。';
-      for (const audio of (data || [])) {
+      if (!scopedAudioRows.length) list.textContent = '当前范围内没有云端音频记录。';
+      for (const audio of scopedAudioRows) {
         const row = document.createElement('div'); row.className = 'audio-manager-row'; row.dataset.name = (audio.file_name || '').toLowerCase(); row.dataset.set = String(audio.set_id || ''); row.dataset.part = String(audio.part_id || '');
         const info = document.createElement('div'); info.textContent = `${audio.file_name} · ${(Number(audio.file_size || 0) / 1024 / 1024).toFixed(2)} MB · 第${audio.set_id}套 Test ${audio.test_id || 1} Part ${audio.part_id} · ${audio.status || 'active'} · ${audio.storage_path}`;
         const actions = document.createElement('div'); actions.className = 'audio-manager-actions';
@@ -994,7 +1014,7 @@ document.getElementById('addQuestionForm').addEventListener('submit', (e) => {
         });
       }
     } else {
-      questionManager.renderSetsList(Number(localStorage.getItem('toeic_current_set_id') || 1), this.currentTestId);
+      questionManager.renderSetsList(Number(localStorage.getItem('toeic_current_set_id') || 6), this.currentTestId);
     }
   }
   
@@ -1019,6 +1039,7 @@ closeAddQuestionModal() {
     const modal = document.getElementById('addQuestionModal');
     modal.style.display = 'none';
     document.getElementById('addQuestionForm').reset();
+    document.getElementById('formPartId').dispatchEvent(new Event('change'));
 }
 
 /**
@@ -1038,8 +1059,8 @@ async handleAddQuestion() {
     const audioUrl = document.getElementById('formAudioUrl').value.trim();
     const note = document.getElementById('formNote').value.trim();
 
-    if (!questionId || !title || !optionA || !optionB || !optionC || !optionD) {
-      Utils.showToast('请填写题号、题干和全部四个选项', 'error');
+    if (!questionId || !title || !optionA || !optionB || !optionC || (partId !== 2 && !optionD)) {
+      Utils.showToast(partId === 2 ? '请填写题号、题干和 A-C 三个选项' : '请填写题号、题干和全部四个选项', 'error');
       return;
     }
 
@@ -1047,7 +1068,7 @@ async handleAddQuestion() {
     const newQuestion = {
       questionId,
       title,
-      options: { A: optionA, B: optionB, C: optionC, D: optionD },
+      options: { A: optionA, B: optionB, C: optionC, ...(partId === 2 ? {} : { D: optionD }) },
       correctAnswer,
       audio: audioUrl ? {
         type: /^https?:\/\//i.test(audioUrl) ? 'remote' : 'local',

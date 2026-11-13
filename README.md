@@ -287,3 +287,81 @@ V20.1 的编辑题目窗口支持保留当前音频、上传替换、试听、�
 - 分组逻辑只改变前端展示，不改写原始 JSON 结构和题目 ID。
 
 当前样本为第6套 Test 1。该样本目前包含 Part 1–4 的100道听力题，Part 5–7 暂无题目，因此 Part 5–7 的布局接入逻辑需在录入对应真实题目后继续验收。
+
+
+## 题库 JSON 结构检查工具
+
+项目内置只读检查脚本，使用 Python 标准库，不需要安装第三方依赖。请在项目根目录执行：
+
+```bash
+# 检查全部 16 套题的 Test 1 / Test 2
+python scripts/validate_question_bank.py
+
+# 只检查第 6 套
+python scripts/validate_question_bank.py --set 6
+
+# 只检查第 6 套 Test 1
+python scripts/validate_question_bank.py --set 6 --test 1
+
+# 输出 JSON 报告
+python scripts/validate_question_bank.py --set 6 --json
+
+# 将警告也视为失败（适合后续 CI）
+python scripts/validate_question_bank.py --fail-on-warning
+
+# 限制终端输出的问题数量（默认最多显示 100 条）
+python scripts/validate_question_bank.py --max-issues 50
+
+# 运行检查工具自身的单元测试
+python -m unittest discover -s tests -v
+```
+
+检查项包括 JSON 与 Set/Test/Part 层级、题号格式和重复、Part/试卷实际题量、选项和正确答案、音频字段、共享材料引用及旧格式兼容提示。缺题、未录答案、未录选项和未配置音频会作为警告，不会误判为 JSON 结构损坏；无效引用、重复题号、错误字段类型等作为错误。
+
+**安全边界：** 该工具只读取 `data/sets/*.json` 并在终端输出报告，不会自动修复、覆盖或删除任何题目数据，也不会连接 Supabase。
+
+
+## 旧版共享材料转换工具（第二阶段）
+
+项目提供 \`scripts/convert_legacy_materials.py\`，用于将旧题库中的共享转录和阅读材料转换为 Test 级 \`materials[]\`。工具仅使用 Python 标准库。
+
+### 第一步：生成预览与新 JSON（默认安全模式）
+
+在项目根目录执行：
+
+\`\`\`bash
+python scripts/convert_legacy_materials.py --set 6 --test 1
+\`\`\`
+
+默认生成：
+
+- \`migration_output/set06_test1.preview.json\`：转换摘要、材料分组、关联题目 ID、文本长度、源文件 SHA-256 和转换文件 SHA-256。
+- \`migration_output/set06_test1.converted.json\`：转换后的完整 JSON，可单独打开检查。
+
+转换范围：
+
+- Part 3 / 4：按共享转录内容分组，转录放入 Material.transcript；人工确认说明、音频来源等非材料笔记留在原题 note。
+- Part 6：按旧 materialId / passageGroupId 分组，将重复文章正文合并为一个 Material.passages[]。
+- Part 7：从组内题目提取 passages[]，将旧 text 字段转换为规范 content 字段，保留标题和其他 passage 元数据。
+
+### 第二步：人工检查
+
+重点确认预览报告中的材料数量、每个材料关联的题目 ID、Part 6 正文及 Part 7 单篇/双篇/多篇文章。并打开 converted.json 抽查题目 ID、题干、选项、答案、解析、音频、笔记和材料关联。
+
+### 第三步：确认后替换（可选）
+
+只有确认预览和新 JSON 无误后，才执行：
+
+\`\`\`bash
+python scripts/convert_legacy_materials.py --set 6 --test 1 --apply --confirm-replace REPLACE
+\`\`\`
+
+替换前会再次核对源文件与预览时的 SHA-256，并核对转换文件 SHA-256；任何文件在人工检查后发生变化都会拒绝替换。替换前自动备份原 JSON 到 \`migration_output/backups/\`。
+
+**安全边界：** 默认模式只生成预览和新 JSON，不修改源题库。必须显式使用 \`--apply --confirm-replace REPLACE\` 才能替换；不会自动执行、不修改其他 Set/Test、不连接 Supabase，也不改变认证、RLS 或运行时页面代码。
+
+### 运行转换器单元测试
+
+\`\`\`bash
+python -m unittest discover -s tests -p "test_convert_legacy_materials.py" -v
+\`\`\`

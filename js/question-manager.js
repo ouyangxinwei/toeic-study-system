@@ -43,6 +43,8 @@ class QuestionManager {
    * @returns {Promise<Object>} 套题数据
    */
   async loadSet(setId, testId = 1) {
+    setId = QuestionScope.assertSet(setId);
+    testId = QuestionScope.assertTest(testId);
     const loadRequestId = ++this.loadRequestId;
     // 静态题库加载与浏览器本地数据解析分开处理：本地缓存损坏不应导致整套题无法打开。
     let loadedSet;
@@ -60,7 +62,7 @@ class QuestionManager {
       loadedSet.testId = Number(testId);
       loadedSet.testName = selectedTest.testName;
       loadedSet.totalQuestions = selectedTest.totalQuestions;
-      loadedSet.parts = selectedTest.parts;
+      loadedSet.parts = QuestionScope.filterParts(selectedTest.parts);
       loadedSet.parts.forEach(part => part.questions.forEach(question => { question.setId = Number(setId); question.testId = Number(testId); question.partId = Number(part.partId); }));
     } catch (error) {
       console.error(`加载第${setId}套静态题库失败:`, error);
@@ -75,13 +77,8 @@ class QuestionManager {
     }
 
     // 单独读取本地数据。若旧版本留下了损坏的缓存，仍可正常加载静态题库。
-    const storageKey = `set${setId}_test${testId}_data`;
-    let rawUserData = localStorage.getItem(storageKey);
-    if (!rawUserData && Number(testId) === 1) {
-      const legacyKey = `set${setId}_data`;
-      rawUserData = localStorage.getItem(legacyKey);
-      if (rawUserData) { localStorage.setItem(storageKey, rawUserData); localStorage.removeItem(legacyKey); }
-    }
+    const storageKey = QuestionScope.cacheKey(setId, testId);
+    const rawUserData = localStorage.getItem(storageKey);
     if (rawUserData) {
       try {
         const parsed = JSON.parse(rawUserData);
@@ -114,7 +111,8 @@ class QuestionManager {
           if (error) throw error;
           rows = data || [];
         }
-        // 只有云端确实有该套题的数据时才覆盖静态题库；云端尚未导入时保留随包附带的题目。
+        // 先按统一范围过滤；只有范围内确实有云端题目时才覆盖静态题库。
+        rows = (rows || []).filter(row => QuestionScope.isPartId(row.part_id));
         if (rows.length > 0) {
         const previousQuestionsById = new Map(loadedSet.parts.flatMap(p => p.questions || []).map(q => [String(q.questionId), q]));
         loadedSet.parts.forEach(part => { part.questions = []; });
@@ -166,10 +164,11 @@ class QuestionManager {
   mergeUserData(userData, targetSet = this.currentSet) {
     if (!targetSet || !userData) return;
 
+    targetSet.parts = QuestionScope.filterParts(targetSet.parts);
     targetSet.parts.forEach(part => {
       part.questions.forEach(question => {
         const userQuestion = userData[question.questionId];
-        if (userQuestion) {
+        if (userQuestion && Number(userQuestion.setId) === Number(targetSet.setId) && Number(userQuestion.testId || 1) === Number(targetSet.testId || 1) && Number(userQuestion.partId) === Number(part.partId)) {
           question.note = userQuestion.note ?? question.note ?? '';
           question.status = userQuestion.status || question.status || 'unanswered';
           question.audio = userQuestion.audio || question.audio || { type: 'none' };
@@ -180,7 +179,7 @@ class QuestionManager {
 
     // 将 localStorage 中新增、但静态 JSON 尚不存在的题目合并回题库。
     Object.values(userData).forEach(userQuestion => {
-      if (!userQuestion || !userQuestion.questionId) return;
+      if (!userQuestion || !userQuestion.questionId || !QuestionScope.isPartId(userQuestion.partId) || Number(userQuestion.setId) !== Number(targetSet.setId) || Number(userQuestion.testId || 1) !== Number(targetSet.testId || 1)) return;
       const alreadyExists = targetSet.parts.some(part =>
         part.questions.some(question => question.questionId === userQuestion.questionId)
       );
@@ -203,14 +202,12 @@ class QuestionManager {
   saveUserData() {
     if (!this.currentSet) return;
 
-    const storageKey = `set${this.currentSet.setId}_test${this.currentSet.testId || 1}_data`;
-    // 保留新增题目等已有用户数据，避免保存状态/笔记时被覆盖。
-    let userData = {};
-    try {
-      userData = JSON.parse(localStorage.getItem(storageKey) || '{}');
-    } catch (error) {
-      console.warn('用户题库数据无法解析，将重新建立数据:', error);
-    }
+    const setId = QuestionScope.assertSet(this.currentSet.setId);
+    const testId = QuestionScope.assertTest(this.currentSet.testId || 1);
+    this.currentSet.parts = QuestionScope.filterParts(this.currentSet.parts);
+    const storageKey = QuestionScope.cacheKey(setId, testId);
+    // 新命名空间只读取新范围缓存；旧版缓存不会自动合并。
+    const userData = QuestionScope.readCache(setId, testId);
     this.currentSet.parts.forEach(part => {
       part.questions.forEach(question => {
         userData[question.questionId] = {
@@ -225,7 +222,7 @@ class QuestionManager {
       });
     });
 
-    localStorage.setItem(storageKey, JSON.stringify(userData));
+    QuestionScope.writeCache(setId, testId, userData);
     if (window.toeicSupabaseReady && window.toeicSupabase) {
       const rows = this.currentSet.parts.flatMap(part => part.questions.map(question => ({
         set_id: Number(this.currentSet.setId), test_id: Number(this.currentSet.testId || 1), part_id: Number(part.partId), question_id: question.questionId,
@@ -245,6 +242,7 @@ class QuestionManager {
    * @param {Object} question
    */
   async addQuestion(setId, partId, question, testId = this.currentSet?.testId || 1) {
+    setId = QuestionScope.assertSet(setId); partId = QuestionScope.assertPart(partId); testId = QuestionScope.assertTest(testId);
     const setData = await this.loadSet(setId, testId);
     if (!setData) throw new Error(`无法加载第${setId}套 Test ${testId} 题目`);
     const part = setData.parts.find(item => item.partId === partId);
@@ -305,8 +303,10 @@ class QuestionManager {
 
   /** 修改题目所有可录入字段，并同步到云端。支持修改套题、Part 和题号。 */
   async editQuestion(oldSetId, oldQuestionId, newSetId, updated, oldTestId = this.currentSet?.testId || 1) {
-    const targetSetId = Number(newSetId);
-    const targetTestId = Number(updated.testId ?? oldTestId);
+    const targetSetId = QuestionScope.assertSet(newSetId);
+    const targetTestId = QuestionScope.assertTest(updated.testId ?? oldTestId);
+    QuestionScope.assertSet(oldSetId);
+    QuestionScope.assertPart(updated.partId);
     const oldSet = await this.loadSet(Number(oldSetId), Number(oldTestId));
     if (!oldSet) throw new Error(`无法加载第${oldSetId}套题目`);
     const oldPart = oldSet.parts.find(p => p.questions.some(q => String(q.questionId) === String(oldQuestionId)));
@@ -343,10 +343,10 @@ class QuestionManager {
     // 云端修改成功后再写本地删除墓碑，避免失败时把原题从本机隐藏。
     try { const tombstones=JSON.parse(localStorage.getItem('toeic_v20_deleted_questions')||'{}'); if(Number(oldSetId)!==targetSetId || Number(oldTestId)!==targetTestId || String(oldQuestionId)!==String(saved.questionId)) tombstones[`${Number(oldSetId)}:${Number(oldTestId)}:${String(oldQuestionId)}`]=now; delete tombstones[`${targetSetId}:${targetTestId}:${String(saved.questionId)}`]; if(targetTestId===1) delete tombstones[`${targetSetId}:${String(saved.questionId)}`]; localStorage.setItem('toeic_v20_deleted_questions',JSON.stringify(tombstones)); } catch (_) {}
     // 更新浏览器缓存；若跨套题移动，也清理原套题缓存。
-    const oldKey = `set${Number(oldSetId)}_test${Number(oldTestId)}_data`;
-    let oldCache = {}; try { oldCache = JSON.parse(localStorage.getItem(oldKey) || '{}'); } catch (_) {}
+    const oldKey = QuestionScope.cacheKey(oldSetId, oldTestId);
+    const oldCache = QuestionScope.readCache(oldSetId, oldTestId);
     delete oldCache[String(oldQuestionId)];
-    if (Number(oldSetId) !== targetSetId || Number(oldTestId) !== targetTestId || String(oldQuestionId) !== String(saved.questionId)) localStorage.setItem(oldKey, JSON.stringify(oldCache));
+    if (Number(oldSetId) !== targetSetId || Number(oldTestId) !== targetTestId || String(oldQuestionId) !== String(saved.questionId)) QuestionScope.writeCache(oldSetId, oldTestId, oldCache);
     const oldPartIndex = oldSet.parts.findIndex(p => p.questions.some(q => String(q.questionId) === String(oldQuestionId)));
     if (oldPartIndex >= 0) {
       oldSet.parts[oldPartIndex].questions = oldSet.parts[oldPartIndex].questions.filter(q => String(q.questionId) !== String(oldQuestionId));
@@ -358,16 +358,16 @@ class QuestionManager {
     targetPart.questions.sort((a,b) => String(a.questionId).localeCompare(String(b.questionId), undefined, {numeric:true}));
     targetSet.parts.forEach(p => p.questionCount = p.questions.length);
     this.currentSet = targetSet;
-    const targetKey = `set${targetSetId}_test${targetTestId}_data`;
-    let targetCache = {}; try { targetCache = JSON.parse(localStorage.getItem(targetKey) || '{}'); } catch (_) {}
+    const targetCache = QuestionScope.readCache(targetSetId, targetTestId);
     targetCache[saved.questionId] = saved;
-    localStorage.setItem(targetKey, JSON.stringify(targetCache));
+    QuestionScope.writeCache(targetSetId, targetTestId, targetCache);
     this.cloudQuestionsBySet = null; this.cloudCachePromise = null;
     return saved;
   }
 
   /** V20 安全删除：服务端事务删除题目/解绑音频并建立可重试的 Storage 清理任务。 */
   async deleteQuestion(setId, questionId, testId = this.currentSet?.testId || 1) {
+    setId = QuestionScope.assertSet(setId); testId = QuestionScope.assertTest(testId);
     if (!this.currentSet || Number(this.currentSet.setId) !== Number(setId) || Number(this.currentSet.testId || 1) !== Number(testId)) {
       const loaded = await this.loadSet(setId, testId);
       if (!loaded) throw new Error(`无法加载第${setId}套题目`);
@@ -406,10 +406,10 @@ class QuestionManager {
     // 云端事务已确认题目删除或已进入离线队列后，才清除本地题目与相关缓存。
     part.questions = part.questions.filter(q => String(q.questionId) !== String(questionId));
     part.questionCount = part.questions.length;
-    const key = `set${setId}_test${this.currentSet.testId || 1}_data`;
-    let cache = {}; try { cache = JSON.parse(localStorage.getItem(key) || '{}'); } catch (_) {}
+    const key = QuestionScope.cacheKey(setId, this.currentSet.testId || 1);
+    const cache = QuestionScope.readCache(setId, this.currentSet.testId || 1);
     delete cache[questionId];
-    localStorage.setItem(key, JSON.stringify(cache));
+    QuestionScope.writeCache(setId, this.currentSet.testId || 1, cache);
     if (this.cloudQuestionsBySet) {
       const rows = this.cloudQuestionsBySet.get(`${Number(setId)}:${Number(testId)}`) || [];
       this.cloudQuestionsBySet.set(`${Number(setId)}:${Number(testId)}`, rows.filter(row => String(row.question_id) !== String(questionId)));
@@ -532,7 +532,7 @@ class QuestionManager {
 
     this.cloudCachePromise = (async () => {
       const grouped = new Map();
-      for (let s=1;s<=16;s++) for (let t=1;t<=2;t++) grouped.set(`${s}:${t}`, []);
+      QuestionScope.setIds.forEach(s => QuestionScope.testIds.forEach(t => grouped.set(`${s}:${t}`, [])));
       const pageSize = 1000;
       let from = 0;
       while (true) {
@@ -543,7 +543,7 @@ class QuestionManager {
         const page = data || [];
         page.forEach(row => {
           const key = `${Number(row.set_id)}:${Number(row.test_id || 1)}`;
-          if (grouped.has(key)) grouped.get(key).push(row);
+          if (grouped.has(key) && QuestionScope.isPartId(row.part_id)) grouped.get(key).push(row);
         });
         if (page.length < pageSize) break;
         from += pageSize;
@@ -559,7 +559,7 @@ class QuestionManager {
     return this.cloudCachePromise;
   }
 
-  async renderSetsList(setId = Number(localStorage.getItem('toeic_current_set_id') || 1), testId = Number(localStorage.getItem('toeic_current_test_id') || 1)) {
+  async renderSetsList(setId = Number(localStorage.getItem('toeic_current_set_id') || 6), testId = Number(localStorage.getItem('toeic_current_test_id') || 1)) {
     const requestId = ++this.renderRequestId;
     const setsList = document.getElementById('setsList');
     if (!setsList) {
@@ -569,8 +569,8 @@ class QuestionManager {
     // 每次切换都先清空旧 DOM，确保页面绝不会残留其他套题卡片。
     setsList.replaceChildren();
     const selectedSetId = Number(setId);
-    if (!Number.isInteger(selectedSetId) || selectedSetId < 1 || selectedSetId > 16) {
-      Utils.showToast('套题编号无效，请选择第 1 至第 16 套。', 'error');
+    if (!QuestionScope.isSetId(selectedSetId) || !QuestionScope.isTestId(testId)) {
+      Utils.showToast('当前题库仅开放 Set 6–16、Test 1–2。', 'error');
       return;
     }
     // 只加载所选套题，避免启动时读取全部 15 套及全量云端缓存。

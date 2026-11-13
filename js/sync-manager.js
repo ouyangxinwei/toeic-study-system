@@ -44,10 +44,10 @@ class SyncManager {
   async uploadLocalToCloud() {
     if (!window.toeicSupabaseReady || !window.toeicSupabase) { Utils.showToast('Supabase 尚未连接，请先检查登录和网络配置。', 'error', 7000); return; }
     if (this.isSyncing) { Utils.showToast('正在执行数据传输，请稍候。', 'info'); return; }
-    if (!confirm('将把本机 16 套题库的 Test 1 和 Test 2（静态题库及浏览器本地修改）上传到云端。云端同套题、同 Test、同题号会被更新，不会删除云端多出的题目。确定继续吗？')) return;
+    if (!confirm('将仅把本机 Set 6–16、Part 2–5 的 Test 1 / Test 2 上传到云端。不会删除云端范围外数据。确定继续吗？')) return;
     this.isSyncing = true; let total = 0;
     try {
-      for (let setId = 1; setId <= 16; setId++) for (let testId = 1; testId <= 2; testId++) {
+      for (const setId of QuestionScope.setIds) for (const testId of QuestionScope.testIds) {
         const rows = await this.buildLocalRowsForSet(setId, testId);
         if (rows.length) {
           const { error } = await window.toeicSupabase.from('toeic_questions').upsert(rows, { onConflict: 'set_id,test_id,question_id' });
@@ -67,7 +67,7 @@ class SyncManager {
   async downloadCloudToLocal() {
     if (!window.toeicSupabaseReady || !window.toeicSupabase) { Utils.showToast('Supabase 尚未连接，请先检查登录和网络配置。', 'error', 7000); return; }
     if (this.isSyncing) { Utils.showToast('正在执行数据传输，请稍候。', 'info'); return; }
-    if (!confirm('将从云端下载全部 Test 1 / Test 2 题目，并覆盖浏览器本机对应缓存；不会修改云端。建议确认后继续。')) return;
+    if (!confirm('将仅下载云端 Set 6–16、Part 2–5 的 Test 1 / Test 2，并写入全新的隔离缓存；旧版缓存不会被覆盖。不会修改云端。确定继续吗？')) return;
     this.isSyncing = true;
     try {
       let allRows = []; const pageSize = 1000;
@@ -75,33 +75,35 @@ class SyncManager {
         const { data, error } = await window.toeicSupabase.from('toeic_questions').select('*').order('set_id').order('test_id').order('question_id').range(from, from + pageSize - 1);
         if (error) throw error; allRows = allRows.concat(data || []); if (!data || data.length < pageSize) break;
       }
+      const activeRows = allRows.filter(row => QuestionScope.isSetId(row.set_id) && QuestionScope.isTestId(row.test_id || 1) && QuestionScope.isPartId(row.part_id));
       const grouped = new Map();
-      for (let s=1;s<=16;s++) for(let t=1;t<=2;t++) grouped.set(`${s}:${t}`,{});
-      allRows.forEach(row => {
-        const key = `${Number(row.set_id)}:${Number(row.test_id || 1)}`; if (!grouped.has(key)) return;
+      QuestionScope.setIds.forEach(s => QuestionScope.testIds.forEach(t => grouped.set(`${s}:${t}`,{})));
+      activeRows.forEach(row => {
+        const key = `${Number(row.set_id)}:${Number(row.test_id || 1)}`; if (!grouped.has(key) || !QuestionScope.isPartId(row.part_id)) return;
         grouped.get(key)[String(row.question_id)] = { questionId:String(row.question_id), setId:Number(row.set_id), testId:Number(row.test_id || 1), partId:Number(row.part_id), title:row.title||'', options:row.options||{}, correctAnswer:row.correct_answer||'', audio:row.audio||{type:'none'}, note:row.note||'', status:row.status||'unanswered', createdAt:row.created_at, updatedAt:row.updated_at };
       });
-      grouped.forEach((questions,key)=>{const [s,t]=key.split(':');localStorage.setItem(`set${s}_test${t}_data`,JSON.stringify(questions));});
-      const backup = { exportedAt:new Date().toISOString(), source:'Supabase toeic_questions', totalQuestions:allRows.length, tests:Object.fromEntries(Array.from(grouped.entries()).map(([key,questions])=>[key,Object.values(questions)])) };
+      grouped.forEach((questions,key)=>{const [s,t]=key.split(':');QuestionScope.writeCache(Number(s),Number(t),questions);});
+      const backup = { exportedAt:new Date().toISOString(), source:'Supabase toeic_questions', totalQuestions:activeRows.length, tests:Object.fromEntries(Array.from(grouped.entries()).map(([key,questions])=>[key,Object.values(questions)])) };
       const blob = new Blob([JSON.stringify(backup,null,2)],{type:'application/json;charset=utf-8'}); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download=`toeic-cloud-backup-${new Date().toISOString().slice(0,10)}.json`; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
-      Utils.showToast(`下载完成：云端 ${allRows.length} 道题已按 Test 1 / Test 2 保存到本机，并下载 JSON 备份。`,'success',8000);
+      Utils.showToast(`下载完成：云端范围内 ${activeRows.length} 道题已按 Test 1 / Test 2 保存到本机，并下载 JSON 备份。`,'success',8000);
       if(window.app?.refreshCurrentView) window.app.refreshCurrentView();
     } catch(error) { console.error('下载云端数据失败:',error); Utils.showToast(`下载失败：${error.message||error.code||'请检查网络、表权限和 RLS 策略'}`,'error',9000); }
     finally { this.isSyncing=false; }
   }
 
     async buildLocalRowsForSet(setId, testId = 1) {
+    setId = QuestionScope.assertSet(setId); testId = QuestionScope.assertTest(testId);
     const response = await fetch(`data/sets/set${String(setId).padStart(2,'0')}.json`);
     if (!response.ok) throw new Error(`读取本机第 ${setId} 套失败（HTTP ${response.status}）`);
     const localSet = await response.json();
     const test = (localSet.tests || []).find(x => Number(x.testId) === Number(testId));
     if (!test) throw new Error(`第 ${setId} 套缺少 Test ${testId}`);
-    const localStore = JSON.parse(localStorage.getItem(`set${setId}_test${testId}_data`) || (Number(testId)===1?localStorage.getItem(`set${setId}_data`):'{}') || '{}');
+    const localStore = QuestionScope.readCache(setId, testId);
     const byId = new Map();
-    (test.parts || []).forEach(part => (part.questions || []).forEach(q => byId.set(String(q.questionId),{...q,partId:Number(part.partId)})));
-    Object.values(localStore || {}).forEach(q => { if(q?.questionId){const prev=byId.get(String(q.questionId))||{};byId.set(String(q.questionId),{...prev,...q,partId:Number(q.partId||prev.partId||1)});} });
+    (test.parts || []).filter(part => QuestionScope.isPartId(part.partId)).forEach(part => (part.questions || []).forEach(q => byId.set(String(q.questionId),{...q,partId:Number(part.partId)})));
+    Object.values(localStore || {}).forEach(q => { if(q?.questionId && QuestionScope.isPartId(q.partId)){const prev=byId.get(String(q.questionId))||{};byId.set(String(q.questionId),{...prev,...q,partId:Number(q.partId)});} });
     let tombstones={}; try{tombstones=JSON.parse(localStorage.getItem('toeic_v20_deleted_questions')||'{}');}catch(_){}
-    return Array.from(byId.values()).filter(q=>!tombstones[`${Number(setId)}:${Number(testId)}:${String(q.questionId)}`] && !(Number(testId)===1 && tombstones[`${Number(setId)}:${String(q.questionId)}`])).map(q=>{
+    return Array.from(byId.values()).filter(q=>QuestionScope.isPartId(q.partId) && !tombstones[`${Number(setId)}:${Number(testId)}:${String(q.questionId)}`] && !(Number(testId)===1 && tombstones[`${Number(setId)}:${String(q.questionId)}`])).map(q=>{
       const audio=q.audio||{type:'none'}; const safeAudio=audio.type==='local'&&String(audio.path||'').startsWith('data:audio/')?{type:'local',fileName:audio.fileName||'',pendingUpload:true}:audio;
       return {set_id:Number(setId),test_id:Number(testId),part_id:Number(q.partId||Number(String(q.questionId).split('-')[1])||1),question_id:String(q.questionId),title:q.title||'',options:q.options||{},correct_answer:q.correctAnswer||q.correct_answer||'',audio:safeAudio,note:q.note||'',status:q.status||'unanswered',created_at:q.createdAt||q.created_at||new Date().toISOString(),updated_at:q.updatedAt||q.updated_at||new Date().toISOString()};
     });
@@ -128,10 +130,10 @@ class SyncManager {
       if (sessionError) throw sessionError;
       if (!sessionData?.session) throw new Error('请先登录，再同步题库数据。');
 
-      const setIds = setId ? [Number(setId)] : Array.from({ length: 16 }, (_, i) => i + 1);
+      const setIds = setId ? [QuestionScope.assertSet(setId)] : [...QuestionScope.setIds];
       let syncedCount = 0;
       for (const currentSetId of setIds) {
-        if (!Number.isInteger(currentSetId) || currentSetId < 1 || currentSetId > 16) continue;
+        if (!QuestionScope.isSetId(currentSetId)) continue;
         // 从静态题库 + 当前浏览器本地增改记录构建上传内容，确保本地编辑不会被云端读取结果覆盖。
         const testIds = testId ? [Number(testId)] : [1,2];
         for (const currentTestId of testIds) {

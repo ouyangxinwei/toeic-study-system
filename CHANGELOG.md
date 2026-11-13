@@ -1,5 +1,38 @@
 # 更新日志
 
+## V22.3.0 - 旧版共享材料安全转换工具
+- 新增 `scripts/convert_legacy_materials.py`，支持第 6 套 Test 1 的 Part 3 / 4 / 6 / 7 旧材料转换。
+- Part 3 / 4 按共享转录分组，转录提升至 Test.materials[]；人工确认、音频来源等非材料笔记保留在原题 note。
+- Part 6 按 materialId / passageGroupId 聚合重复正文；Part 7 将组首题 passages[] 提升为 document_set Material，并将 passage.text 规范为 passage.content。
+- 默认生成 preview.json 与 converted.json，源题库保持不变；人工检查后才可显式执行 `--apply --confirm-replace REPLACE`。
+- 替换前核对源文件及转换文件 SHA-256，并自动备份原始 JSON；检测到文件变化或材料冲突时拒绝替换。
+- 新增转换器单元测试，覆盖材料提取、笔记与题目字段保留、冲突保护、显式确认和源文件校验。
+- 未执行实际题库迁移；未修改任何 `data/sets/*.json`，未连接 Supabase，未修改认证/RLS/运行时页面。
+
+## V22.2.0 - 题库 JSON 结构检查工具
+- 新增 `scripts/validate_question_bank.py`，可检查全部 16 套题或指定 Set / Test。
+- 检查 JSON 解析、Set/Test/Part 层级、缺失 Part、题号格式与重复、实际题量、选项、正确答案、音频字段和共享材料引用。
+- 对未录入的题目、选项、答案、音频和未完成试卷使用警告；对重复题号、无效答案、错误字段类型和材料悬空引用使用错误。
+- 支持普通终端报告、JSON 报告、`--fail-on-warning` 和自定义项目根目录。
+- 终端默认最多显示 100 条问题，可通过 `--max-issues` 调整，避免未完成题库产生过长输出。
+- 新增 `tests/test_validate_question_bank.py`，覆盖基本结构、重复题号、材料悬空引用和空答案警告。
+- README 增加运行命令和安全边界说明。
+- 工具只读 JSON，不自动修改题目，不连接 Supabase，不涉及认证或部署。
+
+# 更新日志
+
+## V22.1.0 - 第二阶段数据结构规范初版
+- 新增 `DATA_SCHEMA.md`，明确 Set / Test / Part / Question / Material / Audio / Asset 的目标数据结构。
+- 确认 16 套题、每套 Test 1 / Test 2、每份试卷 200 题及 Part 1–7 的标准题量。
+- 统一新录入材料通过 `materialId` 关联；共享对话、独白和阅读材料规划为 Test 级 `materials[]`。
+- 明确固定题库内容与用户个人学习状态、答题记录分离的目标方向。
+- 记录旧版 `passageGroupId`、`groupId`、`passages[]`、`passageText`、`articleText`、`transcript` 等字段的兼容策略。
+- 增加未来 Supabase 字段映射建议；本版本不执行数据库迁移、不批量改写 JSON、不修改认证和 RLS。
+- 本次为文档与版本声明更新，不改变现有运行时题库结构。
+- 新增 `DATA_AUDIT_PHASE2.md`，只读盘点 16 套 JSON 的实际题数、字段差异及共享材料的旧格式；确认当前仅 Set 06 Test 1 为完整 200 题，Set 16 Test 1 为 100 题，Set 01 Test 1 为 3 题。
+
+# 更新日志
+
 ## V22.0 - 按 TOEIC 材料分组展示
 - Part 3 / 4 按共享对话或独白转录分组，每组展示对应三道题；共享材料在组内只显示一次。
 - Part 5 按每组五道题展示。
