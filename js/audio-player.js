@@ -140,7 +140,7 @@ class AudioPlayer {
   async uploadLocalAudio(questionId) {
     const input = document.createElement('input'); input.type='file'; input.accept='audio/mpeg,audio/wav,audio/mp4,audio/x-m4a,audio/*';
     input.onchange = async e => { const file=e.target.files[0]; if(!file)return; const question=questionManager.getQuestion(questionId); if(!question)return;
-      try { const setId=Number(question.setId||document.getElementById('currentSetSelect')?.value||6); const testId=Number(question.testId||document.getElementById('currentTestSelect')?.value||1); const partId=Number(question.partId||1); const old=question.audio;
+      try { const setId=Number(question.setId||document.getElementById('currentSetSelect')?.value||6); const testId=Number(question.testId||document.getElementById('currentTestSelect')?.value||1); const partId=Number(question.partId||2); const old=question.audio;
         Utils.showToast('正在上传音频到云端…','info');
         const audio=await audioStorageManager.upload(file,{setId,testId,partId,questionId,onProgress:p=>{}});
         const updatedAt=new Date().toISOString();
