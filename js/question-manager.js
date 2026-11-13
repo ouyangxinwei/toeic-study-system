@@ -168,7 +168,7 @@ class QuestionManager {
     targetSet.parts.forEach(part => {
       part.questions.forEach(question => {
         const userQuestion = userData[question.questionId];
-        if (userQuestion) {
+        if (userQuestion && Number(userQuestion.setId) === Number(targetSet.setId) && Number(userQuestion.testId || 1) === Number(targetSet.testId || 1) && Number(userQuestion.partId) === Number(part.partId)) {
           question.note = userQuestion.note ?? question.note ?? '';
           question.status = userQuestion.status || question.status || 'unanswered';
           question.audio = userQuestion.audio || question.audio || { type: 'none' };
