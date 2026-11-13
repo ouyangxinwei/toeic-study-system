@@ -1039,6 +1039,7 @@ closeAddQuestionModal() {
     const modal = document.getElementById('addQuestionModal');
     modal.style.display = 'none';
     document.getElementById('addQuestionForm').reset();
+    document.getElementById('formPartId').dispatchEvent(new Event('change'));
 }
 
 /**
