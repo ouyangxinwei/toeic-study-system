@@ -304,7 +304,7 @@ document.getElementById('addQuestionForm').addEventListener('submit', (e) => {
     backBtn.className = 'back-btn';
     backBtn.textContent = '← 返回套题列表';
     backBtn.addEventListener('click', () => {
-      questionManager.renderSetsList(Number(localStorage.getItem('toeic_current_set_id') || 1), this.currentTestId);
+      questionManager.renderSetsList(Number(localStorage.getItem('toeic_current_set_id') || 6), this.currentTestId);
       this.currentSetId = null;
       this.isSearchMode = false;
     });
@@ -994,7 +994,7 @@ document.getElementById('addQuestionForm').addEventListener('submit', (e) => {
         });
       }
     } else {
-      questionManager.renderSetsList(Number(localStorage.getItem('toeic_current_set_id') || 1), this.currentTestId);
+      questionManager.renderSetsList(Number(localStorage.getItem('toeic_current_set_id') || 6), this.currentTestId);
     }
   }
   
