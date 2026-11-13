@@ -956,12 +956,13 @@ updateAddFormOptions();
       const sb = window.toeicSupabase;
       const { data, error } = await sb.from('toeic_audio_files').select('id,file_name,file_size,mime_type,storage_path,status,set_id,test_id,part_id,created_at').order('created_at', { ascending: false });
       if (error) throw error;
+      const scopedAudioRows = (data || []).filter(audio => QuestionScope.isSetId(audio.set_id) && QuestionScope.isTestId(audio.test_id || 1) && QuestionScope.isPartId(audio.part_id));
       let modal = document.getElementById('cloudAudioManagerModal');
       if (!modal) { modal = document.createElement('div'); modal.id = 'cloudAudioManagerModal'; modal.className = 'modal'; document.body.appendChild(modal); }
       modal.innerHTML = `<div class="modal-content modal-large"><span class="close" id="closeCloudAudioManager">&times;</span><h2>云端音频管理</h2><p>所有登录账号共享。主动删除音频会影响所有引用它的题目。</p><div class="audio-manager-filters"><input id="audioManagerSearch" placeholder="搜索音频文件名"><select id="audioManagerSet"><option value="">全部套题</option>${QuestionScope.setIds.map(id=>`<option value="${id}">第${id}套</option>`).join('')}</select><select id="audioManagerPart"><option value="">全部 Part</option>${QuestionScope.partIds.map(id=>`<option value="${id}">Part ${id}</option>`).join('')}</select></div><div id="cloudAudioList"></div><button type="button" id="retryAudioCleanupBtn" class="secondary-btn">重试待清理音频</button></div>`;
       const list = modal.querySelector('#cloudAudioList');
-      if (!data?.length) list.textContent = '目前没有云端音频记录。';
-      for (const audio of (data || [])) {
+      if (!scopedAudioRows.length) list.textContent = '当前范围内没有云端音频记录。';
+      for (const audio of scopedAudioRows) {
         const row = document.createElement('div'); row.className = 'audio-manager-row'; row.dataset.name = (audio.file_name || '').toLowerCase(); row.dataset.set = String(audio.set_id || ''); row.dataset.part = String(audio.part_id || '');
         const info = document.createElement('div'); info.textContent = `${audio.file_name} · ${(Number(audio.file_size || 0) / 1024 / 1024).toFixed(2)} MB · 第${audio.set_id}套 Test ${audio.test_id || 1} Part ${audio.part_id} · ${audio.status || 'active'} · ${audio.storage_path}`;
         const actions = document.createElement('div'); actions.className = 'audio-manager-actions';
