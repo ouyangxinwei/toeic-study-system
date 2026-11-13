@@ -12,7 +12,7 @@
         <!-- 头部 -->
         <header class="header">
             <h1>📚 TOEIC错题学习系统</h1>
-            <p>16套模拟题 · 每套含 Test 1 / Test 2 · 每份200题</p>
+            <p>Set 6–16 · Part 2–5 · Test 1 / Test 2</p>
             <button id="logoutBtn" class="auth-logout-btn" type="button" hidden>退出登录</button>
         </header>
 
@@ -24,14 +24,11 @@
             </div>
             <div class="filter-box">
                 <select id="partFilter">
-                    <option value="">全部Part</option>
-                    <option value="1">Part 1 - 照片描述</option>
+                    <option value="">全部Part（2–5）</option>
                     <option value="2">Part 2 - 问答应答</option>
                     <option value="3">Part 3 - 短对话</option>
                     <option value="4">Part 4 - 独白/短文</option>
                     <option value="5">Part 5 - 句子填空</option>
-                    <option value="6">Part 6 - 段落填空</option>
-                    <option value="7">Part 7 - 阅读理解</option>
                 </select>
                 <select id="statusFilter">
                     <option value="">全部状态</option>
@@ -57,11 +54,6 @@
             <div class="form-group">
                 <label>套题编号 *</label>
                 <select id="formSetId" required>
-                    <option value="1">第1套</option>
-                    <option value="2">第2套</option>
-                    <option value="3">第3套</option>
-                    <option value="4">第4套</option>
-                    <option value="5">第5套</option>
                     <option value="6">第6套</option>
                     <option value="7">第7套</option>
                     <option value="8">第8套</option>
@@ -72,7 +64,7 @@
                     <option value="13">第13套</option>
                     <option value="14">第14套</option>
                     <option value="15">第15套</option>
-                    <option value="16">第16套（原创听力100题）</option>
+                    <option value="16">第16套</option>
                 </select>
             </div>
             
@@ -82,13 +74,10 @@
             <div class="form-group">
                 <label>Part *</label>
                 <select id="formPartId" required>
-                    <option value="1">Part 1 - 照片描述</option>
                     <option value="2">Part 2 - 问答应答</option>
                     <option value="3">Part 3 - 短对话</option>
                     <option value="4">Part 4 - 独白/短文</option>
                     <option value="5">Part 5 - 句子填空</option>
-                    <option value="6">Part 6 - 段落填空</option>
-                    <option value="7">Part 7 - 阅读理解</option>
                 </select>
             </div>
             
@@ -154,22 +143,17 @@
         <section class="current-set-picker" aria-label="选择当前套题">
             <label for="currentSetSelect">当前显示套题</label>
             <select id="currentSetSelect">
-                <option value="1">第 1 套模拟题</option>
-                <option value="2">第 2 套模拟题</option>
-                <option value="3">第 3 套模拟题</option>
-                <option value="4">第 4 套模拟题</option>
-                <option value="5">第 5 套模拟题</option>
-                <option value="6">第 6 套模拟题</option>
-                <option value="7">第 7 套模拟题</option>
-                <option value="8">第 8 套模拟题</option>
-                <option value="9">第 9 套模拟题</option>
-                <option value="10">第 10 套模拟题</option>
-                <option value="11">第 11 套模拟题</option>
-                <option value="12">第 12 套模拟题</option>
-                <option value="13">第 13 套模拟题</option>
-                <option value="14">第 14 套模拟题</option>
-                <option value="15">第 15 套模拟题</option>
-                <option value="16">第 16 套模拟题（原创听力100题）</option>
+                    <option value="6">第6套</option>
+                    <option value="7">第7套</option>
+                    <option value="8">第8套</option>
+                    <option value="9">第9套</option>
+                    <option value="10">第10套</option>
+                    <option value="11">第11套</option>
+                    <option value="12">第12套</option>
+                    <option value="13">第13套</option>
+                    <option value="14">第14套</option>
+                    <option value="15">第15套</option>
+                    <option value="16">第16套</option>
             </select>
             <span class="picker-hint">只加载所选套题；选择会保存到云端账号。</span>
         </section>
@@ -177,7 +161,7 @@
         <section class="current-test-picker" aria-label="选择 Test">
             <label for="currentTestSelect">当前试卷</label>
             <select id="currentTestSelect"><option value="1">Test 1</option><option value="2">Test 2</option></select>
-            <span class="picker-hint">每套模拟题包含两份独立的 200 题试卷。</span>
+            <span class="picker-hint">当前开放 Set 6–16 的 Test 1 / Test 2。</span>
         </section>
 
         <!-- 当前选中的套题 -->
