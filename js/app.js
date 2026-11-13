@@ -642,15 +642,15 @@ updateAddFormOptions();
           <span class="close" id="closeEditQuestionModal">&times;</span>
           <h2>修改题目</h2>
           <form id="editQuestionForm">
-            <div class="form-group"><label>套题编号 *</label><select id="editSetId" required>${Array.from({length:16},(_,i)=>`<option value="${i+1}">第${i+1}套</option>`).join('')}</select></div>
+            <div class="form-group"><label>套题编号 *</label><select id="editSetId" required>${QuestionScope.setIds.map(id=>`<option value="${id}">第${id}套</option>`).join('')}</select></div>
             <div class="form-group"><label>Test *</label><select id="editTestId"><option value="1">Test 1</option><option value="2">Test 2</option></select></div>
-            <div class="form-group"><label>Part *</label><select id="editPartId" required>${Array.from({length:7},(_,i)=>`<option value="${i+1}">Part ${i+1}</option>`).join('')}</select></div>
+            <div class="form-group"><label>Part *</label><select id="editPartId" required>${QuestionScope.partIds.map(id=>`<option value="${id}">Part ${id}</option>`).join('')}</select></div>
             <div class="form-group"><label>题号 *</label><input id="editQuestionId" required></div>
             <div class="form-group"><label>题目标题/题干 *</label><textarea id="editTitle" rows="4" required></textarea></div>
             <div class="form-group"><label>选项 A *</label><input id="editOptionA" required></div>
             <div class="form-group"><label>选项 B *</label><input id="editOptionB" required></div>
             <div class="form-group"><label>选项 C *</label><input id="editOptionC" required></div>
-            <div class="form-group"><label>选项 D *</label><input id="editOptionD" required></div>
+            <div class="form-group"><label>选项 D *</label><input id="editOptionD"></div>
             <div class="form-group"><label>正确答案 *</label><select id="editCorrectAnswer" required><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option></select></div>
             <section class="edit-audio-panel">
               <h3>题目音频</h3>
@@ -668,6 +668,15 @@ updateAddFormOptions();
           </form>
         </div>`;
       document.body.appendChild(modal);
+      const updateEditFormOptions = () => {
+        const isPart2 = Number(modal.querySelector('#editPartId').value) === 2;
+        modal.querySelector('#editOptionD').required = !isPart2;
+        const answerD = modal.querySelector('#editCorrectAnswer option[value="D"]');
+        if (answerD) answerD.disabled = isPart2;
+        if (isPart2 && modal.querySelector('#editCorrectAnswer').value === 'D') modal.querySelector('#editCorrectAnswer').value = 'A';
+      };
+      modal.querySelector('#editPartId').addEventListener('change', updateEditFormOptions);
+      updateEditFormOptions();
       const close = () => { this.stopEditAudioPreview(); modal.style.display = 'none'; };
       modal.querySelector('#closeEditQuestionModal').addEventListener('click', close);
       modal.querySelector('#cancelEditQuestion').addEventListener('click', close);
@@ -736,7 +745,7 @@ updateAddFormOptions();
             questionId,
             testId,
             title: document.getElementById('editTitle').value.trim(),
-            options: { A: document.getElementById('editOptionA').value.trim(), B: document.getElementById('editOptionB').value.trim(), C: document.getElementById('editOptionC').value.trim(), D: document.getElementById('editOptionD').value.trim() },
+            options: { A: document.getElementById('editOptionA').value.trim(), B: document.getElementById('editOptionB').value.trim(), C: document.getElementById('editOptionC').value.trim(), ...(partId === 2 ? {} : { D: document.getElementById('editOptionD').value.trim() }) },
             correctAnswer: document.getElementById('editCorrectAnswer').value,
             audio: nextAudio,
             note: document.getElementById('editNote').value.trim(),
@@ -948,7 +957,7 @@ updateAddFormOptions();
       if (error) throw error;
       let modal = document.getElementById('cloudAudioManagerModal');
       if (!modal) { modal = document.createElement('div'); modal.id = 'cloudAudioManagerModal'; modal.className = 'modal'; document.body.appendChild(modal); }
-      modal.innerHTML = `<div class="modal-content modal-large"><span class="close" id="closeCloudAudioManager">&times;</span><h2>云端音频管理</h2><p>所有登录账号共享。主动删除音频会影响所有引用它的题目。</p><div class="audio-manager-filters"><input id="audioManagerSearch" placeholder="搜索音频文件名"><select id="audioManagerSet"><option value="">全部套题</option>${Array.from({length:16},(_,i)=>`<option value="${i+1}">第${i+1}套</option>`).join('')}</select><select id="audioManagerPart"><option value="">全部 Part</option>${Array.from({length:7},(_,i)=>`<option value="${i+1}">Part ${i+1}</option>`).join('')}</select></div><div id="cloudAudioList"></div><button type="button" id="retryAudioCleanupBtn" class="secondary-btn">重试待清理音频</button></div>`;
+      modal.innerHTML = `<div class="modal-content modal-large"><span class="close" id="closeCloudAudioManager">&times;</span><h2>云端音频管理</h2><p>所有登录账号共享。主动删除音频会影响所有引用它的题目。</p><div class="audio-manager-filters"><input id="audioManagerSearch" placeholder="搜索音频文件名"><select id="audioManagerSet"><option value="">全部套题</option>${QuestionScope.setIds.map(id=>`<option value="${id}">第${id}套</option>`).join('')}</select><select id="audioManagerPart"><option value="">全部 Part</option>${QuestionScope.partIds.map(id=>`<option value="${id}">Part ${id}</option>`).join('')}</select></div><div id="cloudAudioList"></div><button type="button" id="retryAudioCleanupBtn" class="secondary-btn">重试待清理音频</button></div>`;
       const list = modal.querySelector('#cloudAudioList');
       if (!data?.length) list.textContent = '目前没有云端音频记录。';
       for (const audio of (data || [])) {
