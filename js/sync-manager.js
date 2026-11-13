@@ -75,16 +75,17 @@ class SyncManager {
         const { data, error } = await window.toeicSupabase.from('toeic_questions').select('*').order('set_id').order('test_id').order('question_id').range(from, from + pageSize - 1);
         if (error) throw error; allRows = allRows.concat(data || []); if (!data || data.length < pageSize) break;
       }
+      const activeRows = allRows.filter(row => QuestionScope.isSetId(row.set_id) && QuestionScope.isTestId(row.test_id || 1) && QuestionScope.isPartId(row.part_id));
       const grouped = new Map();
       QuestionScope.setIds.forEach(s => QuestionScope.testIds.forEach(t => grouped.set(`${s}:${t}`,{})));
-      allRows.forEach(row => {
+      activeRows.forEach(row => {
         const key = `${Number(row.set_id)}:${Number(row.test_id || 1)}`; if (!grouped.has(key) || !QuestionScope.isPartId(row.part_id)) return;
         grouped.get(key)[String(row.question_id)] = { questionId:String(row.question_id), setId:Number(row.set_id), testId:Number(row.test_id || 1), partId:Number(row.part_id), title:row.title||'', options:row.options||{}, correctAnswer:row.correct_answer||'', audio:row.audio||{type:'none'}, note:row.note||'', status:row.status||'unanswered', createdAt:row.created_at, updatedAt:row.updated_at };
       });
       grouped.forEach((questions,key)=>{const [s,t]=key.split(':');QuestionScope.writeCache(Number(s),Number(t),questions);});
-      const backup = { exportedAt:new Date().toISOString(), source:'Supabase toeic_questions', totalQuestions:allRows.length, tests:Object.fromEntries(Array.from(grouped.entries()).map(([key,questions])=>[key,Object.values(questions)])) };
+      const backup = { exportedAt:new Date().toISOString(), source:'Supabase toeic_questions', totalQuestions:activeRows.length, tests:Object.fromEntries(Array.from(grouped.entries()).map(([key,questions])=>[key,Object.values(questions)])) };
       const blob = new Blob([JSON.stringify(backup,null,2)],{type:'application/json;charset=utf-8'}); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download=`toeic-cloud-backup-${new Date().toISOString().slice(0,10)}.json`; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
-      Utils.showToast(`下载完成：云端 ${allRows.length} 道题已按 Test 1 / Test 2 保存到本机，并下载 JSON 备份。`,'success',8000);
+      Utils.showToast(`下载完成：云端范围内 ${activeRows.length} 道题已按 Test 1 / Test 2 保存到本机，并下载 JSON 备份。`,'success',8000);
       if(window.app?.refreshCurrentView) window.app.refreshCurrentView();
     } catch(error) { console.error('下载云端数据失败:',error); Utils.showToast(`下载失败：${error.message||error.code||'请检查网络、表权限和 RLS 策略'}`,'error',9000); }
     finally { this.isSyncing=false; }
