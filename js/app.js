@@ -781,6 +781,7 @@ updateAddFormOptions();
     document.getElementById('editSetId').value = modal.dataset.oldSetId;
     document.getElementById('editTestId').value = modal.dataset.oldTestId;
     document.getElementById('editPartId').value = String(question.partId || 2);
+    document.getElementById('editPartId').dispatchEvent(new Event('change'));
     document.getElementById('editQuestionId').value = question.questionId || '';
     document.getElementById('editTitle').value = question.title || '';
     document.getElementById('editOptionA').value = question.options?.A || '';
