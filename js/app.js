@@ -48,7 +48,7 @@ class App {
         picker.value = String(savedSetId);
         picker.addEventListener('change', async () => {
           const setId = Number(picker.value);
-          if (!Number.isInteger(setId) || setId < 1 || setId > 16) return;
+          if (!QuestionScope.isSetId(setId)) { Utils.showToast('当前仅开放 Set 6–16。', 'warning'); picker.value = String(this.currentSetId || 6); return; }
           // 先立即记录本地选择，再保存云端偏好；即使云端暂时不可用，本机也会记住。
           localStorage.setItem('toeic_current_set_id', String(setId));
           this.currentSetId = null;
@@ -89,8 +89,8 @@ class App {
   }
 
   async loadPreferredSetId() {
-    const localValue = Number(localStorage.getItem('toeic_current_set_id') || 1);
-    const fallback = Number.isInteger(localValue) && localValue >= 1 && localValue <= 16 ? localValue : 1;
+    const localValue = Number(localStorage.getItem('toeic_current_set_id') || 6);
+    const fallback = QuestionScope.isSetId(localValue) ? localValue : 6;
     if (!window.toeicSupabaseReady || !window.toeicSupabase) return fallback;
     try {
       const { data: authData } = await window.toeicSupabase.auth.getUser();
@@ -100,7 +100,7 @@ class App {
         .select('selected_set_id').eq('user_id', userId).maybeSingle();
       if (error) throw error;
       const setId = Number(data && data.selected_set_id);
-      if (Number.isInteger(setId) && setId >= 1 && setId <= 16) {
+      if (QuestionScope.isSetId(setId)) {
         localStorage.setItem('toeic_current_set_id', String(setId));
         return setId;
       }
