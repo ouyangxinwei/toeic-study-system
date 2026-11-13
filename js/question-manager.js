@@ -342,10 +342,10 @@ class QuestionManager {
     // 云端修改成功后再写本地删除墓碑，避免失败时把原题从本机隐藏。
     try { const tombstones=JSON.parse(localStorage.getItem('toeic_v20_deleted_questions')||'{}'); if(Number(oldSetId)!==targetSetId || Number(oldTestId)!==targetTestId || String(oldQuestionId)!==String(saved.questionId)) tombstones[`${Number(oldSetId)}:${Number(oldTestId)}:${String(oldQuestionId)}`]=now; delete tombstones[`${targetSetId}:${targetTestId}:${String(saved.questionId)}`]; if(targetTestId===1) delete tombstones[`${targetSetId}:${String(saved.questionId)}`]; localStorage.setItem('toeic_v20_deleted_questions',JSON.stringify(tombstones)); } catch (_) {}
     // 更新浏览器缓存；若跨套题移动，也清理原套题缓存。
-    const oldKey = `set${Number(oldSetId)}_test${Number(oldTestId)}_data`;
-    let oldCache = {}; try { oldCache = JSON.parse(localStorage.getItem(oldKey) || '{}'); } catch (_) {}
+    const oldKey = QuestionScope.cacheKey(oldSetId, oldTestId);
+    const oldCache = QuestionScope.readCache(oldSetId, oldTestId);
     delete oldCache[String(oldQuestionId)];
-    if (Number(oldSetId) !== targetSetId || Number(oldTestId) !== targetTestId || String(oldQuestionId) !== String(saved.questionId)) localStorage.setItem(oldKey, JSON.stringify(oldCache));
+    if (Number(oldSetId) !== targetSetId || Number(oldTestId) !== targetTestId || String(oldQuestionId) !== String(saved.questionId)) QuestionScope.writeCache(oldSetId, oldTestId, oldCache);
     const oldPartIndex = oldSet.parts.findIndex(p => p.questions.some(q => String(q.questionId) === String(oldQuestionId)));
     if (oldPartIndex >= 0) {
       oldSet.parts[oldPartIndex].questions = oldSet.parts[oldPartIndex].questions.filter(q => String(q.questionId) !== String(oldQuestionId));
@@ -357,10 +357,9 @@ class QuestionManager {
     targetPart.questions.sort((a,b) => String(a.questionId).localeCompare(String(b.questionId), undefined, {numeric:true}));
     targetSet.parts.forEach(p => p.questionCount = p.questions.length);
     this.currentSet = targetSet;
-    const targetKey = `set${targetSetId}_test${targetTestId}_data`;
-    let targetCache = {}; try { targetCache = JSON.parse(localStorage.getItem(targetKey) || '{}'); } catch (_) {}
+    const targetCache = QuestionScope.readCache(targetSetId, targetTestId);
     targetCache[saved.questionId] = saved;
-    localStorage.setItem(targetKey, JSON.stringify(targetCache));
+    QuestionScope.writeCache(targetSetId, targetTestId, targetCache);
     this.cloudQuestionsBySet = null; this.cloudCachePromise = null;
     return saved;
   }
@@ -406,10 +405,10 @@ class QuestionManager {
     // 云端事务已确认题目删除或已进入离线队列后，才清除本地题目与相关缓存。
     part.questions = part.questions.filter(q => String(q.questionId) !== String(questionId));
     part.questionCount = part.questions.length;
-    const key = `set${setId}_test${this.currentSet.testId || 1}_data`;
-    let cache = {}; try { cache = JSON.parse(localStorage.getItem(key) || '{}'); } catch (_) {}
+    const key = QuestionScope.cacheKey(setId, this.currentSet.testId || 1);
+    const cache = QuestionScope.readCache(setId, this.currentSet.testId || 1);
     delete cache[questionId];
-    localStorage.setItem(key, JSON.stringify(cache));
+    QuestionScope.writeCache(setId, this.currentSet.testId || 1, cache);
     if (this.cloudQuestionsBySet) {
       const rows = this.cloudQuestionsBySet.get(`${Number(setId)}:${Number(testId)}`) || [];
       this.cloudQuestionsBySet.set(`${Number(setId)}:${Number(testId)}`, rows.filter(row => String(row.question_id) !== String(questionId)));
